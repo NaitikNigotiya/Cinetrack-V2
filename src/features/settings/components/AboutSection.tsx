@@ -35,6 +35,7 @@ export function AboutSection() {
         <h2 className={styles.title}>Attribution &amp; Data Sources</h2>
         
         <div className={styles.tmdbBadge}>
+          <img src="/tmdb-logo.svg" alt="The Movie Database (TMDB)" style={{ height: '20px', marginBottom: '10px' }} />
           <div className={styles.tmdbTitle}>The Movie Database (TMDB)</div>
           <p className={styles.tmdbDesc}>
             This product uses the TMDB API but is not endorsed or certified by TMDB.

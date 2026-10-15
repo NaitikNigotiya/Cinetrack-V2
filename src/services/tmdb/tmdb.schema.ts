@@ -23,6 +23,17 @@ export function tolerantArray<T extends z.ZodTypeAny>(schema: T, itemName = 'ite
     })
 }
 
+/**
+ * Tolerant TMDB date parser:
+ * TMDB dates are YYYY-MM-DD or empty string "" for unreleased/unknown titles.
+ * Converts empty strings and nullish values to null.
+ */
+export const TmdbDateSchema = z
+  .string()
+  .nullish()
+  .transform((val) => (val && val.trim().length > 0 ? val : null))
+  .optional()
+
 export const TmdbMediaItemSchema = z.object({
   id: z.number(),
   title: z.string().optional(),
@@ -30,8 +41,8 @@ export const TmdbMediaItemSchema = z.object({
   media_type: z.enum(['movie', 'tv']).optional(),
   poster_path: z.string().nullable().optional(),
   backdrop_path: z.string().nullable().optional(),
-  release_date: z.string().optional(),
-  first_air_date: z.string().optional(),
+  release_date: TmdbDateSchema,
+  first_air_date: TmdbDateSchema,
   overview: z.string().default(''),
   vote_average: z.number().default(0),
   vote_count: z.number().default(0),
@@ -87,7 +98,7 @@ export const TmdbMovieDetailsSchema = z.object({
   overview: z.string().default(''),
   poster_path: z.string().nullable().optional(),
   backdrop_path: z.string().nullable().optional(),
-  release_date: z.string().optional(),
+  release_date: TmdbDateSchema,
   runtime: z.number().nullable().optional(),
   vote_average: z.number().default(0),
   vote_count: z.number().default(0),
@@ -118,7 +129,7 @@ export const TmdbTvDetailsSchema = z.object({
   overview: z.string().default(''),
   poster_path: z.string().nullable().optional(),
   backdrop_path: z.string().nullable().optional(),
-  first_air_date: z.string().optional(),
+  first_air_date: TmdbDateSchema,
   episode_run_time: z.array(z.number()).optional(),
   number_of_episodes: z.number().nullable().optional(),
   number_of_seasons: z.number().nullable().optional(),
@@ -145,7 +156,7 @@ export const TmdbTvDetailsSchema = z.object({
     .optional(),
   next_episode_to_air: z
     .object({
-      air_date: z.string(),
+      air_date: TmdbDateSchema,
       episode_number: z.number(),
       season_number: z.number(),
     })

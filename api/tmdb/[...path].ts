@@ -13,6 +13,49 @@ const ALLOWED_PATH_PATTERNS = [
   /^(movie|tv)\/\d+\/(recommendations|similar|videos|credits|watch\/providers)$/,
 ]
 
+async function fetchWithRetry(url: string, token: string, maxRetries = 2): Promise<Response> {
+  let attempt = 0
+  while (attempt <= maxRetries) {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 10000)
+    try {
+      const res = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+        },
+        signal: controller.signal,
+      })
+      clearTimeout(timeout)
+
+      // Final non-retryable responses or success
+      if (res.status === 401 || res.status === 403 || res.status === 404 || res.status === 422 || res.ok) {
+        return res
+      }
+
+      // Retryable: 429 rate limit or 5xx server errors
+      if ((res.status === 429 || res.status >= 500) && attempt < maxRetries) {
+        attempt++
+        const retryAfterHeader = res.headers.get('Retry-After')
+        const delayMs = retryAfterHeader ? (parseInt(retryAfterHeader, 10) || 1) * 1000 : attempt * 500
+        await new Promise((resolve) => setTimeout(resolve, delayMs))
+        continue
+      }
+
+      return res
+    } catch (err) {
+      clearTimeout(timeout)
+      if (attempt < maxRetries) {
+        attempt++
+        await new Promise((resolve) => setTimeout(resolve, attempt * 500))
+        continue
+      }
+      throw err
+    }
+  }
+  throw new Error('Max retries exceeded')
+}
+
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
   // Allow CORS for local dev / Vercel preview
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -59,18 +102,28 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       upstreamUrl.searchParams.set(key, val)
     })
 
-    const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), 10000)
+    // Strict TMDB facts enforcement
+    // 1. Never forward api_key in query params
+    upstreamUrl.searchParams.delete('api_key')
 
-    const upstreamRes = await fetch(upstreamUrl.toString(), {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json',
-      },
-      signal: controller.signal,
-    })
+    // 2. Always enforce include_adult=false
+    upstreamUrl.searchParams.set('include_adult', 'false')
 
-    clearTimeout(timeout)
+    // 3. Default language to en-US if not specified
+    if (!upstreamUrl.searchParams.has('language')) {
+      upstreamUrl.searchParams.set('language', 'en-US')
+    }
+
+    // 4. Cap page query parameter at TMDB max of 500
+    const pageVal = upstreamUrl.searchParams.get('page')
+    if (pageVal) {
+      const pageNum = parseInt(pageVal, 10)
+      if (!isNaN(pageNum) && pageNum > 500) {
+        upstreamUrl.searchParams.set('page', '500')
+      }
+    }
+
+    const upstreamRes = await fetchWithRetry(upstreamUrl.toString(), token)
 
     // Set cache headers based on path type
     const isStable = targetPath.startsWith('movie/') || targetPath.startsWith('tv/') || targetPath.startsWith('genre/')

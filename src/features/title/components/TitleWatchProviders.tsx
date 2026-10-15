@@ -114,7 +114,7 @@ export function TitleWatchProviders({ providers, region = 'US' }: TitleWatchProv
         )}
 
         <div style={{ fontSize: '11px', color: 'var(--text-3)', marginTop: 'var(--space-2)' }}>
-          Streaming availability data provided by JustWatch via TMDB.
+          Streaming availability data Powered by JustWatch via TMDB.
         </div>
       </div>
     </section>

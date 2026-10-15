@@ -12,14 +12,32 @@ import {
   MOCK_TV_DETAILS,
 } from './mockData'
 import { auth } from '@/services/firebase/auth'
+import { useAuthStore } from '@/features/auth/store/authStore'
 
 const PROXY_BASE = '/api/tmdb'
+
+function getUserLocale(): { language: string; region: string } {
+  try {
+    const profile = useAuthStore.getState().profile
+    return {
+      language: profile?.language || 'en-US',
+      region: profile?.region || 'US',
+    }
+  } catch {
+    return { language: 'en-US', region: 'US' }
+  }
+}
 
 async function fetchFromProxy<T>(
   path: string,
   params: Record<string, string> = {}
 ): Promise<T> {
   const url = new URL(path, window.location.origin)
+  const locale = getUserLocale()
+
+  if (!params['language']) url.searchParams.set('language', locale.language)
+  if (!params['region']) url.searchParams.set('region', locale.region)
+
   Object.entries(params).forEach(([k, v]) => {
     if (v) url.searchParams.set(k, v)
   })
@@ -53,10 +71,11 @@ export const tmdbClient = {
     if (!query.trim()) {
       return { page: 1, total_pages: 1, total_results: 0, results: [] }
     }
+    const safePage = Math.max(1, Math.min(page, 500))
     try {
       const data = await fetchFromProxy<unknown>(`${PROXY_BASE}/search/multi`, {
         query,
-        page: page.toString(),
+        page: safePage.toString(),
       })
       return TmdbSearchResponseSchema.parse(data)
     } catch {
@@ -85,22 +104,58 @@ export const tmdbClient = {
   },
 
   async getMovieDetails(id: number): Promise<TmdbMovieDetails> {
+    const locale = getUserLocale()
     try {
       const data = await fetchFromProxy<unknown>(`${PROXY_BASE}/movie/${id}`, {
         append_to_response: 'credits,videos,watch/providers,recommendations',
       })
-      return TmdbMovieDetailsSchema.parse(data)
+      const details = TmdbMovieDetailsSchema.parse(data)
+
+      // Fallback to English if translated overview is empty
+      if (!details.overview && locale.language !== 'en-US') {
+        try {
+          const fallbackData = await fetchFromProxy<unknown>(`${PROXY_BASE}/movie/${id}`, {
+            language: 'en-US',
+          })
+          const fallback = TmdbMovieDetailsSchema.parse(fallbackData)
+          if (fallback.overview) {
+            details.overview = fallback.overview
+          }
+        } catch {
+          // ignore fallback error
+        }
+      }
+
+      return details
     } catch {
       return { ...MOCK_MOVIE_DETAILS, id }
     }
   },
 
   async getTvDetails(id: number): Promise<TmdbTvDetails> {
+    const locale = getUserLocale()
     try {
       const data = await fetchFromProxy<unknown>(`${PROXY_BASE}/tv/${id}`, {
         append_to_response: 'credits,videos,watch/providers,recommendations',
       })
-      return TmdbTvDetailsSchema.parse(data)
+      const details = TmdbTvDetailsSchema.parse(data)
+
+      // Fallback to English if translated overview is empty
+      if (!details.overview && locale.language !== 'en-US') {
+        try {
+          const fallbackData = await fetchFromProxy<unknown>(`${PROXY_BASE}/tv/${id}`, {
+            language: 'en-US',
+          })
+          const fallback = TmdbTvDetailsSchema.parse(fallbackData)
+          if (fallback.overview) {
+            details.overview = fallback.overview
+          }
+        } catch {
+          // ignore fallback error
+        }
+      }
+
+      return details
     } catch {
       return { ...MOCK_TV_DETAILS, id }
     }
@@ -143,10 +198,11 @@ export const tmdbClient = {
   },
 
   async discoverByGenre(mediaType: 'movie' | 'tv', genreId: number, page = 1): Promise<TmdbSearchResponse> {
+    const safePage = Math.max(1, Math.min(page, 500))
     try {
       const data = await fetchFromProxy<unknown>(`${PROXY_BASE}/discover/${mediaType}`, {
         with_genres: genreId.toString(),
-        page: page.toString(),
+        page: safePage.toString(),
       })
       return TmdbSearchResponseSchema.parse(data)
     } catch {

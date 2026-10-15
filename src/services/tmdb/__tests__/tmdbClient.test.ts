@@ -83,4 +83,22 @@ describe('tmdbClient module', () => {
     // unknown field is not in schema
     expect('extra_unknown_field_from_tmdb' in parsed).toBe(false)
   })
+
+  it('treats empty date strings as null for unreleased or unknown titles', () => {
+    const withEmptyDates = {
+      id: 501,
+      title: 'Upcoming Unscheduled Title',
+      release_date: '',
+    }
+    const parsed = TmdbMovieDetailsSchema.parse(withEmptyDates)
+    expect(parsed.release_date).toBeNull()
+
+    const withValidDate = {
+      id: 502,
+      title: 'Scheduled Title',
+      release_date: '2026-11-20',
+    }
+    const parsedValid = TmdbMovieDetailsSchema.parse(withValidDate)
+    expect(parsedValid.release_date).toBe('2026-11-20')
+  })
 })
