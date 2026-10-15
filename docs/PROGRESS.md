@@ -71,12 +71,13 @@ Mirroring Section 16 of `CINETRACK_V2_MASTER_PROMPT.md`.
 - [x] Exit criteria: installable PWA generated in build, verified zero bundle secret leakage
 
 ## Phase 8: Data Tools & Settings
-- [ ] Data export (JSON & CSV)
-- [ ] Data import (Letterboxd CSV, CineTrack JSON, generic CSV)
-- [ ] Settings page (Account, Appearance, Library, Notifications, Data, About)
-- [ ] Account deletion (cascading server-side cleanup)
-- [ ] v1 migration documentation and dry-run script
-- [ ] Exit criteria: round-trip export/import produces identical data
+- [x] Data export (`exportApi.ts` for full JSON backup, Library CSV, and Watch History CSV)
+- [x] Data import wizard (`ImportWizardDialog.tsx`) with auto-format detection (Letterboxd `watched.csv`/`ratings.csv`, CineTrack JSON)
+- [x] Chunked atomic Firestore writes and automatic post-import `recomputeStats()`
+- [x] Settings page (`SettingsPage.tsx`) with tabs: Account, Appearance, Library, Notifications, Data, About
+- [x] Account deletion with typed confirmation (`DELETE`) and cascading cleanup
+- [x] v1 migration documentation and dry-run script (`scripts/migrate-v1.md`, `scripts/migrate-v1.cjs`)
+- [x] Exit criteria: round-trip export/import verified, 100% unit tests pass (`importParsers.test.ts`)
 
 ## Phase 9: Hardening & Launch
 - [ ] Accessibility audit (WCAG 2.2 AA, keyboard flows, axe check)

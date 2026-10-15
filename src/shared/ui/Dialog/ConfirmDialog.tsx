@@ -7,12 +7,13 @@ export interface ConfirmDialogProps {
   onCancel?: () => void
   onConfirm: () => void
   title: string
-  message: string
+  message: React.ReactNode
   confirmText?: string
   confirmLabel?: string
   cancelText?: string
   variant?: 'danger' | 'primary'
   isLoading?: boolean
+  confirmDisabled?: boolean
 }
 
 export function ConfirmDialog({
@@ -27,6 +28,7 @@ export function ConfirmDialog({
   cancelText = 'Cancel',
   variant = 'danger',
   isLoading = false,
+  confirmDisabled = false,
 }: ConfirmDialogProps) {
   const handleClose = onCancel ?? onClose ?? (() => {})
   const effectiveConfirmText = confirmLabel ?? confirmText ?? 'Confirm'
@@ -45,6 +47,7 @@ export function ConfirmDialog({
             variant={variant === 'danger' ? 'danger' : 'primary'}
             onClick={onConfirm}
             isLoading={isLoading}
+            disabled={confirmDisabled || isLoading}
           >
             {effectiveConfirmText}
           </Button>

@@ -16,6 +16,7 @@ import ReviewsPage from '@/features/reviews/components/ReviewsPage'
 import NotesPage from '@/features/notes/components/NotesPage'
 import { AnalyticsPage } from '@/features/analytics/components/AnalyticsPage'
 import OfflinePage from '@/features/offline/components/OfflinePage'
+import SettingsPage from '@/features/settings/components/SettingsPage'
 import UiPlayground from '@/features/dev/UiPlayground'
 
 export const router = createBrowserRouter([
@@ -93,7 +94,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'settings',
-        element: <div>Settings Route (Scaffolded)</div>,
+        element: <SettingsPage />,
       },
       {
         path: '*',
