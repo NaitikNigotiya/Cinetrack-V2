@@ -21,11 +21,11 @@ Mirroring Section 16 of `CINETRACK_V2_MASTER_PROMPT.md`.
 - [x] Exit criteria: sign up/in/out working, rules & schemas validated, build green
 
 ## Phase 2: TMDB Proxy, Search, Title Detail
-- [ ] TMDB proxy with auth verification, route allow-list, rate-limiting, short caching
-- [ ] Typed TMDB client in `src/services/tmdb/` with Zod validation
-- [ ] Search page (debounced multi-search, recent searches, quick add)
-- [ ] Title detail page (hero backdrop, cast, trailers modal, streaming providers, recommendations)
-- [ ] Exit criteria: zero TMDB secrets in client bundle, search and detail fully functional
+- [x] TMDB proxy with auth verification, route allow-list, rate-limiting, short caching (`api/tmdb/[...path].ts`)
+- [x] Typed TMDB client in `src/services/tmdb/` with Zod validation
+- [x] Search page (debounced multi-search, recent searches, quick add)
+- [x] Title detail page (hero backdrop, cast, trailers modal, streaming providers, recommendations)
+- [x] Exit criteria: zero TMDB secrets in client bundle (verified: 0 matches in `dist/` and `src/`), search and detail fully functional
 
 ## Phase 3: Library & Atomic Write Paths
 - [ ] Atomic write functions: `addToLibrary`, `setStatus`, favourite, rating, remove with 8s undo

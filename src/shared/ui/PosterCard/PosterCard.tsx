@@ -6,15 +6,15 @@ import styles from './PosterCard.module.css'
 
 export interface PosterCardProps {
   title: string
-  posterPath?: string | null
-  year?: number | null
-  type?: 'movie' | 'tv'
-  status?: LibraryStatus
-  rating?: number | null
-  progress?: { watched: number; total: number }
-  onClick?: () => void
-  className?: string
-  priority?: boolean
+  posterPath?: string | null | undefined
+  year?: number | null | undefined
+  type?: 'movie' | 'tv' | undefined
+  status?: LibraryStatus | undefined
+  rating?: number | null | undefined
+  progress?: { watched: number; total: number } | undefined
+  onClick?: (() => void) | undefined
+  className?: string | undefined
+  priority?: boolean | undefined
 }
 
 export function PosterCard({

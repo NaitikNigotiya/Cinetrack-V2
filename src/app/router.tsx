@@ -2,6 +2,8 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { AuthGate } from '@/features/auth/components/AuthGate'
 import LoginPage from '@/features/auth/components/LoginPage'
 import { AppShell } from '@/app/shell/AppShell'
+import SearchPage from '@/features/search/components/SearchPage'
+import TitleDetailPage from '@/features/title/components/TitleDetailPage'
 import UiPlayground from '@/features/dev/UiPlayground'
 
 export const router = createBrowserRouter([
@@ -27,7 +29,11 @@ export const router = createBrowserRouter([
       },
       {
         path: 'search',
-        element: <div>Search Route (Scaffolded)</div>,
+        element: <SearchPage />,
+      },
+      {
+        path: 'title/:titleKey',
+        element: <TitleDetailPage />,
       },
       {
         path: 'discover',
