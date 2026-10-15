@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#141414"/>
+  <!-- Sidebar -->
+  <rect width="240" height="720" fill="#1b1b1e" stroke="#28282c" stroke-width="1"/>
+  <text x="32" y="48" fill="#e50914" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="800" letter-spacing="1">CINETRACK</text>
+  <text x="32" y="100" fill="#9ca3af" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600">MAIN</text>
+  <rect x="20" y="116" width="200" height="38" rx="8" fill="#28282c"/>
+  <text x="48" y="140" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600">Home</text>
+  <text x="48" y="178" fill="#9ca3af" font-family="system-ui, -apple-system, sans-serif" font-size="14">Search</text>
+  <text x="48" y="214" fill="#9ca3af" font-family="system-ui, -apple-system, sans-serif" font-size="14">Discover</text>
+  <text x="32" y="260" fill="#9ca3af" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600">MY LIBRARY</text>
+  <text x="48" y="286" fill="#9ca3af" font-family="system-ui, -apple-system, sans-serif" font-size="14">Library</text>
+  <text x="48" y="322" fill="#9ca3af" font-family="system-ui, -apple-system, sans-serif" font-size="14">Collections</text>
+  <text x="48" y="358" fill="#9ca3af" font-family="system-ui, -apple-system, sans-serif" font-size="14">History</text>
+  
+  <!-- Main content -->
+  <!-- Header -->
+  <rect x="240" width="1040" height="64" fill="#1b1b1e" stroke="#28282c" stroke-width="1"/>
+  <rect x="272" y="14" width="400" height="36" rx="8" fill="#141414" stroke="#3b3b40"/>
+  <text x="296" y="37" fill="#6b7280" font-family="system-ui, -apple-system, sans-serif" font-size="13">Search movies, TV shows, cast... (/)</text>
+  
+  <!-- Dashboard Hero Cards -->
+  <text x="272" y="110" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="26" font-weight="700">Continue Watching</text>
+  
+  <rect x="272" y="130" width="220" height="320" rx="12" fill="#1f1f23" stroke="#2e2e34"/>
+  <rect x="272" y="130" width="220" height="240" rx="12" fill="#2a2a30"/>
+  <text x="288" y="394" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="600">Severance</text>
+  <text x="288" y="416" fill="#9ca3af" font-family="system-ui, -apple-system, sans-serif" font-size="12">S2 • E4 • The Grim</text>
+  <rect x="288" y="430" width="188" height="6" rx="3" fill="#3b3b40"/>
+  <rect x="288" y="430" width="120" height="6" rx="3" fill="#e50914"/>
+  
+  <rect x="512" y="130" width="220" height="320" rx="12" fill="#1f1f23" stroke="#2e2e34"/>
+  <rect x="512" y="130" width="220" height="240" rx="12" fill="#2a2a30"/>
+  <text x="528" y="394" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="600">The Bear</text>
+  <text x="528" y="416" fill="#9ca3af" font-family="system-ui, -apple-system, sans-serif" font-size="12">S3 • E1 • Tomorrow</text>
+  <rect x="528" y="430" width="188" height="6" rx="3" fill="#3b3b40"/>
+  <rect x="528" y="430" width="160" height="6" rx="3" fill="#e50914"/>
+  
+  <rect x="752" y="130" width="220" height="320" rx="12" fill="#1f1f23" stroke="#2e2e34"/>
+  <rect x="752" y="130" width="220" height="240" rx="12" fill="#2a2a30"/>
+  <text x="768" y="394" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="600">Succession</text>
+  <text x="768" y="416" fill="#9ca3af" font-family="system-ui, -apple-system, sans-serif" font-size="12">S4 • E3 • Connor's Wedding</text>
+  <rect x="768" y="430" width="188" height="6" rx="3" fill="#3b3b40"/>
+  <rect x="768" y="430" width="70" height="6" rx="3" fill="#e50914"/>
+
+  <!-- Stats Strip -->
+  <rect x="272" y="480" width="700" height="180" rx="12" fill="#1f1f23" stroke="#2e2e34"/>
+  <text x="296" y="515" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="600">Weekly Watching Streak</text>
+  <text x="296" y="555" fill="#e50914" font-family="system-ui, -apple-system, sans-serif" font-size="36" font-weight="800">14 Days 🔥</text>
+  <text x="296" y="585" fill="#9ca3af" font-family="system-ui, -apple-system, sans-serif" font-size="13">You watched 18 hours of movies &amp; TV this week</text>
+</svg>

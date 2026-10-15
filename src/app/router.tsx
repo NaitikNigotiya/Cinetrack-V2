@@ -15,6 +15,7 @@ import CalendarPage from '@/features/calendar/components/CalendarPage'
 import ReviewsPage from '@/features/reviews/components/ReviewsPage'
 import NotesPage from '@/features/notes/components/NotesPage'
 import { AnalyticsPage } from '@/features/analytics/components/AnalyticsPage'
+import OfflinePage from '@/features/offline/components/OfflinePage'
 import UiPlayground from '@/features/dev/UiPlayground'
 
 export const router = createBrowserRouter([
@@ -85,6 +86,10 @@ export const router = createBrowserRouter([
       {
         path: 'analytics',
         element: <AnalyticsPage />,
+      },
+      {
+        path: 'offline',
+        element: <OfflinePage />,
       },
       {
         path: 'settings',

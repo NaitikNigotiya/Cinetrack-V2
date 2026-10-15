@@ -1,0 +1,80 @@
+{
+  "name": "CineTrack",
+  "short_name": "CineTrack",
+  "description": "Track. Rate. Remember. Fast, offline-capable personal movie and TV tracker.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#141414",
+  "theme_color": "#141414",
+  "icons": [
+    {
+      "src": "/pwa-192x192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/maskable-icon-512x512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop.svg",
+      "sizes": "1280x720",
+      "type": "image/svg+xml",
+      "form_factor": "wide",
+      "label": "CineTrack Dashboard on Desktop"
+    },
+    {
+      "src": "/screenshots/mobile.svg",
+      "sizes": "750x1334",
+      "type": "image/svg+xml",
+      "form_factor": "narrow",
+      "label": "CineTrack Mobile Tracker"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Search",
+      "short_name": "Search",
+      "description": "Search for movies and TV shows",
+      "url": "/search",
+      "icons": [{ "src": "/pwa-192x192.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Library",
+      "short_name": "Library",
+      "description": "View your watchlist and library",
+      "url": "/library",
+      "icons": [{ "src": "/pwa-192x192.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Quick Add",
+      "short_name": "Add",
+      "description": "Quickly add a title to your library",
+      "url": "/search?add=true",
+      "icons": [{ "src": "/pwa-192x192.svg", "sizes": "192x192" }]
+    }
+  ],
+  "share_target": {
+    "action": "/search",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
+}

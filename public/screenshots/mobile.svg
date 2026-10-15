@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1334" viewBox="0 0 750 1334">
+  <rect width="750" height="1334" fill="#141414"/>
+  <!-- Top Bar -->
+  <rect width="750" height="100" fill="#1b1b1e" stroke="#28282c" stroke-width="1"/>
+  <text x="40" y="62" fill="#e50914" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="800">CINETRACK</text>
+  
+  <!-- Search input -->
+  <rect x="40" y="130" width="670" height="70" rx="14" fill="#1f1f23" stroke="#2e2e34"/>
+  <text x="80" y="174" fill="#6b7280" font-family="system-ui, -apple-system, sans-serif" font-size="24">Search movies, TV shows, cast...</text>
+  
+  <!-- Content -->
+  <text x="40" y="260" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="36" font-weight="700">Continue Watching</text>
+  
+  <!-- Card 1 -->
+  <rect x="40" y="290" width="670" height="240" rx="20" fill="#1f1f23" stroke="#2e2e34"/>
+  <rect x="60" y="310" width="140" height="200" rx="12" fill="#2a2a30"/>
+  <text x="230" y="360" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="30" font-weight="700">Severance</text>
+  <text x="230" y="400" fill="#9ca3af" font-family="system-ui, -apple-system, sans-serif" font-size="24">Season 2 • Episode 4</text>
+  <rect x="230" y="440" width="440" height="10" rx="5" fill="#3b3b40"/>
+  <rect x="230" y="440" width="300" height="10" rx="5" fill="#e50914"/>
+  <text x="230" y="485" fill="#e50914" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="600">Next: The Grim</text>
+  
+  <!-- Card 2 -->
+  <rect x="40" y="560" width="670" height="240" rx="20" fill="#1f1f23" stroke="#2e2e34"/>
+  <rect x="60" y="580" width="140" height="200" rx="12" fill="#2a2a30"/>
+  <text x="230" y="630" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="30" font-weight="700">The Bear</text>
+  <text x="230" y="670" fill="#9ca3af" font-family="system-ui, -apple-system, sans-serif" font-size="24">Season 3 • Episode 1</text>
+  <rect x="230" y="710" width="440" height="10" rx="5" fill="#3b3b40"/>
+  <rect x="230" y="710" width="380" height="10" rx="5" fill="#e50914"/>
+  <text x="230" y="755" fill="#e50914" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="600">Next: Tomorrow</text>
+
+  <!-- Streak Banner -->
+  <rect x="40" y="830" width="670" height="200" rx="20" fill="#1f1f23" stroke="#2e2e34"/>
+  <text x="80" y="890" fill="#9ca3af" font-family="system-ui, -apple-system, sans-serif" font-size="24">Current Streak</text>
+  <text x="80" y="960" fill="#e50914" font-family="system-ui, -apple-system, sans-serif" font-size="52" font-weight="800">14 Days 🔥</text>
+
+  <!-- Bottom Navigation Tab Bar -->
+  <rect y="1214" width="750" height="120" fill="#1b1b1e" stroke="#28282c" stroke-width="1"/>
+  <text x="80" y="1285" fill="#e50914" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700">Home</text>
+  <text x="230" y="1285" fill="#9ca3af" font-family="system-ui, -apple-system, sans-serif" font-size="22">Search</text>
+  <text x="375" y="1285" fill="#9ca3af" font-family="system-ui, -apple-system, sans-serif" font-size="22">Library</text>
+  <text x="520" y="1285" fill="#9ca3af" font-family="system-ui, -apple-system, sans-serif" font-size="22">Calendar</text>
+  <text x="660" y="1285" fill="#9ca3af" font-family="system-ui, -apple-system, sans-serif" font-size="22">More</text>
+</svg>

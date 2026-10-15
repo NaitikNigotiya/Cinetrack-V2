@@ -5,6 +5,8 @@ import { TopBar } from './TopBar'
 import { MobileTabBar } from './MobileTabBar'
 import { ShortcutsModal } from './ShortcutsModal'
 import { ToastContainer } from '@/shared/ui'
+import { OfflineBanner } from '@/shared/ui/Offline/OfflineBanner'
+import { ReloadPrompt } from '@/shared/ui/Pwa/ReloadPrompt'
 import styles from './AppShell.module.css'
 
 export function AppShell() {
@@ -60,6 +62,7 @@ export function AppShell() {
 
   return (
     <div className={styles.shell}>
+      <OfflineBanner />
       <Sidebar
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
@@ -75,6 +78,7 @@ export function AppShell() {
       <MobileTabBar />
       <ShortcutsModal isOpen={isShortcutsOpen} onClose={() => setIsShortcutsOpen(false)} />
       <ToastContainer />
+      <ReloadPrompt />
     </div>
   )
 }

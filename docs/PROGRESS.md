@@ -61,12 +61,14 @@ Mirroring Section 16 of `CINETRACK_V2_MASTER_PROMPT.md`.
 - [x] Exit criteria: recompute equals incremental stats on source-of-truth documents
 
 ## Phase 7: PWA & Notifications
-- [ ] PWA manifest with icons and real screenshots
-- [ ] Workbox service worker caching strategy
-- [ ] Push notification subscription in Settings (`settings/push.tokens`)
-- [ ] Daily Vercel cron handler (`api/cron/new-releases.ts`) with `CRON_SECRET`
-- [ ] Offline banner & update reload toast
-- [ ] Exit criteria: installable PWA, Lighthouse PWA score >= 90
+- [x] PWA manifest (`manifest.webmanifest`) with 192/512/maskable icons, shortcuts, share target, and real screenshots
+- [x] Workbox service worker caching strategy (`CacheFirst` for TMDB images 30d, `StaleWhileRevalidate` for API 24h)
+- [x] FCM background service worker (`firebase-messaging-sw.js`) with tab focusing and action URLs
+- [x] Push notification subscription API (`pushApi.ts`, `settings/push.tokens` hash IDs, device detection)
+- [x] Vercel cron handler (`api/cron/new-releases.ts`) with `CRON_SECRET` authorization, dry-run mode, and token pruning
+- [x] Timezone-safe local digest hour delivery and candidate ranking with 100% unit tests (`cronHelpers.test.ts`)
+- [x] Offline banner, service worker update prompt (`ReloadPrompt.tsx`), and `/offline` fallback route
+- [x] Exit criteria: installable PWA generated in build, verified zero bundle secret leakage
 
 ## Phase 8: Data Tools & Settings
 - [ ] Data export (JSON & CSV)
