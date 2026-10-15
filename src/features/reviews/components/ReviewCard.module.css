@@ -1,0 +1,130 @@
+.card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: border-color var(--duration-fast) var(--ease-default);
+}
+
+.card:hover {
+  border-color: var(--color-border-hover);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.titleInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.poster {
+  width: 44px;
+  height: 66px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-hover);
+  flex-shrink: 0;
+}
+
+.posterPlaceholder {
+  width: 44px;
+  height: 66px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-hover);
+  flex-shrink: 0;
+}
+
+.titleLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.titleLink:hover .title {
+  color: var(--color-accent);
+}
+
+.title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  margin: 0 0 var(--space-1) 0;
+}
+
+.ratingWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.bodyContainer {
+  position: relative;
+  line-height: var(--line-height-relaxed);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.bodyText {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.spoilerCover {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+.blurred {
+  filter: blur(8px);
+  user-select: none;
+  opacity: 0.6;
+}
+
+.spoilerOverlayContent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background-color: rgba(0, 0, 0, 0.4);
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  z-index: 2;
+  border-radius: var(--radius-md);
+  padding: var(--space-2);
+  text-align: center;
+}
+
+.hideButton {
+  margin-top: var(--space-2);
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  cursor: pointer;
+  padding: 0;
+}
+
+.hideButton:hover {
+  color: var(--color-text);
+}

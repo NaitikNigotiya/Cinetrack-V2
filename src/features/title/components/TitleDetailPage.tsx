@@ -101,6 +101,7 @@ export default function TitleDetailPage() {
       <TitleActionBar
         titleKey={titleKey ?? ''}
         title={title}
+        posterPath={posterPath}
         type={parsed.type}
         hasTrailer={Boolean(trailerVideo)}
         onOpenTrailer={() => setIsTrailerOpen(true)}

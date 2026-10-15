@@ -6,6 +6,7 @@ const ALLOWED_PATH_PATTERNS = [
   /^search\/(multi|movie|tv)$/,
   /^trending\/(all|movie|tv)\/(day|week)$/,
   /^discover\/(movie|tv)$/,
+  /^(movie|tv)\/(popular|top_rated|upcoming|now_playing|on_the_air)$/,
   /^(movie|tv)\/\d+$/,
   /^tv\/\d+\/season\/\d+$/,
   /^genre\/(movie|tv)\/list$/,

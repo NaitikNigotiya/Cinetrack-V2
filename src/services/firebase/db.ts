@@ -21,6 +21,7 @@ try {
 }
 
 export const db: Firestore = firestoreInstance
+export const firestore: Firestore = firestoreInstance
 
 // Connect to emulator in development if specified
 if (import.meta.env.VITE_USE_EMULATORS === 'true') {

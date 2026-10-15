@@ -7,6 +7,13 @@ import TitleDetailPage from '@/features/title/components/TitleDetailPage'
 import EpisodeTrackerPage from '@/features/episodes/components/EpisodeTrackerPage'
 import HistoryPage from '@/features/history/components/HistoryPage'
 import LibraryPage from '@/features/library/components/LibraryPage'
+import HomePage from '@/features/home/components/HomePage'
+import DiscoverPage from '@/features/discover/components/DiscoverPage'
+import CollectionsPage from '@/features/collections/components/CollectionsPage'
+import CollectionDetailPage from '@/features/collections/components/CollectionDetailPage'
+import CalendarPage from '@/features/calendar/components/CalendarPage'
+import ReviewsPage from '@/features/reviews/components/ReviewsPage'
+import NotesPage from '@/features/notes/components/NotesPage'
 import UiPlayground from '@/features/dev/UiPlayground'
 
 export const router = createBrowserRouter([
@@ -28,7 +35,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <UiPlayground />, // Will be replaced by HomePage in Phase 5
+        element: <HomePage />,
       },
       {
         path: 'search',
@@ -44,7 +51,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'discover',
-        element: <div>Discover Route (Scaffolded)</div>,
+        element: <DiscoverPage />,
       },
       {
         path: 'library',
@@ -52,7 +59,11 @@ export const router = createBrowserRouter([
       },
       {
         path: 'collections',
-        element: <div>Collections Route (Scaffolded)</div>,
+        element: <CollectionsPage />,
+      },
+      {
+        path: 'collections/:id',
+        element: <CollectionDetailPage />,
       },
       {
         path: 'history',
@@ -60,15 +71,15 @@ export const router = createBrowserRouter([
       },
       {
         path: 'calendar',
-        element: <div>Calendar Route (Scaffolded)</div>,
+        element: <CalendarPage />,
       },
       {
         path: 'reviews',
-        element: <div>Reviews Route (Scaffolded)</div>,
+        element: <ReviewsPage />,
       },
       {
         path: 'notes',
-        element: <div>Notes Route (Scaffolded)</div>,
+        element: <NotesPage />,
       },
       {
         path: 'analytics',

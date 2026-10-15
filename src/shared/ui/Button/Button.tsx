@@ -11,6 +11,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   isLoading?: boolean
   iconOnly?: boolean
   leftIcon?: React.ReactNode
+  startIcon?: React.ReactNode
   rightIcon?: React.ReactNode
 }
 
@@ -23,6 +24,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     isLoading = false,
     iconOnly = false,
     leftIcon,
+    startIcon,
     rightIcon,
     disabled,
     type = 'button',
@@ -30,6 +32,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   },
   ref
 ) {
+  const effectiveLeftIcon = leftIcon ?? startIcon
   const variantClass = {
     primary: styles.variantPrimary,
     secondary: styles.variantSecondary,
@@ -62,7 +65,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       {isLoading ? (
         <span className={styles.spinner} aria-hidden="true" />
       ) : (
-        leftIcon && <span aria-hidden="true">{leftIcon}</span>
+        effectiveLeftIcon && <span aria-hidden="true">{effectiveLeftIcon}</span>
       )}
       {children}
       {!isLoading && rightIcon && <span aria-hidden="true">{rightIcon}</span>}

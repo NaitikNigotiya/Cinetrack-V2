@@ -114,6 +114,7 @@ export const TmdbTvDetailsSchema = z.object({
 })
 
 export type TmdbMediaItem = z.infer<typeof TmdbMediaItemSchema>
+export type TmdbSearchResult = TmdbMediaItem
 export type TmdbSearchResponse = z.infer<typeof TmdbSearchResponseSchema>
 export type TmdbMovieDetails = z.infer<typeof TmdbMovieDetailsSchema>
 export type TmdbTvDetails = z.infer<typeof TmdbTvDetailsSchema>

@@ -105,4 +105,52 @@ export const tmdbClient = {
       return { ...MOCK_TV_DETAILS, id }
     }
   },
+
+  async getPopular(mediaType: 'movie' | 'tv' = 'movie'): Promise<TmdbSearchResponse> {
+    try {
+      const data = await fetchFromProxy<unknown>(`${PROXY_BASE}/${mediaType}/popular`)
+      return TmdbSearchResponseSchema.parse(data)
+    } catch {
+      return MOCK_SEARCH_RESULTS
+    }
+  },
+
+  async getTopRated(mediaType: 'movie' | 'tv' = 'movie'): Promise<TmdbSearchResponse> {
+    try {
+      const data = await fetchFromProxy<unknown>(`${PROXY_BASE}/${mediaType}/top_rated`)
+      return TmdbSearchResponseSchema.parse(data)
+    } catch {
+      return MOCK_SEARCH_RESULTS
+    }
+  },
+
+  async getUpcoming(): Promise<TmdbSearchResponse> {
+    try {
+      const data = await fetchFromProxy<unknown>(`${PROXY_BASE}/movie/upcoming`)
+      return TmdbSearchResponseSchema.parse(data)
+    } catch {
+      return MOCK_SEARCH_RESULTS
+    }
+  },
+
+  async getRecommendations(mediaType: 'movie' | 'tv', id: number): Promise<TmdbSearchResponse> {
+    try {
+      const data = await fetchFromProxy<unknown>(`${PROXY_BASE}/${mediaType}/${id}/recommendations`)
+      return TmdbSearchResponseSchema.parse(data)
+    } catch {
+      return MOCK_SEARCH_RESULTS
+    }
+  },
+
+  async discoverByGenre(mediaType: 'movie' | 'tv', genreId: number, page = 1): Promise<TmdbSearchResponse> {
+    try {
+      const data = await fetchFromProxy<unknown>(`${PROXY_BASE}/discover/${mediaType}`, {
+        with_genres: genreId.toString(),
+        page: page.toString(),
+      })
+      return TmdbSearchResponseSchema.parse(data)
+    } catch {
+      return MOCK_SEARCH_RESULTS
+    }
+  },
 }

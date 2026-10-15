@@ -14,6 +14,7 @@ export interface RatingControlProps {
   onChange?: (val: number | null) => void
   scale?: RatingScale
   readOnly?: boolean
+  readonly?: boolean
   showLabel?: boolean
   showClear?: boolean
   size?: 'sm' | 'md' | 'lg'
@@ -25,10 +26,12 @@ export function RatingControl({
   onChange,
   scale = 'ten',
   readOnly = false,
+  readonly = false,
   showLabel = true,
   showClear = true,
   className,
 }: RatingControlProps) {
+  const isReadOnly = readOnly || readonly
   const [hoverValue, setHoverValue] = useState<number | null>(null)
   const displayVal = toDisplay(value, scale)
   const effectiveDisplay = hoverValue !== null ? hoverValue : displayVal
@@ -36,7 +39,7 @@ export function RatingControl({
   const step = scale === 'five' ? 1 : 0.5
 
   const handleStarClick = (starIndex: number, e: React.MouseEvent<HTMLButtonElement>) => {
-    if (readOnly || !onChange) return
+    if (isReadOnly || !onChange) return
     const rect = e.currentTarget.getBoundingClientRect()
     const clickX = e.clientX - rect.left
     const isHalf = scale !== 'five' && clickX < rect.width / 2
@@ -47,7 +50,7 @@ export function RatingControl({
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (readOnly || !onChange) return
+    if (isReadOnly || !onChange) return
     const current = displayVal ?? 0
     let next = current
 
@@ -69,7 +72,7 @@ export function RatingControl({
     <div
       className={clsx(styles.container, className)}
       role="slider"
-      tabIndex={readOnly ? -1 : 0}
+      tabIndex={isReadOnly ? -1 : 0}
       aria-label="Rating"
       aria-valuemin={0.5}
       aria-valuemax={10}
@@ -88,7 +91,7 @@ export function RatingControl({
             <button
               key={index}
               type="button"
-              disabled={readOnly}
+              disabled={isReadOnly}
               className={clsx(
                 styles.starBtn,
                 isFilled && styles.starFilled,
@@ -97,7 +100,7 @@ export function RatingControl({
               aria-label={`Rate ${starVal} out of 5 stars`}
               onClick={(e) => handleStarClick(index, e)}
               onMouseMove={(e) => {
-                if (readOnly) return
+                if (isReadOnly) return
                 const rect = e.currentTarget.getBoundingClientRect()
                 const isHoverHalf = scale !== 'five' && (e.clientX - rect.left) < rect.width / 2
                 setHoverValue(isHoverHalf ? index + 0.5 : starVal)

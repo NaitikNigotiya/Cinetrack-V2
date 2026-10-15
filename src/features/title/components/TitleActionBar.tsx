@@ -1,13 +1,18 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Heart, Play, Share2, Check, ListPlus, Tv } from 'lucide-react'
+import { Heart, Play, Share2, Check, ListPlus, Tv, Calendar, MessageSquare } from 'lucide-react'
 import { Button, IconButton, RatingControl, toast } from '@/shared/ui'
+import { useAuthStore } from '@/features/auth/store/authStore'
+import { QuickAddToCollectionDialog } from '@/features/collections/components/QuickAddToCollectionDialog'
+import { AddPlannedWatchDialog } from '@/features/calendar/components/AddPlannedWatchDialog'
+import { ReviewDialog } from '@/features/reviews/components/ReviewDialog'
 import type { LibraryStatus } from '@/shared/schemas'
 import styles from './TitleActionBar.module.css'
 
 interface TitleActionBarProps {
   titleKey: string
   title: string
+  posterPath?: string | null | undefined
   type: 'movie' | 'tv'
   hasTrailer: boolean
   onOpenTrailer: () => void
@@ -16,14 +21,23 @@ interface TitleActionBarProps {
 export function TitleActionBar({
   titleKey,
   title,
+  posterPath = null,
   type,
   hasTrailer,
   onOpenTrailer,
 }: TitleActionBarProps) {
   const navigate = useNavigate()
+  const { user } = useAuthStore()
+  const uid = user?.uid
+
   const [status, setStatus] = useState<LibraryStatus | 'not_in_library'>('not_in_library')
   const [isFavorite, setIsFavorite] = useState(false)
   const [rating, setRating] = useState<number | null>(null)
+
+  // Dialog states
+  const [isCollectionOpen, setIsCollectionOpen] = useState(false)
+  const [isPlanOpen, setIsPlanOpen] = useState(false)
+  const [isReviewOpen, setIsReviewOpen] = useState(false)
 
   const handleStatusChange = (newStatus: string) => {
     setStatus(newStatus as LibraryStatus)
@@ -75,7 +89,7 @@ export function TitleActionBar({
         </select>
 
         <IconButton
-          icon={<Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} color={isFavorite ? 'var(--accent)' : 'currentColor'} />}
+          icon={<Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} color={isFavorite ? 'var(--color-accent)' : 'currentColor'} />}
           aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
           variant="ghost"
           onClick={handleToggleFavorite}
@@ -90,7 +104,7 @@ export function TitleActionBar({
         {type === 'movie' ? (
           <Button
             variant="primary"
-            leftIcon={<Check size={16} />}
+            startIcon={<Check size={16} />}
             onClick={() => handleStatusChange('completed')}
           >
             Mark Watched
@@ -98,7 +112,7 @@ export function TitleActionBar({
         ) : (
           <Button
             variant="primary"
-            leftIcon={<Tv size={16} />}
+            startIcon={<Tv size={16} />}
             onClick={() => navigate(`/title/${titleKey}/episodes`)}
           >
             Track Episodes
@@ -108,7 +122,7 @@ export function TitleActionBar({
         {hasTrailer && (
           <Button
             variant="secondary"
-            leftIcon={<Play size={16} />}
+            startIcon={<Play size={16} />}
             onClick={onOpenTrailer}
           >
             Trailer
@@ -116,10 +130,42 @@ export function TitleActionBar({
         )}
 
         <IconButton
-          icon={<ListPlus size={18} />}
-          aria-label="Add to custom collection"
+          icon={<Calendar size={18} />}
+          aria-label="Plan a watch"
           variant="ghost"
-          onClick={() => toast.info('Collections modal (Phase 5)')}
+          onClick={() => {
+            if (!uid) {
+              toast.error('Sign in to schedule planned watches.')
+              return
+            }
+            setIsPlanOpen(true)
+          }}
+        />
+
+        <IconButton
+          icon={<MessageSquare size={18} />}
+          aria-label="Write a review"
+          variant="ghost"
+          onClick={() => {
+            if (!uid) {
+              toast.error('Sign in to write reviews.')
+              return
+            }
+            setIsReviewOpen(true)
+          }}
+        />
+
+        <IconButton
+          icon={<ListPlus size={18} />}
+          aria-label="Add to collection"
+          variant="ghost"
+          onClick={() => {
+            if (!uid) {
+              toast.error('Sign in to manage collections.')
+              return
+            }
+            setIsCollectionOpen(true)
+          }}
         />
 
         <IconButton
@@ -129,6 +175,41 @@ export function TitleActionBar({
           onClick={handleShare}
         />
       </div>
+
+      {uid && isCollectionOpen && (
+        <QuickAddToCollectionDialog
+          isOpen={isCollectionOpen}
+          onClose={() => setIsCollectionOpen(false)}
+          uid={uid}
+          titleKey={titleKey}
+          title={title}
+          posterPath={posterPath}
+          type={type}
+        />
+      )}
+
+      {uid && isPlanOpen && (
+        <AddPlannedWatchDialog
+          isOpen={isPlanOpen}
+          onClose={() => setIsPlanOpen(false)}
+          uid={uid}
+          titleKey={titleKey}
+          title={title}
+          posterPath={posterPath}
+          type={type}
+        />
+      )}
+
+      {uid && isReviewOpen && (
+        <ReviewDialog
+          isOpen={isReviewOpen}
+          onClose={() => setIsReviewOpen(false)}
+          uid={uid}
+          titleKey={titleKey}
+          title={title}
+          posterPath={posterPath}
+        />
+      )}
     </div>
   )
 }

@@ -3,11 +3,13 @@ import { Button } from '../Button/Button'
 
 export interface ConfirmDialogProps {
   isOpen: boolean
-  onClose: () => void
+  onClose?: () => void
+  onCancel?: () => void
   onConfirm: () => void
   title: string
   message: string
   confirmText?: string
+  confirmLabel?: string
   cancelText?: string
   variant?: 'danger' | 'primary'
   isLoading?: boolean
@@ -16,22 +18,27 @@ export interface ConfirmDialogProps {
 export function ConfirmDialog({
   isOpen,
   onClose,
+  onCancel,
   onConfirm,
   title,
   message,
-  confirmText = 'Confirm',
+  confirmText,
+  confirmLabel,
   cancelText = 'Cancel',
   variant = 'danger',
   isLoading = false,
 }: ConfirmDialogProps) {
+  const handleClose = onCancel ?? onClose ?? (() => {})
+  const effectiveConfirmText = confirmLabel ?? confirmText ?? 'Confirm'
+
   return (
     <Dialog
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       title={title}
       footer={
         <>
-          <Button variant="secondary" onClick={onClose} disabled={isLoading}>
+          <Button variant="secondary" onClick={handleClose} disabled={isLoading}>
             {cancelText}
           </Button>
           <Button
@@ -39,12 +46,12 @@ export function ConfirmDialog({
             onClick={onConfirm}
             isLoading={isLoading}
           >
-            {confirmText}
+            {effectiveConfirmText}
           </Button>
         </>
       }
     >
-      <p>{message}</p>
+      <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>{message}</p>
     </Dialog>
   )
 }

@@ -42,13 +42,13 @@ Mirroring Section 16 of `CINETRACK_V2_MASTER_PROMPT.md`.
 - [x] Exit criteria: transactional tests prove zero counter drift, offline sync verified
 
 ## Phase 5: Home, Discover, Reviews, Notes, Collections, Calendar
-- [ ] Home dashboard (continue watching, plan shortlist, stats strip, surprise me)
-- [ ] Discover page (trending, carousels, genre browser, because you liked X)
-- [ ] Reviews page with autosaved drafts and spoiler blur
-- [ ] Notes page with pinned notes and markdown-lite
-- [ ] Collections page (custom lists, drag-and-drop, quick add)
-- [ ] Calendar page (planned watches, air dates, timezone-safe date keys)
-- [ ] Exit criteria: all routes in §7.1 functional, no file > 300 lines
+- [x] Home dashboard (continue watching, plan shortlist, stats strip, surprise me)
+- [x] Discover page (trending, carousels, genre browser, because you liked X)
+- [x] Reviews page with autosaved drafts and spoiler blur
+- [x] Notes page with pinned notes and markdown-lite
+- [x] Collections page (custom lists, drag-and-drop, quick add)
+- [x] Calendar page (planned watches, air dates, timezone-safe date keys)
+- [x] Exit criteria: all routes in §7.1 functional, no file > 300 lines
 
 ## Phase 6: Analytics
 - [ ] Pre-aggregated stats (`stats/summary`, `stats/monthly_YYYY-MM`)

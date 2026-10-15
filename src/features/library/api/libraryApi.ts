@@ -19,19 +19,62 @@ const removedSnapshotsCache = new Map<string, { entry: LibraryEntry; timer: Retu
 /**
  * Atomically adds a title to the user's library and updates stats.
  */
-export async function addToLibrary(uid: string, entry: Omit<LibraryEntry, 'addedAt' | 'updatedAt' | 'schemaVersion'>): Promise<void> {
+export async function addToLibrary(
+  uid: string,
+  entry: {
+    titleKey: string
+    tmdbId: number
+    type: 'movie' | 'tv'
+    title: string
+    status: LibraryStatus
+    year?: number | null | undefined
+    posterPath?: string | null | undefined
+    backdropPath?: string | null | undefined
+    genres?: { id: number; name: string }[] | undefined
+    runtimeMinutes?: number | null | undefined
+    rating?: number | null | undefined
+    isFavorite?: boolean | undefined
+    watchCount?: number | undefined
+    lastWatchedAt?: any
+    totalMinutesWatched?: number | undefined
+    tags?: string[] | undefined
+    startedAt?: any
+    completedAt?: any
+    tv?: LibraryEntry['tv'] | undefined
+  }
+): Promise<void> {
   const libRef = getLibraryDocRef(uid, entry.titleKey)
   const statsRef = getStatsSummaryDocRef(uid)
   const now = serverTimestamp()
 
-  const batch = writeBatch(db)
-
-  batch.set(libRef, {
-    ...entry,
+  const fullDoc = {
+    titleKey: entry.titleKey,
+    tmdbId: entry.tmdbId,
+    type: entry.type,
+    title: entry.title,
+    year: entry.year ?? null,
+    posterPath: entry.posterPath ?? null,
+    backdropPath: entry.backdropPath ?? null,
+    genres: entry.genres ?? [],
+    runtimeMinutes: entry.runtimeMinutes ?? null,
+    status: entry.status,
+    rating: entry.rating ?? null,
+    isFavorite: entry.isFavorite ?? false,
+    watchCount: entry.watchCount ?? 0,
+    lastWatchedAt: entry.lastWatchedAt ?? null,
+    totalMinutesWatched: entry.totalMinutesWatched ?? 0,
+    tags: entry.tags ?? [],
+    startedAt: entry.startedAt ?? null,
+    completedAt: entry.completedAt ?? null,
+    ...(entry.tv ? { tv: entry.tv } : {}),
     addedAt: now,
     updatedAt: now,
-    schemaVersion: 1,
-  })
+    schemaVersion: 1 as const,
+  }
+
+  const batch = writeBatch(db)
+
+  batch.set(libRef, fullDoc)
 
   // Increment status count in stats summary
   const statusField = `statusCounts.${entry.status}`

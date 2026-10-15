@@ -1,7 +1,9 @@
+import { Link } from 'react-router-dom'
 import { Star, Film } from 'lucide-react'
 import clsx from 'clsx'
 import { getPosterUrl, getPosterSrcSet } from '@/shared/lib/tmdbImage'
 import { StatusBadge, type LibraryStatus } from '../Badge/StatusBadge'
+import { Badge } from '../Badge/Badge'
 import styles from './PosterCard.module.css'
 
 export interface PosterCardProps {
@@ -10,9 +12,12 @@ export interface PosterCardProps {
   year?: number | null | undefined
   type?: 'movie' | 'tv' | undefined
   status?: LibraryStatus | undefined
+  statusBadge?: string | undefined
   rating?: number | null | undefined
   progress?: { watched: number; total: number } | undefined
   onClick?: (() => void) | undefined
+  detailHref?: string | undefined
+  quickAction?: { label: string; onClick: () => void } | undefined
   className?: string | undefined
   priority?: boolean | undefined
 }
@@ -22,9 +27,12 @@ export function PosterCard({
   posterPath,
   year,
   status,
+  statusBadge,
   rating,
   progress,
   onClick,
+  detailHref,
+  quickAction,
   className,
   priority = false,
 }: PosterCardProps) {
@@ -36,19 +44,8 @@ export function PosterCard({
       ? Math.min(100, Math.round((progress.watched / progress.total) * 100))
       : 0
 
-  return (
-    <div
-      className={clsx(styles.card, className)}
-      onClick={onClick}
-      role={onClick ? 'button' : undefined}
-      tabIndex={onClick ? 0 : undefined}
-      onKeyDown={(e) => {
-        if (onClick && (e.key === 'Enter' || e.key === ' ')) {
-          e.preventDefault()
-          onClick()
-        }
-      }}
-    >
+  const cardContent = (
+    <>
       <div className={styles.posterWrapper}>
         {posterUrl ? (
           <img
@@ -70,6 +67,12 @@ export function PosterCard({
         {status && (
           <div className={styles.badgeTopLeft}>
             <StatusBadge status={status} />
+          </div>
+        )}
+
+        {statusBadge && !status && (
+          <div className={styles.badgeTopLeft}>
+            <Badge variant="accent">{statusBadge}</Badge>
           </div>
         )}
 
@@ -97,6 +100,57 @@ export function PosterCard({
           ) : null}
         </div>
       </div>
+    </>
+  )
+
+  if (detailHref) {
+    return (
+      <div className={clsx(styles.card, className)}>
+        <Link to={detailHref} className={styles.cardLink} onClick={onClick}>
+          {cardContent}
+        </Link>
+        {quickAction && (
+          <button
+            type="button"
+            className={styles.quickActionBtn}
+            onClick={(e) => {
+              e.preventDefault()
+              quickAction.onClick()
+            }}
+          >
+            {quickAction.label}
+          </button>
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div
+      className={clsx(styles.card, className)}
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={(e) => {
+        if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault()
+          onClick()
+        }
+      }}
+    >
+      {cardContent}
+      {quickAction && (
+        <button
+          type="button"
+          className={styles.quickActionBtn}
+          onClick={(e) => {
+            e.stopPropagation()
+            quickAction.onClick()
+          }}
+        >
+          {quickAction.label}
+        </button>
+      )}
     </div>
   )
 }
