@@ -1,58 +1,73 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
+import { verifyFirebaseIdToken } from '../_lib/admin'
+import { checkRateLimit } from '../_lib/rateLimiter'
+import {
+  matchRoute,
+  sanitizeParams,
+  getCacheControlHeader,
+  type ProxyErrorCode,
+} from '../_lib/allowList'
 
 const TMDB_API_BASE = 'https://api.themoviedb.org/3'
 
-const ALLOWED_PATH_PATTERNS = [
-  /^search\/(multi|movie|tv)$/,
-  /^find\/[a-zA-Z0-9_-]+$/,
-  /^trending\/(all|movie|tv)\/(day|week)$/,
-  /^discover\/(movie|tv)$/,
-  /^(movie|tv)\/(popular|top_rated|upcoming|now_playing)$/,
-  /^tv\/(popular|top_rated|on_the_air|airing_today)$/,
-  /^(movie|tv)\/\d+$/,
-  /^tv\/\d+\/season\/\d+$/,
-  /^tv\/\d+\/season\/\d+\/episode\/\d+$/,
-  /^genre\/(movie|tv)\/list$/,
-  /^(movie|tv)\/\d+\/(recommendations|similar|videos|credits|watch\/providers)$/,
-  /^configuration$/,
-  /^watch\/providers\/(movie|tv|regions)$/,
-]
+function sendJsonError(
+  res: ServerResponse,
+  status: number,
+  code: ProxyErrorCode,
+  message: string
+) {
+  res.statusCode = status
+  res.setHeader('Content-Type', 'application/json')
+  res.setHeader('Cache-Control', 'no-store')
+  res.end(JSON.stringify({ error: { code, message, status } }))
+}
 
-async function fetchWithRetry(url: string, token: string, maxRetries = 2): Promise<Response> {
+async function fetchWithRetry(url: string, token: string): Promise<Response> {
+  const delays = [300, 900]
   let attempt = 0
-  while (attempt <= maxRetries) {
-    const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), 10000)
+
+  while (attempt <= 2) {
     try {
+      // 10s timeout per attempt
+      const signal = AbortSignal.timeout(10_000)
       const res = await fetch(url, {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: 'application/json',
         },
-        signal: controller.signal,
+        signal,
       })
-      clearTimeout(timeout)
 
-      // Final non-retryable responses or success
-      if (res.status === 401 || res.status === 403 || res.status === 404 || res.status === 422 || res.ok) {
+      // Non-retryable responses: success or standard 4xx (except 429)
+      if (res.ok || (res.status >= 400 && res.status < 500 && res.status !== 429)) {
         return res
       }
 
-      // Retryable: 429 rate limit or 5xx server errors
-      if ((res.status === 429 || res.status >= 500) && attempt < maxRetries) {
+      // Retryable: 429 or 5xx
+      if ((res.status === 429 || res.status >= 500) && attempt < 2) {
         attempt++
         const retryAfterHeader = res.headers.get('Retry-After')
-        const delayMs = retryAfterHeader ? (parseInt(retryAfterHeader, 10) || 1) * 1000 : attempt * 500
-        await new Promise((resolve) => setTimeout(resolve, delayMs))
+        let waitMs = delays[attempt - 1] ?? 500
+        if (retryAfterHeader) {
+          const parsedSeconds = parseInt(retryAfterHeader, 10)
+          if (!isNaN(parsedSeconds)) {
+            waitMs = Math.min(parsedSeconds * 1000, 5000) // max 5s wait
+          }
+        } else {
+          // Add random jitter between 0 and 100ms
+          waitMs += Math.floor(Math.random() * 100)
+        }
+        await new Promise((resolve) => setTimeout(resolve, waitMs))
         continue
       }
 
       return res
-    } catch (err) {
-      clearTimeout(timeout)
-      if (attempt < maxRetries) {
+    } catch (err: unknown) {
+      if (attempt < 2) {
         attempt++
-        await new Promise((resolve) => setTimeout(resolve, attempt * 500))
+        const jitter = Math.floor(Math.random() * 100)
+        const waitMs = (delays[attempt - 1] ?? 500) + jitter
+        await new Promise((resolve) => setTimeout(resolve, waitMs))
         continue
       }
       throw err
@@ -62,7 +77,7 @@ async function fetchWithRetry(url: string, token: string, maxRetries = 2): Promi
 }
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
-  // Allow CORS for local dev / Vercel preview
+  // CORS configuration
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type')
@@ -73,84 +88,93 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     return
   }
 
+  // Method check: GET only
   if (req.method !== 'GET') {
     res.statusCode = 405
-    res.end(JSON.stringify({ error: { code: 405, message: 'Method Not Allowed' } }))
+    res.setHeader('Content-Type', 'application/json')
+    res.setHeader('Cache-Control', 'no-store')
+    res.end(JSON.stringify({ error: { code: 'METHOD_NOT_ALLOWED', message: 'Method Not Allowed', status: 405 } }))
+    return
+  }
+
+  // Auth: require Authorization: Bearer <Firebase ID token>
+  const authHeader = req.headers.authorization
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    sendJsonError(res, 401, 'UNAUTHENTICATED', 'Missing or invalid Authorization header')
+    return
+  }
+
+  const idToken = authHeader.slice(7).trim()
+  let uid: string
+  try {
+    uid = await verifyFirebaseIdToken(idToken)
+  } catch {
+    sendJsonError(res, 401, 'UNAUTHENTICATED', 'Invalid or expired Firebase ID token')
+    return
+  }
+
+  // Per-user rate limit: 60 requests per minute per uid
+  if (!checkRateLimit(uid)) {
+    sendJsonError(res, 429, 'RATE_LIMITED', 'Rate limit exceeded. Maximum 60 requests per minute.')
     return
   }
 
   // Parse path from URL
   const url = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`)
-  // Remove /api/tmdb/ prefix
   const targetPath = url.pathname.replace(/^\/api\/tmdb\/?/, '')
 
-  const isAllowed = ALLOWED_PATH_PATTERNS.some((pattern) => pattern.test(targetPath))
-  if (!isAllowed) {
-    res.statusCode = 400
-    res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify({ error: { code: 400, message: `Disallowed TMDB path: ${targetPath}` } }))
+  // Allow-list and path validation
+  const matchedRule = matchRoute(targetPath)
+  if (!matchedRule) {
+    sendJsonError(res, 400, 'PATH_NOT_ALLOWED', `Disallowed or invalid path: ${targetPath}`)
     return
   }
 
-  const token = process.env.TMDB_READ_TOKEN
-  if (!token) {
-    res.statusCode = 500
-    res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify({ error: { code: 500, message: 'TMDB_READ_TOKEN not configured on server' } }))
+  const tmdbToken = process.env.TMDB_READ_TOKEN
+  if (!tmdbToken) {
+    sendJsonError(res, 500, 'UPSTREAM_ERROR', 'TMDB_READ_TOKEN not configured on server')
     return
   }
+
+  // Sanitize query params (drop unknown, clamp page & query length, force include_adult=false)
+  const cleanParams = sanitizeParams(url.searchParams, matchedRule.allowedParams)
+  const queryString = cleanParams.toString()
+  const upstreamUrl = `${TMDB_API_BASE}/${targetPath}${queryString ? `?${queryString}` : ''}`
 
   try {
-    const upstreamUrl = new URL(`${TMDB_API_BASE}/${targetPath}`)
-    // Forward query params
-    url.searchParams.forEach((val, key) => {
-      upstreamUrl.searchParams.set(key, val)
-    })
+    const upstreamRes = await fetchWithRetry(upstreamUrl, tmdbToken)
 
-    // Strict TMDB facts enforcement
-    // 1. Never forward api_key in query params
-    upstreamUrl.searchParams.delete('api_key')
-
-    // 2. Always enforce include_adult=false
-    upstreamUrl.searchParams.set('include_adult', 'false')
-
-    // 3. Default language to en-US if not specified
-    if (!upstreamUrl.searchParams.has('language')) {
-      upstreamUrl.searchParams.set('language', 'en-US')
+    if (upstreamRes.status === 404) {
+      sendJsonError(res, 404, 'NOT_FOUND', 'The requested TMDB resource was not found')
+      return
     }
 
-    // 4. Cap page query parameter at TMDB max of 500
-    const pageVal = upstreamUrl.searchParams.get('page')
-    if (pageVal) {
-      const pageNum = parseInt(pageVal, 10)
-      if (!isNaN(pageNum) && pageNum > 500) {
-        upstreamUrl.searchParams.set('page', '500')
-      }
+    if (upstreamRes.status === 429) {
+      sendJsonError(res, 429, 'RATE_LIMITED', 'TMDB upstream rate limit exceeded')
+      return
     }
 
-    const upstreamRes = await fetchWithRetry(upstreamUrl.toString(), token)
+    if (!upstreamRes.ok) {
+      sendJsonError(res, 502, 'UPSTREAM_ERROR', `Upstream TMDB error (HTTP ${upstreamRes.status})`)
+      return
+    }
 
-    // Set cache headers based on path type
-    const isStable =
-      targetPath.startsWith('movie/') ||
-      targetPath.startsWith('tv/') ||
-      targetPath.startsWith('genre/') ||
-      targetPath.startsWith('configuration') ||
-      targetPath.startsWith('watch/providers')
-    const cacheHeader = isStable
-      ? 'public, s-maxage=3600, stale-while-revalidate=86400'
-      : 'public, s-maxage=300, stale-while-revalidate=1800'
-
-    res.statusCode = upstreamRes.status
+    // Set cache headers per matched category
+    const cacheHeader = getCacheControlHeader(matchedRule.cacheCategory)
+    res.statusCode = 200
     res.setHeader('Content-Type', 'application/json')
     res.setHeader('Cache-Control', cacheHeader)
 
     const data = await upstreamRes.text()
     res.end(data)
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Upstream error'
-    res.statusCode = 502
-    res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify({ error: { code: 502, message } }))
+    const isTimeout =
+      err instanceof Error &&
+      (err.name === 'TimeoutError' || err.message.includes('timeout') || err.message.includes('aborted'))
+    if (isTimeout) {
+      sendJsonError(res, 504, 'TIMEOUT', 'TMDB upstream request timed out')
+    } else {
+      sendJsonError(res, 502, 'UPSTREAM_ERROR', 'Network error communicating with TMDB upstream')
+    }
   }
 }
