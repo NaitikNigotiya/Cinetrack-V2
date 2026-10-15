@@ -12,7 +12,8 @@ import type {
   TmdbTvDetails,
   TmdbTvSeason,
 } from '../schemas'
-import { parseYear, normaliseMediaList } from './media'
+import { normaliseMediaList } from './media'
+import { parseYear } from './helpers'
 import type {
   NormalisedTitleDetails,
   NormalisedTvSeason,

@@ -1,3 +1,5 @@
 export * from './normalize/types'
 export * from './normalize/media'
 export * from './normalize/details'
+export * from './normalize/helpers'
+export * from './normalize/models'

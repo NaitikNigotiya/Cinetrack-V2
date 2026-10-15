@@ -8,3 +8,5 @@ export * from './collection.schema'
 export * from './plannedWatch.schema'
 export * from './settings.schema'
 export * from './stats.schema'
+export * from './title'
+

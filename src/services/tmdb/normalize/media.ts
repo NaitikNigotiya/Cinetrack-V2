@@ -7,12 +7,8 @@ import {
 } from '../images'
 import type { TmdbMediaItem, TmdbSearchResponse } from '../schemas'
 import type { NormalisedMediaItem, NormalisedSearchResponse } from './types'
+import { parseYear } from './helpers'
 
-export function parseYear(dateStr: string | null | undefined): number | null {
-  if (!dateStr || dateStr.length < 4) return null
-  const year = parseInt(dateStr.slice(0, 4), 10)
-  return isNaN(year) ? null : year
-}
 
 /**
  * Normalises a raw TMDB media item (search/list item).
