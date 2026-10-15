@@ -51,11 +51,14 @@ Mirroring Section 16 of `CINETRACK_V2_MASTER_PROMPT.md`.
 - [x] Exit criteria: all routes in §7.1 functional, no file > 300 lines
 
 ## Phase 6: Analytics
-- [ ] Pre-aggregated stats (`stats/summary`, `stats/monthly_YYYY-MM`)
-- [ ] `recomputeStats()` repair function
-- [ ] Recharts data visualizations (watch time, top genres, rating distribution, streaks, heatmap)
-- [ ] Accessible table alternatives for all charts
-- [ ] Exit criteria: recomputed stats match incremental calculations
+- [x] Pre-aggregated stats (`stats/summary`, `stats/monthly_YYYY-MM`)
+- [x] `recomputeStats()` repair function (fixes D4 counter drift atomically)
+- [x] Timezone-safe streak calculation with 100% unit tests
+- [x] Recharts data visualizations (WatchTimeChart, TopGenresChart, RatingDistributionChart, DecadeDistributionChart)
+- [x] 16-week ActivityHeatmap with color intensity levels
+- [x] Year in Review highlight summary selector
+- [x] Accessible HTML `<table>` alternatives for every chart with live toggle
+- [x] Exit criteria: recompute equals incremental stats on source-of-truth documents
 
 ## Phase 7: PWA & Notifications
 - [ ] PWA manifest with icons and real screenshots

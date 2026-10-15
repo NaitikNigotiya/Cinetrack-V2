@@ -14,6 +14,7 @@ import CollectionDetailPage from '@/features/collections/components/CollectionDe
 import CalendarPage from '@/features/calendar/components/CalendarPage'
 import ReviewsPage from '@/features/reviews/components/ReviewsPage'
 import NotesPage from '@/features/notes/components/NotesPage'
+import { AnalyticsPage } from '@/features/analytics/components/AnalyticsPage'
 import UiPlayground from '@/features/dev/UiPlayground'
 
 export const router = createBrowserRouter([
@@ -83,7 +84,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'analytics',
-        element: <div>Analytics Route (Scaffolded)</div>,
+        element: <AnalyticsPage />,
       },
       {
         path: 'settings',
