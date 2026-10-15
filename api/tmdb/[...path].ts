@@ -4,13 +4,18 @@ const TMDB_API_BASE = 'https://api.themoviedb.org/3'
 
 const ALLOWED_PATH_PATTERNS = [
   /^search\/(multi|movie|tv)$/,
+  /^find\/[a-zA-Z0-9_-]+$/,
   /^trending\/(all|movie|tv)\/(day|week)$/,
   /^discover\/(movie|tv)$/,
-  /^(movie|tv)\/(popular|top_rated|upcoming|now_playing|on_the_air)$/,
+  /^(movie|tv)\/(popular|top_rated|upcoming|now_playing)$/,
+  /^tv\/(popular|top_rated|on_the_air|airing_today)$/,
   /^(movie|tv)\/\d+$/,
   /^tv\/\d+\/season\/\d+$/,
+  /^tv\/\d+\/season\/\d+\/episode\/\d+$/,
   /^genre\/(movie|tv)\/list$/,
   /^(movie|tv)\/\d+\/(recommendations|similar|videos|credits|watch\/providers)$/,
+  /^configuration$/,
+  /^watch\/providers\/(movie|tv|regions)$/,
 ]
 
 async function fetchWithRetry(url: string, token: string, maxRetries = 2): Promise<Response> {
@@ -126,7 +131,12 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     const upstreamRes = await fetchWithRetry(upstreamUrl.toString(), token)
 
     // Set cache headers based on path type
-    const isStable = targetPath.startsWith('movie/') || targetPath.startsWith('tv/') || targetPath.startsWith('genre/')
+    const isStable =
+      targetPath.startsWith('movie/') ||
+      targetPath.startsWith('tv/') ||
+      targetPath.startsWith('genre/') ||
+      targetPath.startsWith('configuration') ||
+      targetPath.startsWith('watch/providers')
     const cacheHeader = isStable
       ? 'public, s-maxage=3600, stale-while-revalidate=86400'
       : 'public, s-maxage=300, stale-while-revalidate=1800'

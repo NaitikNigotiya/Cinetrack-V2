@@ -75,6 +75,7 @@ export const TmdbWatchProviderItemSchema = z.object({
   provider_id: z.number(),
   provider_name: z.string(),
   logo_path: z.string().nullable().optional(),
+  display_priority: z.number().optional(),
 })
 
 export const TmdbWatchProvidersResponseSchema = z.object({
@@ -89,6 +90,52 @@ export const TmdbWatchProvidersResponseSchema = z.object({
       })
     )
     .default({}),
+})
+
+export const TmdbFindResponseSchema = z.object({
+  movie_results: tolerantArray(TmdbMediaItemSchema, 'movie find result'),
+  tv_results: tolerantArray(TmdbMediaItemSchema, 'tv find result'),
+})
+
+export const TmdbTvEpisodeSchema = z.object({
+  id: z.number(),
+  episode_number: z.number(),
+  season_number: z.number(),
+  name: z.string().default(''),
+  overview: z.string().default(''),
+  air_date: TmdbDateSchema,
+  runtime: z.number().nullable().optional(),
+  still_path: z.string().nullable().optional(),
+  vote_average: z.number().default(0),
+})
+
+export const TmdbTvSeasonSchema = z.object({
+  id: z.number(),
+  season_number: z.number(),
+  name: z.string().default(''),
+  overview: z.string().default(''),
+  poster_path: z.string().nullable().optional(),
+  air_date: TmdbDateSchema,
+  episodes: tolerantArray(TmdbTvEpisodeSchema, 'tv episode'),
+})
+
+export const TmdbGenreListResponseSchema = z.object({
+  genres: tolerantArray(z.object({ id: z.number(), name: z.string() }), 'genre item'),
+})
+
+export const TmdbConfigurationSchema = z.object({
+  images: z.object({
+    base_url: z.string().default('http://image.tmdb.org/t/p/'),
+    secure_base_url: z.string().default('https://image.tmdb.org/t/p/'),
+    backdrop_sizes: z.array(z.string()).default([]),
+    poster_sizes: z.array(z.string()).default([]),
+    profile_sizes: z.array(z.string()).default([]),
+    still_sizes: z.array(z.string()).default([]),
+  }),
+})
+
+export const TmdbWatchProviderCatalogSchema = z.object({
+  results: tolerantArray(TmdbWatchProviderItemSchema, 'watch provider catalog'),
 })
 
 export const TmdbMovieDetailsSchema = z.object({
@@ -120,6 +167,11 @@ export const TmdbMovieDetailsSchema = z.object({
       results: tolerantArray(TmdbMediaItemSchema, 'recommendation'),
     })
     .optional(),
+  similar: z
+    .object({
+      results: tolerantArray(TmdbMediaItemSchema, 'similar'),
+    })
+    .optional(),
 })
 
 export const TmdbTvDetailsSchema = z.object({
@@ -138,7 +190,23 @@ export const TmdbTvDetailsSchema = z.object({
   vote_count: z.number().default(0),
   tagline: z.string().optional(),
   genres: tolerantArray(z.object({ id: z.number(), name: z.string() }), 'genre'),
+  seasons: tolerantArray(
+    z.object({
+      id: z.number(),
+      name: z.string(),
+      season_number: z.number(),
+      episode_count: z.number().default(0),
+      poster_path: z.string().nullable().optional(),
+      air_date: TmdbDateSchema,
+    }),
+    'tv season summary'
+  ).optional(),
   credits: z
+    .object({
+      cast: tolerantArray(TmdbCastMemberSchema, 'cast member'),
+    })
+    .optional(),
+  aggregate_credits: z
     .object({
       cast: tolerantArray(TmdbCastMemberSchema, 'cast member'),
     })
@@ -154,6 +222,11 @@ export const TmdbTvDetailsSchema = z.object({
       results: tolerantArray(TmdbMediaItemSchema, 'recommendation'),
     })
     .optional(),
+  similar: z
+    .object({
+      results: tolerantArray(TmdbMediaItemSchema, 'similar'),
+    })
+    .optional(),
   next_episode_to_air: z
     .object({
       air_date: TmdbDateSchema,
@@ -167,7 +240,13 @@ export const TmdbTvDetailsSchema = z.object({
 export type TmdbMediaItem = z.infer<typeof TmdbMediaItemSchema>
 export type TmdbSearchResult = TmdbMediaItem
 export type TmdbSearchResponse = z.infer<typeof TmdbSearchResponseSchema>
+export type TmdbFindResponse = z.infer<typeof TmdbFindResponseSchema>
 export type TmdbMovieDetails = z.infer<typeof TmdbMovieDetailsSchema>
 export type TmdbTvDetails = z.infer<typeof TmdbTvDetailsSchema>
+export type TmdbTvSeason = z.infer<typeof TmdbTvSeasonSchema>
+export type TmdbTvEpisode = z.infer<typeof TmdbTvEpisodeSchema>
 export type TmdbCastMember = z.infer<typeof TmdbCastMemberSchema>
 export type TmdbVideo = z.infer<typeof TmdbVideoSchema>
+export type TmdbGenreListResponse = z.infer<typeof TmdbGenreListResponseSchema>
+export type TmdbConfiguration = z.infer<typeof TmdbConfigurationSchema>
+export type TmdbWatchProviderCatalog = z.infer<typeof TmdbWatchProviderCatalogSchema>

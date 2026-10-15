@@ -4,6 +4,7 @@ import { tmdbKeys } from '../queryKeys'
 import {
   TmdbSearchResponseSchema,
   TmdbMovieDetailsSchema,
+  TmdbTvSeasonSchema,
 } from '../tmdb.schema'
 
 describe('tmdbClient module', () => {
@@ -15,12 +16,23 @@ describe('tmdbClient module', () => {
     ])
     expect(tmdbKeys.details('movie:550')).toEqual(['tmdb', 'details', 'movie:550'])
     expect(tmdbKeys.trending('all', 'week')).toEqual(['tmdb', 'trending', 'all', 'week'])
+    expect(tmdbKeys.season(1396, 1)).toEqual(['tmdb', 'tv', 1396, 'season', 1])
   })
 
-  it('returns empty search response for empty query', async () => {
-    const res = await tmdbClient.searchMulti('')
-    expect(res.results).toEqual([])
-    expect(res.total_results).toBe(0)
+  it('returns empty search response for empty query or query shorter than 2 chars', async () => {
+    const emptyRes = await tmdbClient.searchMulti('')
+    expect(emptyRes.results).toEqual([])
+    expect(emptyRes.total_results).toBe(0)
+
+    const shortRes = await tmdbClient.searchMulti('a')
+    expect(shortRes.results).toEqual([])
+    expect(shortRes.total_results).toBe(0)
+
+    const shortMovie = await tmdbClient.searchMovie('x')
+    expect(shortMovie.results).toEqual([])
+
+    const shortTv = await tmdbClient.searchTv('y')
+    expect(shortTv.results).toEqual([])
   })
 
   it('returns valid search results with fallback/mock data', async () => {
@@ -38,11 +50,46 @@ describe('tmdbClient module', () => {
     expect(movie['watch/providers']?.results).toBeDefined()
   })
 
-  it('fetches tv details with parsed schemas', async () => {
+  it('fetches tv details with parsed schemas and sorts Season 0 Specials last', async () => {
     const tv = await tmdbClient.getTvDetails(1396)
     expect(tv.id).toBe(1396)
     expect(tv.name).toBe('Breaking Bad')
     expect(tv.number_of_episodes).toBe(62)
+  })
+
+  it('parses TV season and episode fixtures tolerantly', () => {
+    const seasonData = {
+      id: 3572,
+      season_number: 1,
+      name: 'Season 1',
+      overview: 'First season',
+      episodes: [
+        {
+          id: 62085,
+          episode_number: 1,
+          season_number: 1,
+          name: 'Pilot',
+          air_date: '2008-01-20',
+          runtime: 58,
+          still_path: '/pilot.jpg',
+          vote_average: 8.4,
+        },
+        {
+          id: 62086,
+          episode_number: 2,
+          season_number: 1,
+          name: "Cat's in the Bag...",
+          air_date: '', // empty date should convert to null
+          runtime: null,
+          vote_average: 8.3,
+        },
+      ],
+    }
+
+    const parsed = TmdbTvSeasonSchema.parse(seasonData)
+    expect(parsed.episodes).toHaveLength(2)
+    expect(parsed.episodes[0]?.name).toBe('Pilot')
+    expect(parsed.episodes[1]?.air_date).toBeNull()
   })
 
   it('tolerantly drops malformed items in a list without breaking the entire list', () => {
@@ -80,7 +127,6 @@ describe('tmdbClient module', () => {
     expect(parsed.vote_average).toBe(0)
     expect(parsed.vote_count).toBe(0)
     expect(parsed.overview).toBe('')
-    // unknown field is not in schema
     expect('extra_unknown_field_from_tmdb' in parsed).toBe(false)
   })
 

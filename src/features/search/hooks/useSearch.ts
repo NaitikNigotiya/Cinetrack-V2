@@ -23,8 +23,9 @@ export function useSearch(initialQuery = '') {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(query)
-      if (query.trim() && !recentSearches.includes(query.trim())) {
-        const next = [query.trim(), ...recentSearches.filter((s) => s !== query.trim())].slice(0, 10)
+      const trimmed = query.trim()
+      if (trimmed.length >= 2 && !recentSearches.includes(trimmed)) {
+        const next = [trimmed, ...recentSearches.filter((s) => s !== trimmed)].slice(0, 10)
         setRecentSearches(next)
         localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(next))
       }
@@ -32,18 +33,28 @@ export function useSearch(initialQuery = '') {
     return () => clearTimeout(timer)
   }, [query, recentSearches])
 
-  // Multi-search query
+  // Search query: route to dedicated endpoint per typeFilter
+  const isSearchActive = debouncedQuery.trim().length >= 2
   const searchQuery = useQuery({
     queryKey: tmdbKeys.search(debouncedQuery, typeFilter, yearFilter),
-    queryFn: () => tmdbClient.searchMulti(debouncedQuery),
-    enabled: Boolean(debouncedQuery.trim()),
+    queryFn: () => {
+      const q = debouncedQuery.trim()
+      if (typeFilter === 'movie') {
+        return tmdbClient.searchMovie(q, { year: yearFilter })
+      }
+      if (typeFilter === 'tv') {
+        return tmdbClient.searchTv(q, { firstAirDateYear: yearFilter })
+      }
+      return tmdbClient.searchMulti(q)
+    },
+    enabled: isSearchActive,
   })
 
-  // Trending fallback query when search input is empty
+  // Trending fallback query when search input is empty or < 2 characters
   const trendingQuery = useQuery({
     queryKey: tmdbKeys.trending('all', 'week'),
     queryFn: () => tmdbClient.getTrending('all', 'week'),
-    enabled: !debouncedQuery.trim(),
+    enabled: !isSearchActive,
   })
 
   const clearRecentSearches = () => {
@@ -52,7 +63,7 @@ export function useSearch(initialQuery = '') {
   }
 
   // Filter results by type & year
-  const rawResults = debouncedQuery.trim()
+  const rawResults = isSearchActive
     ? searchQuery.data?.results ?? []
     : trendingQuery.data?.results ?? []
 
@@ -76,7 +87,7 @@ export function useSearch(initialQuery = '') {
     recentSearches,
     clearRecentSearches,
     results: filteredResults,
-    isLoading: debouncedQuery.trim() ? searchQuery.isLoading : trendingQuery.isLoading,
-    isSearching: Boolean(debouncedQuery.trim()),
+    isLoading: isSearchActive ? searchQuery.isLoading : trendingQuery.isLoading,
+    isSearching: isSearchActive,
   }
 }
