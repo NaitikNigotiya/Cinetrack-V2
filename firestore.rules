@@ -1,0 +1,109 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidRating(rating) {
+      return rating == null || (rating is number && rating >= 0.5 && rating <= 10.0);
+    }
+
+    function isValidTitleKey(key) {
+      return key.matches('^(movie|tv):[0-9]+$');
+    }
+
+    function isValidStatus(status) {
+      return status in ['plan_to_watch', 'watching', 'completed', 'on_hold', 'dropped'];
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // User Data Hierarchy - strictly isolated per UID
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+
+      // Library collection
+      match /library/{titleKey} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && isValidTitleKey(titleKey)
+          && isValidStatus(request.resource.data.status)
+          && isValidRating(request.resource.data.rating)
+          && (!('tags' in request.resource.data) || request.resource.data.tags.size() <= 20);
+        allow delete: if isOwner(userId);
+
+        // TV Seasons subcollection
+        match /seasons/{seasonNumber} {
+          allow read, write: if isOwner(userId);
+        }
+      }
+
+      // Watch History
+      match /history/{eventId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Reviews
+      match /reviews/{titleKey} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && isValidTitleKey(titleKey)
+          && isValidRating(request.resource.data.rating)
+          && request.resource.data.body.size() <= 5000;
+        allow delete: if isOwner(userId);
+      }
+
+      // Notes
+      match /notes/{noteId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && request.resource.data.body.size() <= 5000;
+        allow delete: if isOwner(userId);
+      }
+
+      // Collections (custom lists)
+      match /collections/{collectionId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && request.resource.data.name.size() > 0
+          && request.resource.data.name.size() <= 80
+          && (!('items' in request.resource.data) || request.resource.data.items.size() <= 500);
+        allow delete: if isOwner(userId);
+      }
+
+      // Planned Watches (Calendar)
+      match /plannedWatches/{id} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Settings (Preferences & Push)
+      match /settings/{settingDoc} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Pre-aggregated Stats
+      match /stats/{statDoc} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId);
+        allow delete: if isOwner(userId);
+      }
+    }
+
+    // Public Collections (read-only for guests, writable only by owner)
+    match /publicCollections/{shareSlug} {
+      allow read: if true;
+      allow write: if isAuthenticated() && request.auth.uid == request.resource.data.ownerUid;
+    }
+  }
+}

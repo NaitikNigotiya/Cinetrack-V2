@@ -1,0 +1,120 @@
+.tabBar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(60px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background-color: var(--surface-overlay-glass);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border-subtle);
+  z-index: var(--z-header);
+  justify-content: space-around;
+  align-items: center;
+}
+
+@media (max-width: 1023px) {
+  .tabBar {
+    display: flex;
+  }
+}
+
+.tabItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: var(--text-3);
+  font-size: 11px;
+  font-weight: 500;
+  text-decoration: none;
+  padding: var(--space-1) var(--space-3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.tabItem:hover {
+  color: var(--text-1);
+}
+
+.tabItemActive {
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+/* Bottom Sheet */
+.sheetBackdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: var(--z-sheet);
+  display: flex;
+  align-items: flex-end;
+  animation: fadeIn var(--duration-fast) var(--ease-out);
+}
+
+.sheet {
+  width: 100%;
+  background-color: var(--surface-raised);
+  border-top-left-radius: var(--radius-2xl);
+  border-top-right-radius: var(--radius-2xl);
+  border-top: 1px solid var(--border-strong);
+  padding: var(--space-4) var(--space-6) calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: slideUp var(--duration-normal) var(--ease-out);
+}
+
+.dragHandle {
+  width: 36px;
+  height: 4px;
+  background-color: var(--border-strong);
+  border-radius: var(--radius-pill);
+  align-self: center;
+}
+
+.sheetGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+.sheetBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-2);
+  background-color: var(--surface-overlay);
+  border-radius: var(--radius-lg);
+  color: var(--text-1);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  border: 1px solid var(--border-subtle);
+}
+
+.sheetBtn:hover {
+  border-color: var(--border-strong);
+  background-color: var(--surface-base);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

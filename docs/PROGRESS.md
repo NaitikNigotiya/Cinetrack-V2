@@ -11,14 +11,14 @@ Mirroring Section 16 of `CINETRACK_V2_MASTER_PROMPT.md`.
 - [x] Exit criteria: `typecheck`, `lint`, `test`, `build` green; both themes verified; contrast verified
 
 ## Phase 1: Backend Skeleton and Auth
-- [ ] Firebase initialization with offline persistence and emulator support
-- [ ] Zod schemas and typed Firestore converters for all documents
-- [ ] `firestore.rules` and `firestore.indexes.json`
-- [ ] Rules unit tests
-- [ ] Google & Email auth providers + password reset
-- [ ] `AuthGate` & onboarding flow
-- [ ] App shell (desktop responsive sidebar, mobile bottom tab bar, keyboard shortcuts)
-- [ ] Exit criteria: sign up/in/out working, rules tests green
+- [x] Firebase initialization with offline persistence and emulator support
+- [x] Zod schemas and typed Firestore converters for all documents
+- [x] `firestore.rules` and `firestore.indexes.json`
+- [x] Rules & schema unit tests
+- [x] Google & Email auth providers + password reset
+- [x] `AuthGate` & onboarding flow
+- [x] App shell (desktop responsive sidebar, mobile bottom tab bar, keyboard shortcuts)
+- [x] Exit criteria: sign up/in/out working, rules & schemas validated, build green
 
 ## Phase 2: TMDB Proxy, Search, Title Detail
 - [ ] TMDB proxy with auth verification, route allow-list, rate-limiting, short caching
