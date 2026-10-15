@@ -4,6 +4,8 @@ import LoginPage from '@/features/auth/components/LoginPage'
 import { AppShell } from '@/app/shell/AppShell'
 import SearchPage from '@/features/search/components/SearchPage'
 import TitleDetailPage from '@/features/title/components/TitleDetailPage'
+import EpisodeTrackerPage from '@/features/episodes/components/EpisodeTrackerPage'
+import HistoryPage from '@/features/history/components/HistoryPage'
 import LibraryPage from '@/features/library/components/LibraryPage'
 import UiPlayground from '@/features/dev/UiPlayground'
 
@@ -37,6 +39,10 @@ export const router = createBrowserRouter([
         element: <TitleDetailPage />,
       },
       {
+        path: 'title/:titleKey/episodes',
+        element: <EpisodeTrackerPage />,
+      },
+      {
         path: 'discover',
         element: <div>Discover Route (Scaffolded)</div>,
       },
@@ -50,7 +56,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'history',
-        element: <div>History Route (Scaffolded)</div>,
+        element: <HistoryPage />,
       },
       {
         path: 'calendar',

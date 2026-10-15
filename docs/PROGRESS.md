@@ -35,11 +35,11 @@ Mirroring Section 16 of `CINETRACK_V2_MASTER_PROMPT.md`.
 - [x] Exit criteria: write-path tests pass (26 tests total), library counts verified via `stats/summary`
 
 ## Phase 4: TV Tracking & History
-- [ ] Per-season docs (`seasons/{seasonNumber}`)
-- [ ] `markEpisode`, `markSeason`, "mark up to here" transactions
-- [ ] Auto-transition statuses and completion celebration (confetti)
-- [ ] History timeline with daily grouping and manual backfill
-- [ ] Exit criteria: transactional tests prove zero counter drift, offline sync verified
+- [x] Per-season docs (`seasons/{seasonNumber}`)
+- [x] `markEpisode`, `markSeason`, "mark up to here" transactions
+- [x] Auto-transition statuses and completion celebration (confetti)
+- [x] History timeline with daily grouping and manual backfill
+- [x] Exit criteria: transactional tests prove zero counter drift, offline sync verified
 
 ## Phase 5: Home, Discover, Reviews, Notes, Collections, Calendar
 - [ ] Home dashboard (continue watching, plan shortlist, stats strip, surprise me)
