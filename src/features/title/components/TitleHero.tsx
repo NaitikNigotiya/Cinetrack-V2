@@ -1,5 +1,10 @@
 import { Star, Clock, Calendar } from 'lucide-react'
-import { getBackdropUrl, getPosterUrl } from '@/shared/lib/tmdbImage'
+import {
+  getBackdropUrl,
+  getBackdropSrcSet,
+  getPosterUrl,
+  getPosterSrcSet,
+} from '@/shared/lib/tmdbImage'
 import styles from './TitleHero.module.css'
 
 interface TitleHeroProps {
@@ -28,13 +33,17 @@ export function TitleHero({
   episodesCount,
 }: TitleHeroProps) {
   const backdropUrl = getBackdropUrl(backdropPath, 'w1280')
+  const backdropSrcSet = getBackdropSrcSet(backdropPath)
   const posterUrl = getPosterUrl(posterPath, 'w500')
+  const posterSrcSet = getPosterSrcSet(posterPath)
 
   return (
     <div className={styles.hero}>
       {backdropUrl && (
         <img
           src={backdropUrl}
+          srcSet={backdropSrcSet}
+          sizes="100vw"
           alt=""
           role="presentation"
           className={styles.backdrop}
@@ -45,7 +54,13 @@ export function TitleHero({
       <div className={styles.heroContent}>
         <div className={styles.posterWrapper}>
           {posterUrl ? (
-            <img src={posterUrl} alt={title} className={styles.posterImg} />
+            <img
+              src={posterUrl}
+              srcSet={posterSrcSet}
+              sizes="(max-width: 640px) 150px, 200px"
+              alt={title}
+              className={styles.posterImg}
+            />
           ) : (
             <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-3)' }}>
               No Poster

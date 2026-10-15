@@ -1,19 +1,21 @@
 {
   "$schema": "https://unpkg.com/knip@5/overview/configuration-schema.json",
-  "entry": ["src/main.tsx", "src/tests/setup.ts"],
-  "project": ["src/**/*.{ts,tsx}"],
+  "entry": [
+    "src/shared/schemas/**/*.ts",
+    "src/features/**/api/*.ts",
+    "src/services/**/*.ts",
+    "api/**/*.ts"
+  ],
+  "project": ["src/**/*.{ts,tsx}", "api/**/*.ts"],
   "ignoreDependencies": [
-    "@tanstack/query-sync-storage-persister",
-    "@tanstack/react-query",
-    "@tanstack/react-query-persist-client",
-    "canvas-confetti",
-    "@types/canvas-confetti",
     "date-fns",
-    "firebase",
     "framer-motion",
-    "recharts",
-    "zod",
     "@testing-library/react",
     "@testing-library/user-event"
-  ]
+  ],
+  "rules": {
+    "exports": "off",
+    "types": "off",
+    "nsExports": "off"
+  }
 }

@@ -14,7 +14,7 @@ export interface CinetrackExportData {
   settings: Record<string, unknown>
 }
 
-export function downloadBlob(content: string, filename: string, mimeType: string): void {
+function downloadBlob(content: string, filename: string, mimeType: string): void {
   if (typeof document === 'undefined') return
   const blob = new Blob([content], { type: mimeType })
   const url = URL.createObjectURL(blob)
