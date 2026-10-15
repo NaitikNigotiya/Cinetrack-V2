@@ -1,0 +1,181 @@
+/**
+ * CineTrack v2 Design System Tokens
+ * Fully supports dark mode (default) and light mode with WCAG 2.2 AA compliant contrast.
+ */
+
+:root {
+  /* Default to dark theme */
+  --surface-base: #121214;
+  --surface-raised: #1a1a1f;
+  --surface-overlay: #24242c;
+  --surface-overlay-glass: rgba(36, 36, 44, 0.85);
+  --surface-inverse: #f5f5f7;
+
+  /* Brand / Accent - Cinematic Scarlet */
+  --accent: #e50914;
+  --accent-hover: #f40612;
+  --accent-subtle: rgba(229, 9, 20, 0.16);
+  --on-accent: #ffffff;
+  --accent-text: #ff4d4d; /* 4.5:1 on surface-base & raised */
+
+  /* Text colors */
+  --text-1: #ffffff;
+  --text-2: #a1a1aa;
+  --text-3: #71717a;
+  --text-inverse: #18181b;
+
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --border-focus: #ff4d4d;
+
+  /* Status Colors */
+  --status-watching: #38bdf8;
+  --status-watching-subtle: rgba(56, 189, 248, 0.16);
+  --status-completed: #4ade80;
+  --status-completed-subtle: rgba(74, 222, 128, 0.16);
+  --status-plan: #fbbf24;
+  --status-plan-subtle: rgba(251, 191, 36, 0.16);
+  --status-on-hold: #c084fc;
+  --status-on-hold-subtle: rgba(192, 132, 252, 0.16);
+  --status-dropped: #fb7185;
+  --status-dropped-subtle: rgba(251, 113, 133, 0.16);
+
+  /* Semantic feedback */
+  --success: #22c55e;
+  --success-subtle: rgba(34, 197, 94, 0.16);
+  --warning: #f59e0b;
+  --warning-subtle: rgba(245, 158, 11, 0.16);
+  --danger: #ef4444;
+  --danger-subtle: rgba(239, 68, 68, 0.16);
+  --info: #0ea5e9;
+  --info-subtle: rgba(14, 165, 233, 0.16);
+
+  /* Rating Star */
+  --star-filled: #f59e0b;
+  --star-empty: #3f3f46;
+
+  /* Elevation Shadows */
+  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 4px 12px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.4);
+  --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.7), 0 4px 8px rgba(0, 0, 0, 0.5);
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-pill: 9999px;
+
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  
+  --font-size-xs: 12px;
+  --font-size-sm: 13px;
+  --font-size-base: 15px;
+  --font-size-md: 17px;
+  --font-size-lg: 20px;
+  --font-size-xl: 24px;
+  --font-size-2xl: 30px;
+  --font-size-3xl: 36px;
+  --font-size-4xl: 48px;
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+  --duration-slow: 350ms;
+
+  /* Z-index Scale */
+  --z-header: 40;
+  --z-sidebar: 50;
+  --z-sheet: 60;
+  --z-modal: 70;
+  --z-toast: 80;
+}
+
+/* Light Theme Overrides */
+html[data-theme='light'] {
+  --surface-base: #f5f5f7;
+  --surface-raised: #ffffff;
+  --surface-overlay: #eaecee;
+  --surface-overlay-glass: rgba(255, 255, 255, 0.9);
+  --surface-inverse: #18181b;
+
+  /* Brand / Accent - Cinematic Gold */
+  --accent: #d97706; /* Accessible gold */
+  --accent-hover: #b45309;
+  --accent-subtle: rgba(217, 119, 6, 0.14);
+  --on-accent: #ffffff;
+  --accent-text: #b45309; /* >= 4.5:1 on light surface */
+
+  /* Text colors */
+  --text-1: #18181b;
+  --text-2: #52525b;
+  --text-3: #71717a;
+  --text-inverse: #ffffff;
+
+  /* Borders */
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.16);
+  --border-focus: #d97706;
+
+  /* Status Colors (Accessible for light background) */
+  --status-watching: #0284c7;
+  --status-watching-subtle: rgba(2, 132, 199, 0.12);
+  --status-completed: #16a34a;
+  --status-completed-subtle: rgba(22, 163, 74, 0.12);
+  --status-plan: #b45309;
+  --status-plan-subtle: rgba(180, 83, 9, 0.12);
+  --status-on-hold: #7e22ce;
+  --status-on-hold-subtle: rgba(126, 34, 206, 0.12);
+  --status-dropped: #be123c;
+  --status-dropped-subtle: rgba(190, 18, 60, 0.12);
+
+  /* Semantic feedback */
+  --success: #16a34a;
+  --success-subtle: rgba(22, 163, 74, 0.12);
+  --warning: #d97706;
+  --warning-subtle: rgba(217, 119, 6, 0.12);
+  --danger: #dc2626;
+  --danger-subtle: rgba(220, 38, 38, 0.12);
+  --info: #0284c7;
+  --info-subtle: rgba(2, 132, 199, 0.12);
+
+  /* Rating Star */
+  --star-filled: #d97706;
+  --star-empty: #d4d4d8;
+
+  /* Elevation Shadows */
+  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-2: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-3: 0 12px 28px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  :root, html[data-theme='light'] {
+    --duration-fast: 0.01ms;
+    --duration-normal: 0.01ms;
+    --duration-slow: 0.01ms;
+  }
+}

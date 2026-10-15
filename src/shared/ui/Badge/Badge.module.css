@@ -1,0 +1,79 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.variantDefault {
+  background-color: var(--surface-overlay);
+  color: var(--text-2);
+}
+
+.variantPrimary {
+  background-color: var(--accent-subtle);
+  color: var(--accent-text);
+}
+
+.variantSuccess {
+  background-color: var(--success-subtle);
+  color: var(--success);
+}
+
+.variantWarning {
+  background-color: var(--warning-subtle);
+  color: var(--warning);
+}
+
+.variantDanger {
+  background-color: var(--danger-subtle);
+  color: var(--danger);
+}
+
+.variantInfo {
+  background-color: var(--info-subtle);
+  color: var(--info);
+}
+
+/* Status variants */
+.statusWatching {
+  background-color: var(--status-watching-subtle);
+  color: var(--status-watching);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.statusCompleted {
+  background-color: var(--status-completed-subtle);
+  color: var(--status-completed);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+}
+
+.statusPlan {
+  background-color: var(--status-plan-subtle);
+  color: var(--status-plan);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+}
+
+.statusOnHold {
+  background-color: var(--status-on-hold-subtle);
+  color: var(--status-on-hold);
+  border: 1px solid rgba(192, 132, 252, 0.25);
+}
+
+.statusDropped {
+  background-color: var(--status-dropped-subtle);
+  color: var(--status-dropped);
+  border: 1px solid rgba(251, 113, 133, 0.25);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+}

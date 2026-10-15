@@ -1,0 +1,115 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  transition: transform var(--duration-normal) var(--ease-out),
+              box-shadow var(--duration-normal) var(--ease-out),
+              border-color var(--duration-normal) var(--ease-out);
+  cursor: pointer;
+  user-select: none;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-2);
+  border-color: var(--border-strong);
+}
+
+.posterWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background-color: var(--surface-overlay);
+  overflow: hidden;
+}
+
+.posterImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+.card:hover .posterImg {
+  transform: scale(1.03);
+}
+
+.posterFallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: var(--space-4);
+  text-align: center;
+  color: var(--text-3);
+  font-size: var(--font-size-xs);
+  gap: var(--space-2);
+}
+
+.badgeTopLeft {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 2;
+}
+
+.badgeTopRight {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  z-index: 2;
+}
+
+.progressBarContainer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+.progressBar {
+  height: 100%;
+  background-color: var(--status-watching);
+  transition: width var(--duration-normal) var(--ease-out);
+}
+
+.content {
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.title {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--font-size-xs);
+  color: var(--text-2);
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--star-filled);
+  font-weight: 600;
+}

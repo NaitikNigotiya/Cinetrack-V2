@@ -1,0 +1,77 @@
+.container {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.starsRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.starBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  background: transparent;
+  color: var(--star-empty);
+  transition: transform var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out);
+}
+
+.starBtn:hover:not(:disabled) {
+  transform: scale(1.15);
+}
+
+.starBtn:disabled {
+  cursor: default;
+}
+
+.starSvg {
+  width: 22px;
+  height: 22px;
+}
+
+.starFilled {
+  color: var(--star-filled);
+}
+
+.starHalfFilled {
+  color: var(--star-filled);
+}
+
+.halfStarOverlay {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 11px; /* Half of 22px */
+  overflow: hidden;
+  color: var(--star-filled);
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-2);
+  min-width: 44px;
+}
+
+.clearBtn {
+  font-size: var(--font-size-xs);
+  color: var(--text-3);
+  padding: 2px var(--space-1);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+}
+
+.clearBtn:hover {
+  color: var(--danger);
+  background-color: var(--danger-subtle);
+}
