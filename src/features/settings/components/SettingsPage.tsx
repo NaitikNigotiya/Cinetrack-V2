@@ -3,7 +3,6 @@ import {
   User,
   Palette,
   Film,
-  Bell,
   Database,
   Info,
 } from 'lucide-react'
@@ -11,12 +10,11 @@ import { useAuthStore } from '@/features/auth/store/authStore'
 import { AccountSection } from './AccountSection'
 import { AppearanceSection } from './AppearanceSection'
 import { LibrarySettingsSection } from './LibrarySettingsSection'
-import { NotificationSettingsSection } from './NotificationSettingsSection'
 import { DataToolsSection } from './DataToolsSection'
 import { AboutSection } from './AboutSection'
 import styles from './SettingsPage.module.css'
 
-type SettingsTab = 'account' | 'appearance' | 'library' | 'notifications' | 'data' | 'about'
+type SettingsTab = 'account' | 'appearance' | 'library' | 'data' | 'about'
 
 interface TabDefinition {
   id: SettingsTab
@@ -28,7 +26,6 @@ const TABS: TabDefinition[] = [
   { id: 'account', label: 'Account', icon: User },
   { id: 'appearance', label: 'Appearance', icon: Palette },
   { id: 'library', label: 'Library', icon: Film },
-  { id: 'notifications', label: 'Notifications', icon: Bell },
   { id: 'data', label: 'Data & Backup', icon: Database },
   { id: 'about', label: 'About', icon: Info },
 ]
@@ -49,7 +46,7 @@ export default function SettingsPage() {
       <div className={styles.header}>
         <h1 className={styles.title}>Settings</h1>
         <p className={styles.subtitle}>
-          Manage your account profile, visual themes, data backups and notifications
+          Manage your account profile, visual themes and data backups
         </p>
       </div>
 
@@ -77,7 +74,6 @@ export default function SettingsPage() {
         {activeTab === 'account' && <AccountSection />}
         {activeTab === 'appearance' && <AppearanceSection />}
         {activeTab === 'library' && <LibrarySettingsSection />}
-        {activeTab === 'notifications' && <NotificationSettingsSection uid={uid} />}
         {activeTab === 'data' && <DataToolsSection uid={uid} />}
         {activeTab === 'about' && <AboutSection />}
       </div>

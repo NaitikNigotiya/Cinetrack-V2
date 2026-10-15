@@ -16,7 +16,6 @@ import {
   CollectionSchema,
   PlannedWatchSchema,
   UserPreferencesSchema,
-  PushSettingsSchema,
   StatsSummarySchema,
   MonthlyStatsSchema,
   type UserProfile,
@@ -28,7 +27,6 @@ import {
   type Collection,
   type PlannedWatch,
   type UserPreferences,
-  type PushSettings,
   type StatsSummary,
   type MonthlyStats,
 } from '@/shared/schemas'
@@ -42,7 +40,6 @@ export const noteConverter = createZodConverter(NoteSchema, 'notes')
 export const collectionConverter = createZodConverter(CollectionSchema, 'collections')
 export const plannedWatchConverter = createZodConverter(PlannedWatchSchema, 'plannedWatches')
 export const preferencesConverter = createZodConverter(UserPreferencesSchema, 'preferences')
-export const pushSettingsConverter = createZodConverter(PushSettingsSchema, 'push')
 export const statsSummaryConverter = createZodConverter(StatsSummarySchema, 'statsSummary')
 export const monthlyStatsConverter = createZodConverter(MonthlyStatsSchema, 'monthlyStats')
 
@@ -92,10 +89,6 @@ export function getPlannedWatchesCollection(uid: string): CollectionReference<Pl
 
 export function getPreferencesDocRef(uid: string): DocumentReference<UserPreferences> {
   return doc(db, 'users', uid, 'settings', 'preferences').withConverter(preferencesConverter)
-}
-
-export function getPushSettingsDocRef(uid: string): DocumentReference<PushSettings> {
-  return doc(db, 'users', uid, 'settings', 'push').withConverter(pushSettingsConverter)
 }
 
 export function getStatsSummaryDocRef(uid: string): DocumentReference<StatsSummary> {

@@ -3,43 +3,19 @@ import { setDoc, serverTimestamp } from 'firebase/firestore'
 import {
   getUserDocRef,
   getPreferencesDocRef,
-  getPushSettingsDocRef,
   getStatsSummaryDocRef,
 } from '@/services/firebase/collections'
 import { useAuthStore } from '../store/authStore'
 import { Dialog, Button } from '@/shared/ui'
-import { Film, Check } from 'lucide-react'
+import { Film } from 'lucide-react'
 import styles from './OnboardingModal.module.css'
-
-const POPULAR_GENRES = [
-  { id: 28, name: 'Action' },
-  { id: 12, name: 'Adventure' },
-  { id: 16, name: 'Animation' },
-  { id: 35, name: 'Comedy' },
-  { id: 80, name: 'Crime' },
-  { id: 99, name: 'Documentary' },
-  { id: 18, name: 'Drama' },
-  { id: 14, name: 'Fantasy' },
-  { id: 27, name: 'Horror' },
-  { id: 9648, name: 'Mystery' },
-  { id: 10749, name: 'Romance' },
-  { id: 878, name: 'Sci-Fi' },
-  { id: 53, name: 'Thriller' },
-]
 
 export function OnboardingModal({ isOpen }: { isOpen: boolean }) {
   const { user, fetchUserData } = useAuthStore()
   const [step, setStep] = useState(1)
-  const [selectedGenres, setSelectedGenres] = useState<number[]>([28, 878, 18])
   const [defaultStatus, setDefaultStatus] = useState<'plan_to_watch' | 'watching'>('plan_to_watch')
   const [ratingScale, setRatingScale] = useState<'ten' | 'five' | 'fivehalf'>('ten')
   const [isSubmitting, setIsSubmitting] = useState(false)
-
-  const toggleGenre = (genreId: number) => {
-    setSelectedGenres((prev) =>
-      prev.includes(genreId) ? prev.filter((id) => id !== genreId) : [...prev, genreId]
-    )
-  }
 
   const handleFinish = async () => {
     if (!user) return
@@ -48,7 +24,6 @@ export function OnboardingModal({ isOpen }: { isOpen: boolean }) {
       const now = serverTimestamp()
       const userRef = getUserDocRef(user.uid)
       const prefRef = getPreferencesDocRef(user.uid)
-      const pushRef = getPushSettingsDocRef(user.uid)
       const statsRef = getStatsSummaryDocRef(user.uid)
 
       await Promise.all([
@@ -73,15 +48,6 @@ export function OnboardingModal({ isOpen }: { isOpen: boolean }) {
           weekStartsOn: 0,
           hiddenTmdbKeys: [],
           updatedAt: now,
-        }),
-        setDoc(pushRef, {
-          pushEnabled: false,
-          tokens: {},
-          favoriteGenreIds: selectedGenres,
-          includeTv: true,
-          digestHourLocal: 20,
-          lastSentAt: null,
-          recentlyNotifiedKeys: [],
         }),
         setDoc(statsRef, {
           moviesWatched: 0,
@@ -114,7 +80,7 @@ export function OnboardingModal({ isOpen }: { isOpen: boolean }) {
       isOpen={isOpen}
       onClose={() => {}}
       closeOnBackdropClick={false}
-      title={step === 1 ? 'Pick Your Genres' : step === 2 ? 'Viewing Preferences' : 'All Set!'}
+      title={step === 1 ? 'Viewing Preferences' : 'All Set!'}
       footer={
         <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
           {step > 1 ? (
@@ -124,7 +90,7 @@ export function OnboardingModal({ isOpen }: { isOpen: boolean }) {
           ) : (
             <div />
           )}
-          {step < 3 ? (
+          {step < 2 ? (
             <Button variant="primary" onClick={() => setStep((s) => s + 1)}>
               Continue
             </Button>
@@ -138,30 +104,6 @@ export function OnboardingModal({ isOpen }: { isOpen: boolean }) {
     >
       <div className={styles.content}>
         {step === 1 && (
-          <div>
-            <p className={styles.description}>
-              Select the genres you love. We'll curate recommendations and release alerts for you.
-            </p>
-            <div className={styles.genreGrid}>
-              {POPULAR_GENRES.map((g) => {
-                const isSelected = selectedGenres.includes(g.id)
-                return (
-                  <button
-                    key={g.id}
-                    type="button"
-                    onClick={() => toggleGenre(g.id)}
-                    className={`${styles.genreChip} ${isSelected ? styles.genreChipSelected : ''}`}
-                  >
-                    {isSelected && <Check size={14} />}
-                    {g.name}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-        )}
-
-        {step === 2 && (
           <div className={styles.formGroup}>
             <p className={styles.description}>Customize how CineTrack rates and organizes titles.</p>
             <div className={styles.field}>
@@ -213,14 +155,14 @@ export function OnboardingModal({ isOpen }: { isOpen: boolean }) {
           </div>
         )}
 
-        {step === 3 && (
+        {step === 2 && (
           <div className={styles.readyBox}>
             <div className={styles.iconCircle}>
               <Film size={36} color="var(--accent)" />
             </div>
             <h3>Ready for the Ultimate Watchlist</h3>
             <p className={styles.description}>
-              Your account is configured with your selected genres and tracking preferences.
+              Your account is configured with your tracking preferences.
             </p>
           </div>
         )}

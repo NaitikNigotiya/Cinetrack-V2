@@ -30,3 +30,9 @@ Record of non-obvious technical and design choices, reasons, and trade-offs.
 - **Status:** Accepted
 - **Context:** In v1, separate `addDoc` and `updateDoc` calls caused counter drift on partial network failures.
 - **Decision:** Every mutation updating related documents (e.g. marking an episode watched + logging history + incrementing stats) runs within a single Firestore `writeBatch` or `runTransaction`. Repair functions (`recomputeTitle`, `recomputeStats`) are provided to ensure self-healing if needed.
+
+## ADR-005: Push notifications and cron removed
+- **Date:** 2026-10-15
+- **Status:** Accepted
+- Push notifications and cron removed: not needed, Vercel Hobby only supports daily crons.
+

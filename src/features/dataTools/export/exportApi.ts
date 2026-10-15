@@ -38,6 +38,7 @@ function escapeCsvCell(value: unknown): string {
 
 /**
  * Exports all user data into a single round-trippable JSON file.
+ * Note: the settings/push sub-document is intentionally omitted (notifications removed).
  */
 export async function exportCinetrackJson(uid: string): Promise<CinetrackExportData> {
   const fetchCol = async (path: string) => {
@@ -61,8 +62,6 @@ export async function exportCinetrackJson(uid: string): Promise<CinetrackExportD
     fetchCol('plannedWatches'),
   ])
 
-  // Fetch settings
-  const pushSnap = await getDoc(doc(firestore, `users/${uid}/settings/push`))
   const prefSnap = await getDoc(doc(firestore, `users/${uid}/settings/preferences`))
 
   const exportPayload: CinetrackExportData = {
@@ -76,7 +75,6 @@ export async function exportCinetrackJson(uid: string): Promise<CinetrackExportD
     collections,
     plannedWatches,
     settings: {
-      push: pushSnap.exists() ? pushSnap.data() : null,
       preferences: prefSnap.exists() ? prefSnap.data() : null,
     },
   }
@@ -160,7 +158,7 @@ export async function exportHistoryCsv(uid: string): Promise<string> {
     ].join(',')
   })
 
-  const csvContent = [headers.join(','), ...rows].join('\n')
+  const csvContent = [headers.join('\n'), ...rows].join('\n')
   const dateStr = new Date().toISOString().slice(0, 10)
   downloadBlob(csvContent, `cinetrack_history_${dateStr}.csv`, 'text/csv;charset=utf-8;')
 

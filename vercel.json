@@ -1,13 +1,7 @@
 {
-  "crons": [
-    {
-      "path": "/api/cron/new-releases",
-      "schedule": "0 * * * *"
-    }
-  ],
   "headers": [
     {
-      "source": "/(sw.js|firebase-messaging-sw.js|manifest.webmanifest)",
+      "source": "/(sw.js|manifest.webmanifest)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -52,7 +46,7 @@
       "destination": "/api/$1"
     },
     {
-      "source": "/((?!api/|sw\\.js|firebase-messaging-sw\\.js|manifest\\.webmanifest|.*\\..*).*)",
+      "source": "/((?!api/|sw\\.js|manifest\\.webmanifest|.*\\..*).*)",
       "destination": "/index.html"
     }
   ]

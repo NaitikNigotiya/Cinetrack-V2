@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Sun, Moon, Bell, HelpCircle } from 'lucide-react'
+import { Search, Sun, Moon, HelpCircle } from 'lucide-react'
 import { IconButton } from '@/shared/ui'
 import styles from './TopBar.module.css'
 
@@ -70,14 +70,6 @@ export function TopBar({ onOpenShortcuts }: TopBarProps) {
           variant="ghost"
           size="sm"
           onClick={toggleTheme}
-        />
-
-        <IconButton
-          icon={<Bell size={18} />}
-          aria-label="Notifications"
-          variant="ghost"
-          size="sm"
-          onClick={() => navigate('/settings')}
         />
 
         <IconButton
