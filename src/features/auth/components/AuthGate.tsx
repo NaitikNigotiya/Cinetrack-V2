@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
 import { OnboardingModal } from './OnboardingModal'
@@ -6,6 +6,7 @@ import styles from './AuthGate.module.css'
 
 export function AuthGate({ children }: { children: React.ReactNode }) {
   const { user, profile, isLoading } = useAuthStore()
+  const [dismissed, setDismissed] = useState(false)
   const location = useLocation()
 
   if (isLoading) {
@@ -21,12 +22,12 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
-  const needsOnboarding = !profile || !profile.onboarded
+  const needsOnboarding = (!profile || !profile.onboarded) && !dismissed
 
   return (
     <>
       {children}
-      <OnboardingModal isOpen={needsOnboarding} />
+      <OnboardingModal isOpen={needsOnboarding} onClose={() => setDismissed(true)} />
     </>
   )
 }

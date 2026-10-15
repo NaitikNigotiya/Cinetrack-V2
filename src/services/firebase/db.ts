@@ -1,5 +1,6 @@
 import {
   initializeFirestore,
+  getFirestore,
   persistentLocalCache,
   persistentMultipleTabManager,
   connectFirestoreEmulator,
@@ -16,8 +17,8 @@ try {
     }),
   })
 } catch {
-  // If already initialized (e.g. HMR or tests), use default
-  firestoreInstance = initializeFirestore(app, {})
+  // If already initialized (e.g. HMR or tests), retrieve existing instance
+  firestoreInstance = getFirestore(app)
 }
 
 export const db: Firestore = firestoreInstance

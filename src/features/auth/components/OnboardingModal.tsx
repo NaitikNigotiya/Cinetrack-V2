@@ -7,19 +7,33 @@ import {
 } from '@/services/firebase/collections'
 import { useAuthStore } from '../store/authStore'
 import { Dialog, Button } from '@/shared/ui'
-import { Film } from 'lucide-react'
+import { Film, AlertCircle } from 'lucide-react'
 import styles from './OnboardingModal.module.css'
 
-export function OnboardingModal({ isOpen }: { isOpen: boolean }) {
+export function OnboardingModal({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean
+  onClose?: () => void
+}) {
   const { user, fetchUserData } = useAuthStore()
   const [step, setStep] = useState(1)
   const [defaultStatus, setDefaultStatus] = useState<'plan_to_watch' | 'watching'>('plan_to_watch')
   const [ratingScale, setRatingScale] = useState<'ten' | 'five' | 'fivehalf'>('ten')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleFinish = async () => {
     if (!user) return
     setIsSubmitting(true)
+    setError(null)
+
+    const displayName = user.displayName || user.email?.split('@')[0] || 'Movie Enthusiast'
+    const email = user.email || ''
+    const photoURL = user.photoURL || null
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
+
     try {
       const now = serverTimestamp()
       const userRef = getUserDocRef(user.uid)
@@ -28,12 +42,12 @@ export function OnboardingModal({ isOpen }: { isOpen: boolean }) {
 
       await Promise.all([
         setDoc(userRef, {
-          displayName: user.displayName || user.email?.split('@')[0] || 'Movie Enthusiast',
-          email: user.email || '',
-          photoURL: user.photoURL || null,
+          displayName,
+          email,
+          photoURL,
           region: 'US',
           language: 'en-US',
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+          timezone,
           onboarded: true,
           createdAt: now,
           updatedAt: now,
@@ -65,12 +79,62 @@ export function OnboardingModal({ isOpen }: { isOpen: boolean }) {
         }),
       ])
 
+      // Optimistically update store so modal closes smoothly
+      useAuthStore.getState().setProfile({
+        displayName,
+        email,
+        photoURL,
+        region: 'US',
+        language: 'en-US',
+        timezone,
+        onboarded: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        schemaVersion: 1,
+      })
+
+      useAuthStore.getState().setPreferences({
+        theme: 'dark',
+        ratingScale,
+        defaultStatus,
+        compactCards: false,
+        showSpoilers: false,
+        weekStartsOn: 0,
+        hiddenTmdbKeys: [],
+        updatedAt: new Date(),
+      })
+
       await fetchUserData(user.uid)
-    } catch (err) {
+      onClose?.()
+    } catch (err: unknown) {
       console.error('Failed to complete onboarding:', err)
+      const message = err instanceof Error ? err.message : 'Failed to save onboarding settings'
+      setError(message)
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  const handleSkip = () => {
+    if (!user) {
+      onClose?.()
+      return
+    }
+    const displayName = user.displayName || user.email?.split('@')[0] || 'Movie Enthusiast'
+    const email = user.email || ''
+    useAuthStore.getState().setProfile({
+      displayName,
+      email,
+      photoURL: user.photoURL || null,
+      region: 'US',
+      language: 'en-US',
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+      onboarded: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      schemaVersion: 1,
+    })
+    onClose?.()
   }
 
   if (!isOpen) return null
@@ -78,17 +142,19 @@ export function OnboardingModal({ isOpen }: { isOpen: boolean }) {
   return (
     <Dialog
       isOpen={isOpen}
-      onClose={() => {}}
+      onClose={onClose || handleSkip}
       closeOnBackdropClick={false}
       title={step === 1 ? 'Viewing Preferences' : 'All Set!'}
       footer={
-        <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
           {step > 1 ? (
             <Button variant="secondary" onClick={() => setStep((s) => s - 1)}>
               Back
             </Button>
           ) : (
-            <div />
+            <Button variant="ghost" size="sm" onClick={handleSkip}>
+              Skip
+            </Button>
           )}
           {step < 2 ? (
             <Button variant="primary" onClick={() => setStep((s) => s + 1)}>
@@ -103,6 +169,18 @@ export function OnboardingModal({ isOpen }: { isOpen: boolean }) {
       }
     >
       <div className={styles.content}>
+        {error && (
+          <div className={styles.errorBox} role="alert">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <AlertCircle size={18} />
+              <span>{error}</span>
+            </div>
+            <button type="button" className={styles.skipLink} onClick={handleSkip}>
+              Skip setup and enter app anyway &rarr;
+            </button>
+          </div>
+        )}
+
         {step === 1 && (
           <div className={styles.formGroup}>
             <p className={styles.description}>Customize how CineTrack rates and organizes titles.</p>
