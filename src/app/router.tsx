@@ -4,6 +4,7 @@ import LoginPage from '@/features/auth/components/LoginPage'
 import { AppShell } from '@/app/shell/AppShell'
 import SearchPage from '@/features/search/components/SearchPage'
 import TitleDetailPage from '@/features/title/components/TitleDetailPage'
+import LibraryPage from '@/features/library/components/LibraryPage'
 import UiPlayground from '@/features/dev/UiPlayground'
 
 export const router = createBrowserRouter([
@@ -41,7 +42,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'library',
-        element: <div>Library Route (Scaffolded)</div>,
+        element: <LibraryPage />,
       },
       {
         path: 'collections',

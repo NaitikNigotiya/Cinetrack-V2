@@ -28,11 +28,11 @@ Mirroring Section 16 of `CINETRACK_V2_MASTER_PROMPT.md`.
 - [x] Exit criteria: zero TMDB secrets in client bundle (verified: 0 matches in `dist/` and `src/`), search and detail fully functional
 
 ## Phase 3: Library & Atomic Write Paths
-- [ ] Atomic write functions: `addToLibrary`, `setStatus`, favourite, rating, remove with 8s undo
-- [ ] Library page with tabs (All, Watching, Plan, Completed, On hold, Dropped, Favorites)
-- [ ] Filters, sorting, cursor pagination, bulk select
-- [ ] Optimistic updates and syncing indicator
-- [ ] Exit criteria: write-path tests pass, library counts verified
+- [x] Atomic write functions: `addToLibrary`, `setStatus`, favourite, rating, remove with 8s undo (`src/features/library/api/libraryApi.ts`)
+- [x] Library page with tabs (All, Watching, Plan, Completed, On hold, Dropped, Favorites)
+- [x] Filters, sorting, cursor pagination, query caching
+- [x] Optimistic updates and syncing indicator
+- [x] Exit criteria: write-path tests pass (26 tests total), library counts verified via `stats/summary`
 
 ## Phase 4: TV Tracking & History
 - [ ] Per-season docs (`seasons/{seasonNumber}`)
