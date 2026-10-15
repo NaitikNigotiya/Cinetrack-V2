@@ -1,6 +1,10 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { tmdbClient } from '../tmdbClient'
 import { tmdbKeys } from '../queryKeys'
+import {
+  TmdbSearchResponseSchema,
+  TmdbMovieDetailsSchema,
+} from '../tmdb.schema'
 
 describe('tmdbClient module', () => {
   it('generates consistent query keys', () => {
@@ -39,5 +43,44 @@ describe('tmdbClient module', () => {
     expect(tv.id).toBe(1396)
     expect(tv.name).toBe('Breaking Bad')
     expect(tv.number_of_episodes).toBe(62)
+  })
+
+  it('tolerantly drops malformed items in a list without breaking the entire list', () => {
+    const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const payloadWithMalformedItem = {
+      page: 1,
+      total_pages: 1,
+      total_results: 2,
+      results: [
+        { id: 101, title: 'Valid Movie', overview: 'A good movie' },
+        { title: 'Invalid Movie Without ID' }, // malformed, missing required id
+        { id: 102, title: 'Another Valid Movie', unknown_field: 'ignored' },
+      ],
+    }
+
+    const parsed = TmdbSearchResponseSchema.parse(payloadWithMalformedItem)
+    expect(parsed.results).toHaveLength(2)
+    expect(parsed.results[0]?.id).toBe(101)
+    expect(parsed.results[1]?.id).toBe(102)
+    expect(consoleSpy).toHaveBeenCalled()
+    consoleSpy.mockRestore()
+  })
+
+  it('ignores unknown fields and defaults missing optional fields', () => {
+    const rawData = {
+      id: 999,
+      title: 'Minimal Movie',
+      extra_unknown_field_from_tmdb: 'should be stripped',
+    }
+
+    const parsed = TmdbMovieDetailsSchema.parse(rawData)
+    expect(parsed.id).toBe(999)
+    expect(parsed.title).toBe('Minimal Movie')
+    expect(parsed.genres).toEqual([])
+    expect(parsed.vote_average).toBe(0)
+    expect(parsed.vote_count).toBe(0)
+    expect(parsed.overview).toBe('')
+    // unknown field is not in schema
+    expect('extra_unknown_field_from_tmdb' in parsed).toBe(false)
   })
 })

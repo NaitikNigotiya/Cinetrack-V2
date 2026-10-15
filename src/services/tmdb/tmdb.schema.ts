@@ -1,5 +1,28 @@
 import { z } from 'zod'
 
+/**
+ * Tolerant array parser:
+ * Filters out malformed elements, logs a warning, and prevents
+ * a single malformed item from breaking the whole list.
+ */
+export function tolerantArray<T extends z.ZodTypeAny>(schema: T, itemName = 'item') {
+  return z
+    .array(z.unknown())
+    .default([])
+    .transform((items) => {
+      const valid: z.infer<T>[] = []
+      for (const item of items) {
+        const result = schema.safeParse(item)
+        if (result.success) {
+          valid.push(result.data)
+        } else {
+          console.warn(`[TMDB Parser] Dropped malformed ${itemName}:`, result.error.issues)
+        }
+      }
+      return valid
+    })
+}
+
 export const TmdbMediaItemSchema = z.object({
   id: z.number(),
   title: z.string().optional(),
@@ -19,7 +42,7 @@ export const TmdbSearchResponseSchema = z.object({
   page: z.number().default(1),
   total_pages: z.number().default(1),
   total_results: z.number().default(0),
-  results: z.array(TmdbMediaItemSchema).default([]),
+  results: tolerantArray(TmdbMediaItemSchema, 'search result'),
 })
 
 export const TmdbCastMemberSchema = z.object({
@@ -44,15 +67,17 @@ export const TmdbWatchProviderItemSchema = z.object({
 })
 
 export const TmdbWatchProvidersResponseSchema = z.object({
-  results: z.record(
-    z.string(),
-    z.object({
-      link: z.string().optional(),
-      flatrate: z.array(TmdbWatchProviderItemSchema).optional(),
-      rent: z.array(TmdbWatchProviderItemSchema).optional(),
-      buy: z.array(TmdbWatchProviderItemSchema).optional(),
-    })
-  ).default({}),
+  results: z
+    .record(
+      z.string(),
+      z.object({
+        link: z.string().optional(),
+        flatrate: tolerantArray(TmdbWatchProviderItemSchema, 'watch provider').optional(),
+        rent: tolerantArray(TmdbWatchProviderItemSchema, 'watch provider').optional(),
+        buy: tolerantArray(TmdbWatchProviderItemSchema, 'watch provider').optional(),
+      })
+    )
+    .default({}),
 })
 
 export const TmdbMovieDetailsSchema = z.object({
@@ -67,17 +92,23 @@ export const TmdbMovieDetailsSchema = z.object({
   vote_average: z.number().default(0),
   vote_count: z.number().default(0),
   tagline: z.string().optional(),
-  genres: z.array(z.object({ id: z.number(), name: z.string() })).default([]),
-  credits: z.object({
-    cast: z.array(TmdbCastMemberSchema).default([]),
-  }).optional(),
-  videos: z.object({
-    results: z.array(TmdbVideoSchema).default([]),
-  }).optional(),
+  genres: tolerantArray(z.object({ id: z.number(), name: z.string() }), 'genre'),
+  credits: z
+    .object({
+      cast: tolerantArray(TmdbCastMemberSchema, 'cast member'),
+    })
+    .optional(),
+  videos: z
+    .object({
+      results: tolerantArray(TmdbVideoSchema, 'video'),
+    })
+    .optional(),
   'watch/providers': TmdbWatchProvidersResponseSchema.optional(),
-  recommendations: z.object({
-    results: z.array(TmdbMediaItemSchema).default([]),
-  }).optional(),
+  recommendations: z
+    .object({
+      results: tolerantArray(TmdbMediaItemSchema, 'recommendation'),
+    })
+    .optional(),
 })
 
 export const TmdbTvDetailsSchema = z.object({
@@ -95,22 +126,31 @@ export const TmdbTvDetailsSchema = z.object({
   vote_average: z.number().default(0),
   vote_count: z.number().default(0),
   tagline: z.string().optional(),
-  genres: z.array(z.object({ id: z.number(), name: z.string() })).default([]),
-  credits: z.object({
-    cast: z.array(TmdbCastMemberSchema).default([]),
-  }).optional(),
-  videos: z.object({
-    results: z.array(TmdbVideoSchema).default([]),
-  }).optional(),
+  genres: tolerantArray(z.object({ id: z.number(), name: z.string() }), 'genre'),
+  credits: z
+    .object({
+      cast: tolerantArray(TmdbCastMemberSchema, 'cast member'),
+    })
+    .optional(),
+  videos: z
+    .object({
+      results: tolerantArray(TmdbVideoSchema, 'video'),
+    })
+    .optional(),
   'watch/providers': TmdbWatchProvidersResponseSchema.optional(),
-  recommendations: z.object({
-    results: z.array(TmdbMediaItemSchema).default([]),
-  }).optional(),
-  next_episode_to_air: z.object({
-    air_date: z.string(),
-    episode_number: z.number(),
-    season_number: z.number(),
-  }).nullable().optional(),
+  recommendations: z
+    .object({
+      results: tolerantArray(TmdbMediaItemSchema, 'recommendation'),
+    })
+    .optional(),
+  next_episode_to_air: z
+    .object({
+      air_date: z.string(),
+      episode_number: z.number(),
+      season_number: z.number(),
+    })
+    .nullable()
+    .optional(),
 })
 
 export type TmdbMediaItem = z.infer<typeof TmdbMediaItemSchema>
