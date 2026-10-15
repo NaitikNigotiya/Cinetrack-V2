@@ -76,8 +76,7 @@ graph TD
    VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
    VITE_FIREBASE_APP_ID=your_app_id
    TMDB_READ_TOKEN=your_server_only_tmdb_token
-   CRON_SECRET=your_cron_auth_secret
-   ```
+      ```
 
 4. Start development server:
    ```bash

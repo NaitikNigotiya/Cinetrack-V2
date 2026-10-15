@@ -87,7 +87,7 @@ service cloud.firestore {
         allow read, write: if isOwner(userId);
       }
 
-      // Settings (Preferences & Push)
+      // Settings (Preferences)
       match /settings/{settingDoc} {
         allow read, write: if isOwner(userId);
       }
