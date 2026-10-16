@@ -1,15 +1,23 @@
-import { useState, useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { tmdbClient } from '@/services/tmdb/tmdbClient'
-import { tmdbKeys } from '@/services/tmdb/queryKeys'
+import { useState, useEffect, useMemo } from 'react'
+import { useInfiniteSearch, useTrending } from '@/services/tmdb/hooks'
+import { parseSpecialSearchInput, resolveImdbId } from '../lib/searchResolver'
+import type { NormalisedMediaItem } from '@/services/tmdb/normalize'
+import type { TitleKey } from '@/shared/schemas/title'
 
 const RECENT_SEARCHES_KEY = 'cinetrack_recent_searches'
 
+export interface SpecialMatchState {
+  titleKey: TitleKey
+  label: string
+}
+
 export function useSearch(initialQuery = '') {
   const [query, setQuery] = useState(initialQuery)
-  const [debouncedQuery, setDebouncedQuery] = useState(initialQuery)
+  const [debouncedQuery, setDebouncedQuery] = useState(() => initialQuery.trim().replace(/\s+/g, ' '))
   const [typeFilter, setTypeFilter] = useState<'all' | 'movie' | 'tv'>('all')
   const [yearFilter, setYearFilter] = useState<string>('')
+  const [specialMatch, setSpecialMatch] = useState<SpecialMatchState | null>(null)
+
   const [recentSearches, setRecentSearches] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem(RECENT_SEARCHES_KEY)
@@ -19,75 +27,111 @@ export function useSearch(initialQuery = '') {
     }
   })
 
-  // Debounce query by 300ms
+  // Debounce input by 300ms and collapse whitespace
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedQuery(query)
-      const trimmed = query.trim()
-      if (trimmed.length >= 2 && !recentSearches.includes(trimmed)) {
-        const next = [trimmed, ...recentSearches.filter((s) => s !== trimmed)].slice(0, 10)
-        setRecentSearches(next)
-        localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(next))
+      const collapsed = query.trim().replace(/\s+/g, ' ')
+      setDebouncedQuery(collapsed)
+
+      // Check for special URLs or IMDb IDs
+      const special = parseSpecialSearchInput(collapsed)
+      if (special) {
+        if (special.kind === 'titleKey') {
+          setSpecialMatch({
+            titleKey: special.titleKey,
+            label: `Direct ${special.mediaType.toUpperCase()} Link: #${special.id}`,
+          })
+        } else if (special.kind === 'imdb') {
+          void resolveImdbId(special.imdbId).then((tk) => {
+            if (tk) {
+              setSpecialMatch({
+                titleKey: tk,
+                label: `IMDb Match for ${special.imdbId.toUpperCase()}`,
+              })
+            }
+          })
+        }
+      } else {
+        setSpecialMatch(null)
+      }
+
+      // Add to recent searches (case-insensitive deduplication, max 10)
+      if (collapsed.length >= 2 && !special) {
+        setRecentSearches((prev) => {
+          const lower = collapsed.toLowerCase()
+          const filtered = prev.filter((s) => s.toLowerCase() !== lower)
+          const next = [collapsed, ...filtered].slice(0, 10)
+          try {
+            localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(next))
+          } catch {
+            // ignore storage errors
+          }
+          return next
+        })
       }
     }, 300)
-    return () => clearTimeout(timer)
-  }, [query, recentSearches])
 
-  // Search query: route to dedicated endpoint per typeFilter
-  const isSearchActive = debouncedQuery.trim().length >= 2
-  const searchQuery = useQuery({
-    queryKey: tmdbKeys.search(debouncedQuery, typeFilter, yearFilter),
-    queryFn: () => {
-      const q = debouncedQuery.trim()
-      if (typeFilter === 'movie') {
-        return tmdbClient.searchMovie(q, { year: yearFilter })
-      }
-      if (typeFilter === 'tv') {
-        return tmdbClient.searchTv(q, { firstAirDateYear: yearFilter })
-      }
-      return tmdbClient.searchMulti(q)
-    },
+    return () => clearTimeout(timer)
+  }, [query])
+
+  const isSearchActive = debouncedQuery.length >= 2
+
+  // Multi / Movie / TV infinite search
+  const searchQuery = useInfiniteSearch(debouncedQuery, {
+    type: typeFilter === 'all' ? 'multi' : typeFilter,
+    year: yearFilter || undefined,
     enabled: isSearchActive,
   })
 
-  // Trending fallback query when search input is empty or < 2 characters
-  const trendingQuery = useQuery({
-    queryKey: tmdbKeys.trending('all', 'week'),
-    queryFn: () => tmdbClient.getTrending('all', 'week'),
-    enabled: !isSearchActive,
-  })
+  // Trending fallback when query < 2 characters
+  const trendingQuery = useTrending('all', 'week')
 
   const clearRecentSearches = () => {
     setRecentSearches([])
     localStorage.removeItem(RECENT_SEARCHES_KEY)
   }
 
-  // Filter results by type & year
-  const rawResults = isSearchActive
-    ? searchQuery.data?.results ?? []
-    : trendingQuery.data?.results ?? []
+  const removeRecentSearch = (term: string) => {
+    setRecentSearches((prev) => {
+      const next = prev.filter((s) => s !== term)
+      localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(next))
+      return next
+    })
+  }
 
-  const filteredResults = rawResults.filter((item) => {
-    const itemType = item.media_type || (item.title ? 'movie' : 'tv')
-    if (typeFilter !== 'all' && itemType !== typeFilter) return false
-    if (yearFilter) {
-      const releaseYear = (item.release_date || item.first_air_date || '').slice(0, 4)
-      if (releaseYear !== yearFilter) return false
+  // Flatten infinite query results
+  const results = useMemo<NormalisedMediaItem[]>(() => {
+    if (isSearchActive) {
+      return searchQuery.data?.pages.flatMap((page) => page.results) ?? []
     }
-    return true
-  })
+    return trendingQuery.data?.results ?? []
+  }, [isSearchActive, searchQuery.data, trendingQuery.data])
+
+  const totalResults = isSearchActive
+    ? searchQuery.data?.pages[0]?.totalResults ?? 0
+    : trendingQuery.data?.totalResults ?? 0
 
   return {
     query,
     setQuery,
+    debouncedQuery,
     typeFilter,
     setTypeFilter,
     yearFilter,
     setYearFilter,
     recentSearches,
+    removeRecentSearch,
     clearRecentSearches,
-    results: filteredResults,
+    results,
+    totalResults,
+    specialMatch,
     isLoading: isSearchActive ? searchQuery.isLoading : trendingQuery.isLoading,
+    isFetchingNextPage: searchQuery.isFetchingNextPage,
+    hasNextPage: Boolean(searchQuery.hasNextPage),
+    fetchNextPage: searchQuery.fetchNextPage,
     isSearching: isSearchActive,
+    isError: isSearchActive ? searchQuery.isError : trendingQuery.isError,
+    error: isSearchActive ? searchQuery.error : trendingQuery.error,
+    refetch: isSearchActive ? searchQuery.refetch : trendingQuery.refetch,
   }
 }
