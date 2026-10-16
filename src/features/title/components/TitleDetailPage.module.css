@@ -1,0 +1,141 @@
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-bottom: var(--space-12);
+  position: relative;
+}
+
+.backBtn {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.backBtn:hover {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+/* ── Tab Bar ── */
+.tabBar {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border-subtle);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+.tabBar::-webkit-scrollbar { display: none; }
+
+.tabBtn {
+  padding: var(--space-3) var(--space-5);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-3);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+}
+
+.tabBtn:hover {
+  color: var(--text-1);
+}
+
+.tabBtnActive {
+  color: var(--accent);
+  font-weight: 700;
+  border-bottom-color: var(--accent);
+}
+
+/* ── Tab Content ── */
+.tabContent {
+  padding: 0 var(--space-1);
+}
+
+.tabPane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  animation: fadeUp 200ms var(--ease-out) both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Section ── */
+.section {
+  /* intentionally minimal wrapper */
+}
+
+.sectionTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  margin-bottom: var(--space-3);
+  color: var(--text-1);
+}
+
+.overview {
+  font-size: var(--font-size-base);
+  color: var(--text-2);
+  line-height: 1.7;
+  max-width: 850px;
+}
+
+/* ── Details Grid ── */
+.detailsGrid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+  color: var(--text-2);
+}
+
+.detailsGrid dt {
+  color: var(--text-3);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  align-self: start;
+  padding-top: 2px;
+}
+
+.detailsGrid dd {
+  margin: 0;
+}
+
+/* ── Library Meta row ── */
+.libraryMeta {
+  display: flex;
+  gap: var(--space-5);
+  font-size: var(--font-size-xs);
+  color: var(--text-3);
+}
+
+/* ── Recommendations Grid ── */
+.recGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-4);
+}

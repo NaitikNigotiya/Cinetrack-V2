@@ -1,18 +1,15 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { parseTitleKey } from '@/shared/lib/ids'
+import type { TitleDetails } from '@/shared/schemas/title'
 import { getMovieDetails, getTvDetails } from '../endpoints'
 import { tmdbKeys } from '../keys'
-import {
-  normaliseMovieDetails,
-  normaliseTvDetails,
-  type NormalisedTitleDetails,
-} from '../normalize'
+import { toTitleDetails } from '../normalize/titleDetails'
 import { TMDB_CACHE_RULES } from './cacheRules'
 
 export function useTitleDetails(titleKey: string | null | undefined) {
   const parsed = titleKey ? parseTitleKey(titleKey) : null
 
-  return useQuery<NormalisedTitleDetails>({
+  return useQuery<TitleDetails>({
     queryKey: tmdbKeys.details(titleKey ?? ''),
     queryFn: async ({ signal }) => {
       if (!parsed) {
@@ -21,11 +18,11 @@ export function useTitleDetails(titleKey: string | null | undefined) {
 
       if (parsed.type === 'movie') {
         const raw = await getMovieDetails(parsed.tmdbId, signal)
-        return normaliseMovieDetails(raw)
+        return toTitleDetails(raw as never, 'movie')
       }
 
       const raw = await getTvDetails(parsed.tmdbId, signal)
-      return normaliseTvDetails(raw)
+      return toTitleDetails(raw as never, 'tv')
     },
     enabled: Boolean(parsed),
     ...TMDB_CACHE_RULES.titleDetails,
@@ -64,10 +61,10 @@ export function usePrefetchTitle() {
         queryFn: async () => {
           if (parsed.type === 'movie') {
             const raw = await getMovieDetails(parsed.tmdbId)
-            return normaliseMovieDetails(raw)
+            return toTitleDetails(raw as never, 'movie')
           }
           const raw = await getTvDetails(parsed.tmdbId)
-          return normaliseTvDetails(raw)
+          return toTitleDetails(raw as never, 'tv')
         },
         staleTime: TMDB_CACHE_RULES.titleDetails.staleTime,
       })

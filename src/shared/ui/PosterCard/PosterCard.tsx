@@ -2,12 +2,14 @@ import { Link } from 'react-router-dom'
 import { Star, Film } from 'lucide-react'
 import clsx from 'clsx'
 import { getPosterUrl, getPosterSrcSet } from '@/shared/lib/tmdbImage'
+import { usePrefetchTitle } from '@/services/tmdb/hooks'
 import { StatusBadge, type LibraryStatus } from '../Badge/StatusBadge'
 import { Badge } from '../Badge/Badge'
 import styles from './PosterCard.module.css'
 
 export interface PosterCardProps {
   title: string
+  titleKey?: string | undefined
   posterPath?: string | null | undefined
   year?: number | null | undefined
   type?: 'movie' | 'tv' | undefined
@@ -24,6 +26,7 @@ export interface PosterCardProps {
 
 export function PosterCard({
   title,
+  titleKey,
   posterPath,
   year,
   status,
@@ -36,6 +39,15 @@ export function PosterCard({
   className,
   priority = false,
 }: PosterCardProps) {
+  const { prefetchTitle } = usePrefetchTitle()
+  const effectiveTitleKey = titleKey || (detailHref?.startsWith('/title/') ? detailHref.replace('/title/', '') : undefined)
+
+  const handleTriggerPrefetch = () => {
+    if (effectiveTitleKey) {
+      void prefetchTitle(effectiveTitleKey)
+    }
+  }
+
   const posterUrl = getPosterUrl(posterPath, 'w342')
   const posterSrcSet = getPosterSrcSet(posterPath)
 
@@ -105,7 +117,12 @@ export function PosterCard({
 
   if (detailHref) {
     return (
-      <div className={clsx(styles.card, className)}>
+      <div
+        className={clsx(styles.card, className)}
+        onMouseEnter={handleTriggerPrefetch}
+        onFocus={handleTriggerPrefetch}
+        onPointerDown={handleTriggerPrefetch}
+      >
         <Link to={detailHref} className={styles.cardLink} onClick={onClick}>
           {cardContent}
         </Link>
@@ -129,6 +146,9 @@ export function PosterCard({
     <div
       className={clsx(styles.card, className)}
       onClick={onClick}
+      onMouseEnter={handleTriggerPrefetch}
+      onFocus={handleTriggerPrefetch}
+      onPointerDown={handleTriggerPrefetch}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={(e) => {

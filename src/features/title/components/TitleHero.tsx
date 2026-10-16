@@ -14,10 +14,14 @@ interface TitleHeroProps {
   backdropPath?: string | null | undefined
   year?: number | null | undefined
   runtimeMinutes?: number | null | undefined
+  runtimeString?: string | undefined
   genres?: { id: number; name: string }[] | undefined
   voteAverage?: number | undefined
+  certification?: string | undefined
+  status?: string | undefined
   type: 'movie' | 'tv'
   episodesCount?: number | null | undefined
+  nextAirDate?: string | undefined
 }
 
 export function TitleHero({
@@ -27,15 +31,21 @@ export function TitleHero({
   backdropPath,
   year,
   runtimeMinutes,
+  runtimeString,
   genres = [],
   voteAverage,
+  certification,
+  status,
   type,
   episodesCount,
+  nextAirDate,
 }: TitleHeroProps) {
   const backdropUrl = getBackdropUrl(backdropPath, 'w1280')
   const backdropSrcSet = getBackdropSrcSet(backdropPath)
   const posterUrl = getPosterUrl(posterPath, 'w500')
   const posterSrcSet = getPosterSrcSet(posterPath)
+
+  const displayRuntime = runtimeString ?? (runtimeMinutes ? `${runtimeMinutes}m` : null)
 
   return (
     <div className={styles.hero}>
@@ -80,6 +90,19 @@ export function TitleHero({
               </span>
             ) : null}
 
+            {certification && (
+              <span style={{
+                padding: '2px 6px',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: 'var(--font-size-xs)',
+                fontWeight: 600,
+                color: 'var(--text-2)',
+              }}>
+                {certification}
+              </span>
+            )}
+
             {year && (
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                 <Calendar size={14} />
@@ -87,16 +110,35 @@ export function TitleHero({
               </span>
             )}
 
-            {runtimeMinutes ? (
+            {displayRuntime ? (
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                 <Clock size={14} />
-                {runtimeMinutes}m
+                {displayRuntime}
               </span>
             ) : null}
 
             {type === 'tv' && episodesCount ? (
               <span>{episodesCount} episodes</span>
             ) : null}
+
+            {status && (
+              <span style={{
+                fontSize: 'var(--font-size-xs)',
+                color: 'var(--text-3)',
+              }}>
+                • {status}
+              </span>
+            )}
+
+            {nextAirDate && (
+              <span style={{
+                fontSize: 'var(--font-size-xs)',
+                color: 'var(--accent, #6366f1)',
+                fontWeight: 500,
+              }}>
+                • Next: {new Date(nextAirDate).toLocaleDateString()}
+              </span>
+            )}
           </div>
 
           {genres.length > 0 && (
