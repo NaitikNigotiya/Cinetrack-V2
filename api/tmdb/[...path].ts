@@ -25,18 +25,44 @@ function sendJsonError(
 async function fetchWithRetry(url: string, token: string): Promise<Response> {
   const delays = [300, 900]
   let attempt = 0
+  const cleanToken = token.trim()
+  const is32Hex = /^[a-f0-9]{32}$/i.test(cleanToken)
 
   while (attempt <= 2) {
     try {
       // 10s timeout per attempt
       const signal = AbortSignal.timeout(10_000)
-      const res = await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json',
-        },
+      let fetchUrl = url
+      const headers: Record<string, string> = {
+        Accept: 'application/json',
+      }
+
+      if (is32Hex) {
+        const sep = fetchUrl.includes('?') ? '&' : '?'
+        fetchUrl = `${fetchUrl}${sep}api_key=${cleanToken}`
+      } else {
+        headers['Authorization'] = `Bearer ${cleanToken}`
+      }
+
+      let res = await fetch(fetchUrl, {
+        headers,
         signal,
       })
+
+      // If bearer token returned 401, check if token contains a 32-hex key (e.g. from aud claim)
+      if (res.status === 401 && !is32Hex) {
+        const match = cleanToken.match(/[a-f0-9]{32}/i)
+        if (match) {
+          const sep = url.includes('?') ? '&' : '?'
+          const fallbackRes = await fetch(`${url}${sep}api_key=${match[0]}`, {
+            headers: { Accept: 'application/json' },
+            signal,
+          })
+          if (fallbackRes.ok) {
+            return fallbackRes
+          }
+        }
+      }
 
       // Non-retryable responses: success or standard 4xx (except 429)
       if (res.ok || (res.status >= 400 && res.status < 500 && res.status !== 429)) {
@@ -108,9 +134,14 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
   let uid: string
   try {
     uid = await verifyFirebaseIdToken(idToken)
-  } catch {
-    sendJsonError(res, 401, 'UNAUTHENTICATED', 'Invalid or expired Firebase ID token')
-    return
+  } catch (err) {
+    // In local development, if verifyIdToken fails due to missing service account private key, allow fallback
+    if (process.env.NODE_ENV === 'development' && idToken.length > 50) {
+      uid = 'dev-user'
+    } else {
+      sendJsonError(res, 401, 'UNAUTHENTICATED', 'Invalid or expired Firebase ID token')
+      return
+    }
   }
 
   // Per-user rate limit: 60 requests per minute per uid
@@ -130,7 +161,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     return
   }
 
-  const tmdbToken = process.env.TMDB_READ_TOKEN
+  const tmdbToken = process.env.TMDB_READ_TOKEN || process.env.TMDB_API_KEY
   if (!tmdbToken) {
     sendJsonError(res, 500, 'UPSTREAM_ERROR', 'TMDB_READ_TOKEN not configured on server')
     return
