@@ -28,11 +28,11 @@ export async function fetchNotes(uid: string): Promise<Note[]> {
 export async function saveNote(
   uid: string,
   note: {
-    id?: string
-    titleKey?: string | null
-    title?: string | null
+    id?: string | undefined
+    titleKey?: string | null | undefined
+    title?: string | null | undefined
     body: string
-    pinned?: boolean
+    pinned?: boolean | undefined
   }
 ): Promise<string> {
   const notesCol = collection(firestore, `users/${uid}/notes`)

@@ -3,8 +3,11 @@ import {
   Home,
   Search,
   Compass,
-  Film,
-  FolderHeart,
+  Bookmark,
+  Play,
+  CheckCircle,
+  Heart,
+  FolderOpen,
   History,
   Calendar,
   Star,
@@ -53,10 +56,10 @@ export function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps) {
             to="/"
             end
             className={({ isActive }) => clsx(styles.navItem, isActive && styles.navItemActive)}
-            title="Home"
+            title="Dashboard"
           >
             <Home size={18} />
-            {!isCollapsed && <span>Home</span>}
+            {!isCollapsed && <span>Dashboard</span>}
           </NavLink>
           <NavLink
             to="/search"
@@ -76,23 +79,47 @@ export function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps) {
           </NavLink>
         </div>
 
-        {/* LIBRARY GROUP */}
+        {/* MY LIBRARY GROUP */}
         <div className={styles.group}>
-          {!isCollapsed && <span className={styles.groupTitle}>Library</span>}
+          {!isCollapsed && <span className={styles.groupTitle}>My Library</span>}
           <NavLink
-            to="/library"
+            to="/watchlist"
             className={({ isActive }) => clsx(styles.navItem, isActive && styles.navItemActive)}
-            title="Library"
+            title="Watchlist"
           >
-            <Film size={18} />
-            {!isCollapsed && <span>Library</span>}
+            <Bookmark size={18} />
+            {!isCollapsed && <span>Watchlist</span>}
+          </NavLink>
+          <NavLink
+            to="/watching"
+            className={({ isActive }) => clsx(styles.navItem, isActive && styles.navItemActive)}
+            title="Watching"
+          >
+            <Play size={18} />
+            {!isCollapsed && <span>Watching</span>}
+          </NavLink>
+          <NavLink
+            to="/completed"
+            className={({ isActive }) => clsx(styles.navItem, isActive && styles.navItemActive)}
+            title="Completed"
+          >
+            <CheckCircle size={18} />
+            {!isCollapsed && <span>Completed</span>}
+          </NavLink>
+          <NavLink
+            to="/favorites"
+            className={({ isActive }) => clsx(styles.navItem, isActive && styles.navItemActive)}
+            title="Favorites"
+          >
+            <Heart size={18} />
+            {!isCollapsed && <span>Favorites</span>}
           </NavLink>
           <NavLink
             to="/collections"
             className={({ isActive }) => clsx(styles.navItem, isActive && styles.navItemActive)}
             title="Collections"
           >
-            <FolderHeart size={18} />
+            <FolderOpen size={18} />
             {!isCollapsed && <span>Collections</span>}
           </NavLink>
           <NavLink

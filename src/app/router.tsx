@@ -7,6 +7,10 @@ import TitleDetailPage from '@/features/title/components/TitleDetailPage'
 import EpisodeTrackerPage from '@/features/episodes/components/EpisodeTrackerPage'
 import HistoryPage from '@/features/history/components/HistoryPage'
 import LibraryPage from '@/features/library/components/LibraryPage'
+import WatchlistPage from '@/features/library/components/WatchlistPage'
+import WatchingPage from '@/features/library/components/WatchingPage'
+import CompletedPage from '@/features/library/components/CompletedPage'
+import FavoritesPage from '@/features/library/components/FavoritesPage'
 import HomePage from '@/features/home/components/HomePage'
 import DiscoverPage from '@/features/discover/components/DiscoverPage'
 import CollectionsPage from '@/features/collections/components/CollectionsPage'
@@ -59,6 +63,22 @@ export const router = createBrowserRouter([
       {
         path: 'library',
         element: <LibraryPage />,
+      },
+      {
+        path: 'watchlist',
+        element: <WatchlistPage />,
+      },
+      {
+        path: 'watching',
+        element: <WatchingPage />,
+      },
+      {
+        path: 'completed',
+        element: <CompletedPage />,
+      },
+      {
+        path: 'favorites',
+        element: <FavoritesPage />,
       },
       {
         path: 'collections',

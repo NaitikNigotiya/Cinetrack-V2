@@ -111,6 +111,38 @@
   --z-sheet: 60;
   --z-modal: 70;
   --z-toast: 80;
+
+  /* Template Design Token Aliases (Dark mode default) */
+  --bg-primary: #141414;
+  --bg-secondary: #1f1f1f;
+  --bg-elevated: #2a2a2a;
+  --bg-overlay: rgba(255, 255, 255, 0.06);
+  --color-brand: #e50914;
+  --color-brand-dim: #b0070f;
+  --color-brand-text: #ffffff;
+  --text-primary: #e8e8e8;
+  --text-secondary: #aaaaaa;
+  --text-muted: #71717a;
+  --text-on-brand: #ffffff;
+  --border-default: #2a2a2a;
+  --border-brand: #e50914;
+  --color-success: #2ecc71;
+  --color-warning: #f5a623;
+  --color-error: #ff4757;
+  --color-info: #00b4d8;
+  --card-bg: #1f1f1f;
+  --card-border: #2a2a2a;
+  --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --input-bg: #2a2a2a;
+  --input-border: #3a3a3a;
+  --input-focus: #e50914;
+  --skeleton-base: #2a2a2a;
+  --skeleton-shine: #333333;
+  --transition-fast: 120ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 350ms ease;
+  --font-family: var(--font-sans);
+  --sidebar-width: 240px;
 }
 
 /* Light Theme Overrides */
@@ -169,6 +201,29 @@ html[data-theme='light'] {
   --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-2: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
   --shadow-3: 0 12px 28px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+
+  /* Template Design Token Aliases (Light mode) */
+  --bg-primary: #f5f5f1;
+  --bg-secondary: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-overlay: rgba(0, 0, 0, 0.05);
+  --color-brand: #f5c518;
+  --color-brand-dim: #d4a90d;
+  --color-brand-text: #000000;
+  --text-primary: #1a1a1a;
+  --text-secondary: #555555;
+  --text-muted: #8a8a8a;
+  --text-on-brand: #000000;
+  --border-default: #e0dfd8;
+  --border-brand: #f5c518;
+  --card-bg: #ffffff;
+  --card-border: #e0dfd8;
+  --card-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  --input-bg: #ffffff;
+  --input-border: #bdbcba;
+  --input-focus: #f5c518;
+  --skeleton-base: #ebebeb;
+  --skeleton-shine: #f5f5f5;
 }
 
 /* Reduced Motion Override */

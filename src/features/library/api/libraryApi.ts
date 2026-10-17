@@ -186,6 +186,21 @@ export async function toggleFavorite(uid: string, titleKey: string, isFavorite: 
 }
 
 /**
+ * Updates partial fields of a library entry.
+ */
+export async function updateLibraryEntry(
+  uid: string,
+  titleKey: string,
+  updates: Partial<LibraryEntry>
+): Promise<void> {
+  const libRef = getLibraryDocRef(uid, titleKey)
+  await updateDoc(libRef, {
+    ...updates,
+    updatedAt: serverTimestamp(),
+  })
+}
+
+/**
  * Sets canonical rating (0.5..10).
  */
 export async function setRating(

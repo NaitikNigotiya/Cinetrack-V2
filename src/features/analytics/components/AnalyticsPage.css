@@ -1,0 +1,226 @@
+/* ─── Analytics Page Styling ───────────────────────────────────────────────── */
+
+.analytics-page {
+  padding-bottom: calc(var(--bottom-nav-height, 60px) + var(--safe-bottom, 0px) + 24px);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-height: 100vh;
+}
+
+/* Header & Filters */
+.analytics-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cinetrack-select {
+  background: var(--bg-secondary, #141522);
+  color: var(--text-primary, #ffffff);
+  border: 1px solid var(--border-default, #2a2c3d);
+  border-radius: var(--radius-md, 8px);
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+}
+
+/* 6-Card Stats Row */
+.analytics-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (min-width: 576px) {
+  .analytics-metrics-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .analytics-metrics-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+.ap-stat-card {
+  background: var(--bg-secondary, #141522);
+  border: 1px solid var(--border-default, #2a2c3d);
+  border-radius: var(--radius-lg, 12px);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.ap-stat-icon {
+  color: var(--text-muted, #7c7e93);
+  opacity: 0.75;
+  margin-bottom: 6px;
+}
+
+.ap-stat-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary, #ffffff);
+  line-height: 1.2;
+}
+
+.ap-stat-lbl {
+  font-size: 11px;
+  color: var(--text-muted, #7c7e93);
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-top: 4px;
+  letter-spacing: 0.3px;
+}
+
+/* Charts Containers */
+.analytics-charts-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 768px) {
+  .analytics-charts-split {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.analytics-chart-card {
+  background: var(--bg-secondary, #141522);
+  border: 1px solid var(--border-default, #2a2c3d);
+  border-radius: var(--radius-xl, 16px);
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Donut Chart Wrap & Center Label */
+.ap-chart-donut-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px auto;
+  width: 200px;
+  height: 200px;
+}
+
+.ap-donut-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 110px;
+}
+
+.ap-donut-center-lbl {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary, #ffffff);
+  line-height: 1.3;
+}
+
+/* Legends */
+.ap-legend-text {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary, #b3b6cb);
+}
+
+.ap-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* Genre Pills */
+.ap-genre-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.ap-genre-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-elevated, #1a1c28);
+  border: 1px solid var(--border-default, #2a2c3d);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill, 9999px);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary, #b3b6cb);
+}
+
+.ap-genre-pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+/* Tooltips */
+.ap-custom-tooltip {
+  background: var(--bg-elevated, #1a1c28);
+  border: 1px solid var(--border-default, #2a2c3d);
+  border-radius: var(--radius-md, 8px);
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--text-primary, #ffffff);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.ap-tooltip-title {
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  border-bottom: 1px solid var(--border-default, #2a2c3d);
+  padding-bottom: 4px;
+}
+
+.ap-tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* Empty Card */
+.ap-empty-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 64px 24px;
+  background: var(--bg-secondary, #141522);
+  border: 1px dashed var(--border-default, #2a2c3d);
+  border-radius: var(--radius-xl, 16px);
+  margin-top: 24px;
+}

@@ -22,6 +22,10 @@ export interface PosterCardProps {
   quickAction?: { label: string; onClick: () => void } | undefined
   className?: string | undefined
   priority?: boolean | undefined
+  showAddButton?: boolean | undefined
+  isInWatchlist?: boolean | undefined
+  onAddClick?: ((e: React.MouseEvent) => void) | undefined
+  isFavorite?: boolean | undefined
 }
 
 export function PosterCard({
@@ -38,6 +42,10 @@ export function PosterCard({
   quickAction,
   className,
   priority = false,
+  showAddButton = false,
+  isInWatchlist = false,
+  onAddClick,
+  isFavorite = false,
 }: PosterCardProps) {
   const { prefetchTitle } = usePrefetchTitle()
   const effectiveTitleKey = titleKey || (detailHref?.startsWith('/title/') ? detailHref.replace('/title/', '') : undefined)
@@ -76,6 +84,12 @@ export function PosterCard({
           </div>
         )}
 
+        {isFavorite && (
+          <div style={{ position: 'absolute', top: 6, right: 6, fontSize: 14, zIndex: 2 }}>
+            ❤️
+          </div>
+        )}
+
         {status && (
           <div className={styles.badgeTopLeft}>
             <StatusBadge status={status} />
@@ -86,6 +100,33 @@ export function PosterCard({
           <div className={styles.badgeTopLeft}>
             <Badge variant="accent">{statusBadge}</Badge>
           </div>
+        )}
+
+        {showAddButton && (
+          <button
+            type="button"
+            onClick={onAddClick}
+            style={{
+              position: 'absolute',
+              bottom: 6,
+              left: 6,
+              right: 6,
+              padding: '6px',
+              border: 'none',
+              cursor: 'pointer',
+              borderRadius: 'var(--radius-sm, 6px)',
+              background: isInWatchlist
+                ? 'rgba(46, 204, 113, 0.9)'
+                : 'rgba(229, 9, 20, 0.9)',
+              color: 'white',
+              fontSize: '11px',
+              fontWeight: 700,
+              backdropFilter: 'blur(4px)',
+              zIndex: 3,
+            }}
+          >
+            {isInWatchlist ? '✓ In Watchlist' : '+ Add'}
+          </button>
         )}
 
         {progress && progress.total > 0 && (
