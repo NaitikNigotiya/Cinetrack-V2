@@ -73,17 +73,6 @@ export function AppShell() {
         <main id="main-content" className={styles.content}>
           <Outlet />
         </main>
-        <footer className={styles.footer} role="contentinfo">
-          <div className={styles.footerContent}>
-            <div className={styles.footerAttribution}>
-              <img src="/tmdb-logo.svg" alt="TMDB Logo" style={{ height: '14px', opacity: 0.85 }} />
-              <span>This product uses the TMDB API but is not endorsed or certified by TMDB.</span>
-            </div>
-            <div className={styles.footerMeta}>
-              <span>CineTrack v2.0 • Offline Ready</span>
-            </div>
-          </div>
-        </footer>
       </div>
 
       <MobileTabBar />

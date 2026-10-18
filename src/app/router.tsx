@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createBrowserRouter } from 'react-router-dom'
 import { AuthGate } from '@/features/auth/components/AuthGate'
 import LoginPage from '@/features/auth/components/LoginPage'
 import { AppShell } from '@/app/shell/AppShell'
@@ -14,13 +14,13 @@ import FavoritesPage from '@/features/library/components/FavoritesPage'
 import HomePage from '@/features/home/components/HomePage'
 import DiscoverPage from '@/features/discover/components/DiscoverPage'
 import CollectionsPage from '@/features/collections/components/CollectionsPage'
-import CollectionDetailPage from '@/features/collections/components/CollectionDetailPage'
 import CalendarPage from '@/features/calendar/components/CalendarPage'
 import ReviewsPage from '@/features/reviews/components/ReviewsPage'
 import NotesPage from '@/features/notes/components/NotesPage'
 import { AnalyticsPage } from '@/features/analytics/components/AnalyticsPage'
 import OfflinePage from '@/features/offline/components/OfflinePage'
 import SettingsPage from '@/features/settings/components/SettingsPage'
+import NotFoundPage from '@/features/notfound/components/NotFoundPage'
 import UiPlayground from '@/features/dev/UiPlayground'
 
 export const router = createBrowserRouter([
@@ -86,7 +86,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'collections/:id',
-        element: <CollectionDetailPage />,
+        element: <CollectionsPage />,
       },
       {
         path: 'history',
@@ -118,7 +118,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '*',
-        element: <Navigate to="/" replace />,
+        element: <NotFoundPage />,
       },
     ],
   },

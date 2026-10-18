@@ -1,130 +1,422 @@
-.container {
+/* ─── Timeline Structure ─────────────────────────────────────────────────────── */
+.timelineWrapper {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
-  max-width: 900px;
-  margin: 0 auto;
+  gap: var(--space-8);
+  padding-left: var(--space-4);
 }
 
-.header {
+.timelineWrapper::before {
+  content: '';
+  position: absolute;
+  top: 16px;
+  bottom: 16px;
+  left: 19px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--accent) 0%, rgba(229, 9, 20, 0.1) 80%, transparent 100%);
+  border-radius: var(--radius-pill);
+  pointer-events: none;
+}
+
+.daySection {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-3);
+  position: relative;
 }
 
-.titleRow {
+.dayHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  flex-wrap: wrap;
-}
-
-.pageTitle {
-  font-size: var(--font-size-3xl);
-  font-weight: 800;
-  color: var(--text-1);
-}
-
-.monthlyStatsBanner {
-  display: flex;
-  align-items: center;
-  gap: var(--space-6);
-  padding: var(--space-4) var(--space-6);
-  background-color: var(--surface-raised);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: var(--space-2) var(--space-4) var(--space-2) var(--space-8);
+  background-color: var(--surface-card);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius-tile);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-xl);
+  margin-left: -4px;
 }
 
-.statItem {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+.dayHeaderNode {
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: var(--surface-page);
+  border: 3px solid var(--accent);
+  box-shadow: 0 0 10px var(--accent);
 }
 
-.statVal {
-  font-size: var(--font-size-2xl);
-  font-weight: 800;
-  color: var(--accent-text);
-  font-variant-numeric: tabular-nums;
-}
-
-.statLabel {
-  font-size: var(--font-size-xs);
-  color: var(--text-3);
-  text-transform: uppercase;
-}
-
-.controlsBar {
+.dayTitleRow {
   display: flex;
   align-items: center;
   gap: var(--space-3);
   flex-wrap: wrap;
 }
 
-.dayGroup {
+.dayLabel {
+  font-size: var(--fs-small);
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+}
+
+.dayBadge {
+  font-size: var(--fs-eyebrow);
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-subtle);
+  color: var(--accent-text);
+  letter-spacing: var(--ls-eyebrow);
+}
+
+.daySummary {
+  font-size: var(--fs-stat-label);
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* ─── Timeline Row Card ──────────────────────────────────────────────────────── */
+.timelineItemsList {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  padding-left: var(--space-8);
 }
 
-.dayTitle {
-  font-size: var(--font-size-sm);
-  font-weight: 700;
-  color: var(--text-2);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding-bottom: var(--space-1);
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.historyRow {
+.timelineCard {
   display: flex;
   align-items: center;
   gap: var(--space-4);
   padding: var(--space-3) var(--space-4);
-  background-color: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-card);
   transition: all var(--duration-fast) var(--ease-out);
+  position: relative;
 }
 
-.historyRow:hover {
+.timelineCard:hover {
   border-color: var(--border-strong);
+  background-color: var(--surface-card-hover);
+  transform: translateX(4px);
+  box-shadow: var(--shadow-sm);
 }
 
-.posterThumb {
-  width: 44px;
-  height: 66px;
-  border-radius: var(--radius-sm);
+.cardPoster {
+  width: 52px;
+  height: 78px;
+  border-radius: var(--radius-tile);
   overflow: hidden;
-  background-color: var(--surface-overlay);
+  background-color: var(--surface-hover);
   flex-shrink: 0;
+  position: relative;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
 }
 
-.posterImg {
+.posterImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform var(--duration-normal) var(--ease-out);
 }
 
-.rowInfo {
+.cardPoster:hover .posterImage {
+  transform: scale(1.05);
+}
+
+.posterFallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  background: var(--surface-hover);
+}
+
+.cardMainInfo {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
-.rowTitle {
-  font-size: var(--font-size-base);
-  font-weight: 600;
-  color: var(--text-1);
+.cardTitleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
 }
 
-.rowMeta {
+.cardTitle {
+  font-size: var(--fs-card-title);
+  font-weight: 700;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: color var(--duration-fast) ease;
+}
+
+.cardTitle:hover {
+  color: var(--accent-text);
+}
+
+.seasonEpisodeBadge {
+  font-size: var(--fs-stat-label);
+  font-weight: 700;
+  color: var(--accent-text);
+  background-color: var(--accent-subtle);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.episodeTitle {
+  font-size: var(--fs-small);
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.cardMetaRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-size: var(--fs-stat-label);
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.metaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ratingBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  color: var(--color-warning, #f59e0b);
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* ─── Grid View Mode ─────────────────────────────────────────────────────────── */
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: var(--card-gap);
+}
+
+.gridCard {
+  position: relative;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-card);
+  transition: all var(--duration-normal) var(--ease-out);
+  display: flex;
+  flex-direction: column;
+}
+
+.gridCard:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.gridPosterBox {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background-color: var(--surface-hover);
+  cursor: pointer;
+}
+
+.gridPosterImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.gridCard:hover .gridPosterImg {
+  transform: scale(1.05);
+}
+
+.gridRatingOverlay {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 7px;
+  border-radius: var(--radius-pill);
+  background-color: var(--surface-card);
+  backdrop-filter: blur(8px);
+  font-size: var(--fs-stat-label);
+  font-weight: 800;
+  color: var(--color-warning, #f59e0b);
+}
+
+.gridTypeBadge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: var(--fs-stat-label);
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: var(--radius-tile);
+  backdrop-filter: blur(8px);
+}
+
+.gridDetails {
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.gridTitle {
+  font-size: var(--fs-small);
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.gridTitle:hover {
+  color: var(--accent-text);
+}
+
+.gridSubtext {
+  font-size: var(--fs-stat-label);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gridCardActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+  background-color: var(--surface-card-hover);
+}
+
+/* ─── Compact View Mode ──────────────────────────────────────────────────────── */
+.compactTable {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background-color: var(--surface-card);
+}
+
+.compactRow {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  font-size: var(--font-size-xs);
-  color: var(--text-3);
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background-color var(--duration-fast) ease;
+}
+
+.compactRow:last-child {
+  border-bottom: none;
+}
+
+.compactRow:hover {
+  background-color: var(--surface-card-hover);
+}
+
+.compactThumb {
+  width: 32px;
+  height: 48px;
+  border-radius: var(--radius-tile);
+  object-fit: cover;
+  flex-shrink: 0;
+  background-color: var(--surface-hover);
+}
+
+.compactTitleBox {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.compactTitle {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.compactTitle:hover {
+  color: var(--accent-text);
+}
+
+/* ─── Responsive Adjustments ─────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .timelineWrapper {
+    padding-left: 0;
+  }
+
+  .timelineWrapper::before {
+    display: none;
+  }
+
+  .dayHeader {
+    padding-left: var(--space-3);
+    margin-left: 0;
+  }
+
+  .dayHeaderNode {
+    display: none;
+  }
+
+  .timelineItemsList {
+    padding-left: 0;
+  }
+
+  .cardPoster {
+    width: 44px;
+    height: 66px;
+  }
+
+  .gridContainer {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--space-3);
+  }
 }

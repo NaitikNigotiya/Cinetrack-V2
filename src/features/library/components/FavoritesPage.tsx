@@ -1,7 +1,17 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Sparkles } from 'lucide-react'
 import { useLibrary } from '../hooks/useLibrary'
-import { PosterCard } from '@/shared/ui/PosterCard/PosterCard'
+import {
+  PageShell,
+  PageHeader,
+  FilterBar,
+  Pill,
+  EmptyStateCard,
+  PosterGrid,
+  PosterCard,
+  Button,
+} from '@/shared/ui'
 import './FavoritesPage.css'
 
 export default function FavoritesPage() {
@@ -11,6 +21,8 @@ export default function FavoritesPage() {
   const [sortBy, setSortBy] = useState('date')
 
   const favorites = useMemo(() => entries.filter((e) => e.isFavorite), [entries])
+  const moviesCount = useMemo(() => favorites.filter((e) => e.type === 'movie').length, [favorites])
+  const tvCount = useMemo(() => favorites.filter((e) => e.type === 'tv').length, [favorites])
 
   const filteredFavorites = useMemo(() => {
     return favorites
@@ -35,76 +47,49 @@ export default function FavoritesPage() {
   }, [favorites, activeFilter, sortBy])
 
   return (
-    <div className="unified-page-container" style={{ padding: '24px' }}>
-      <header className="unified-page-header" style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <h1 className="page-title" style={{ fontSize: '24px', fontWeight: 800 }}>Favorites</h1>
-            <span
-              style={{
-                background: 'var(--color-brand)',
-                color: 'var(--text-on-brand)',
-                fontSize: '12px',
-                fontWeight: 700,
-                padding: '2px 10px',
-                borderRadius: '999px',
-              }}
-            >
-              {favorites.length} titles
-            </span>
-          </div>
-          <p className="page-subtitle" style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: 4 }}>
-            Your most loved movies and shows
-          </p>
-        </div>
+    <PageShell>
+      <PageHeader
+        eyebrow={<><Sparkles size={14} /> Loved</>}
+        title="Favorites"
+        subtitle="Your most loved movies and shows"
+        meta={
+          <Pill variant="filledBrand">
+            {favorites.length} {favorites.length === 1 ? 'title' : 'titles'}
+          </Pill>
+        }
+      />
 
-        {/* Sort dropdown */}
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-          className="favs-sort-select"
-          style={{ width: 'auto', flexShrink: 0 }}
-        >
-          <option value="date">Date Added</option>
-          <option value="rating">Rating</option>
-          <option value="title">Title A-Z</option>
-          <option value="year">Year</option>
-        </select>
-      </header>
+      <FilterBar
+        tabs={[
+          { id: 'All', label: 'All', count: favorites.length },
+          { id: 'Movies', label: 'Movies', count: moviesCount },
+          { id: 'TV Shows', label: 'TV Shows', count: tvCount },
+        ]}
+        activeTab={activeFilter}
+        onTabChange={(t) => setActiveFilter(t)}
+        sortOptions={[
+          { value: 'date', label: 'Date Added' },
+          { value: 'rating', label: 'Rating' },
+          { value: 'title', label: 'Title (A-Z)' },
+          { value: 'year', label: 'Year' },
+        ]}
+        sortValue={sortBy}
+        onSortChange={(val) => setSortBy(val)}
+      />
 
-      {/* Filter tabs */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '24px' }}>
-        {['All', 'Movies', 'TV Shows'].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveFilter(tab)}
-            className={`favs-pill-btn ${activeFilter === tab ? 'favs-pill-btn--active' : ''}`}
-            type="button"
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      {/* Empty state */}
       {filteredFavorites.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '64px 24px', color: 'var(--text-muted)' }}>
-          <div style={{ fontSize: 56, marginBottom: 16 }}>❤️</div>
-          <h3 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>
-            No favorites yet
-          </h3>
-          <p style={{ fontSize: 14 }}>Click the heart icon on any movie or TV show to add it to your favorites.</p>
-        </div>
+        <EmptyStateCard
+          icon="❤️"
+          title="No favorites yet"
+          description="Click the heart icon on any movie or TV show to add it to your favorites."
+          action={
+            <Button variant="primary" onClick={() => navigate('/search')}>
+              Browse Titles
+            </Button>
+          }
+        />
       ) : (
-        /* Poster grid */
-        <div
-          className="media-card-grid"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
-            gap: '16px',
-          }}
-        >
+        <PosterGrid>
           {filteredFavorites.map((entry) => (
             <PosterCard
               key={entry.titleKey}
@@ -118,8 +103,8 @@ export default function FavoritesPage() {
               onClick={() => navigate(`/title/${entry.titleKey}`)}
             />
           ))}
-        </div>
+        </PosterGrid>
       )}
-    </div>
+    </PageShell>
   )
 }

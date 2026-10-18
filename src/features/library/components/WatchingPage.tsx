@@ -1,12 +1,19 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Play, Check, Film } from 'lucide-react'
+import { Play, Check, Film, Sparkles } from 'lucide-react'
 
 import { useLibrary } from '../hooks/useLibrary'
 import { updateLibraryEntry } from '../api/libraryApi'
 import { useAuthStore } from '@/features/auth/store/authStore'
 import { getPosterUrl } from '@/shared/lib/tmdbImage'
-import { toast } from '@/shared/ui'
+import {
+  toast,
+  PageShell,
+  PageHeader,
+  FilterBar,
+  EmptyStateCard,
+  Button,
+} from '@/shared/ui'
 import type { LibraryEntry } from '@/shared/schemas'
 import './WatchingPage.css'
 
@@ -23,7 +30,6 @@ export default function WatchingPage() {
   const tvEntries = useMemo(() => entries.filter((e) => e.type === 'tv'), [entries])
   const currentEntries = activeTab === 'movies' ? movieEntries : tvEntries
 
-  // Memoized sorting
   const sortedEntries = useMemo(() => {
     return [...currentEntries].sort((a, b) => {
       if (sortBy === 'title') {
@@ -34,7 +40,6 @@ export default function WatchingPage() {
         const secondsB = b.updatedAt?.seconds ?? 0
         return secondsB - secondsA
       }
-      // 'newest' (addedAt default)
       const secondsA = a.addedAt?.seconds ?? 0
       const secondsB = b.addedAt?.seconds ?? 0
       return secondsB - secondsA
@@ -57,60 +62,46 @@ export default function WatchingPage() {
   }
 
   return (
-    <div className="watching-page">
-      <header className="wt-header-v2">
-        <div>
-          <h1 className="wt-title-v2">Watching</h1>
-          <p className="wt-subtitle-v2">Titles currently in progress</p>
-        </div>
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as any)}
-          className="wt-sort-select"
-          style={{ width: 'auto', flexShrink: 0 }}
-        >
-          <option value="newest">Newest</option>
-          <option value="updated">Recently Updated</option>
-          <option value="title">A-Z</option>
-        </select>
-      </header>
+    <PageShell>
+      <PageHeader
+        eyebrow={<><Sparkles size={14} /> In Progress</>}
+        title="Watching"
+        subtitle="Titles currently in progress"
+        meta={<span>{entries.length} {entries.length === 1 ? 'title' : 'titles'} in total</span>}
+      />
 
-      {/* Tabs */}
-      <div className="wt-tabs-row-v2">
-        <button
-          onClick={() => setActiveTab('movies')}
-          className={`wt-tab-btn-v2 ${activeTab === 'movies' ? 'wt-tab-btn-v2--active' : ''}`}
-          type="button"
-        >
-          Movies
-          <span className="wt-tab-badge-v2">{movieEntries.length}</span>
-        </button>
-        <button
-          onClick={() => setActiveTab('tv')}
-          className={`wt-tab-btn-v2 ${activeTab === 'tv' ? 'wt-tab-btn-v2--active' : ''}`}
-          type="button"
-        >
-          TV Shows
-          <span className="wt-tab-badge-v2">{tvEntries.length}</span>
-        </button>
-      </div>
+      {/* FilterBar with Pill Tabs and Right-aligned Sort */}
+      <FilterBar
+        tabs={[
+          { id: 'movies', label: 'Movies', count: movieEntries.length },
+          { id: 'tv', label: 'TV Shows', count: tvEntries.length },
+        ]}
+        activeTab={activeTab}
+        onTabChange={(id) => setActiveTab(id as any)}
+        sortOptions={[
+          { value: 'newest', label: 'Newest Added' },
+          { value: 'updated', label: 'Recently Updated' },
+          { value: 'title', label: 'Title (A-Z)' },
+        ]}
+        sortValue={sortBy}
+        onSortChange={(val) => setSortBy(val as any)}
+      />
 
       {/* Grid */}
-      <div className="watching-grid-layout">
-        {sortedEntries.length === 0 ? (
-          <div className="wt-empty-state-v2">
-            <div className="wt-empty-emoji-v2">🎬</div>
-            <h3 className="wt-empty-title-v2">Nothing currently in progress.</h3>
-            <button
-              onClick={() => navigate('/search')}
-              className="wt-empty-cta-v2"
-              type="button"
-            >
+      {sortedEntries.length === 0 ? (
+        <EmptyStateCard
+          icon="🍿"
+          title="Nothing currently in progress"
+          description={`You don't have any ${activeTab === 'movies' ? 'movies' : 'TV shows'} in progress. Search for titles to start watching.`}
+          action={
+            <Button variant="primary" onClick={() => navigate('/search')}>
               Browse Titles
-            </button>
-          </div>
-        ) : (
-          sortedEntries.map((entry) => {
+            </Button>
+          }
+        />
+      ) : (
+        <div className="watching-grid-layout">
+          {sortedEntries.map((entry) => {
             const totalEps = entry.tv?.totalEpisodes ?? 0
             const watchedEps = entry.tv?.episodesWatched ?? 0
             const progressPercent =
@@ -183,9 +174,9 @@ export default function WatchingPage() {
                 </div>
               </div>
             )
-          })
-        )}
-      </div>
-    </div>
+          })}
+        </div>
+      )}
+    </PageShell>
   )
 }

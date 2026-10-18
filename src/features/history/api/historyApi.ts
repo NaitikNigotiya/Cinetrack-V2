@@ -16,7 +16,7 @@ import {
 import type { HistoryEvent } from '@/shared/schemas'
 import { toast } from '@/shared/ui'
 
-export async function fetchHistory(uid: string, limitCount = 50): Promise<HistoryEvent[]> {
+export async function fetchHistory(uid: string, limitCount = 150): Promise<HistoryEvent[]> {
   const colRef = getHistoryCollection(uid)
   const q = query(colRef, orderBy('watchedAt', 'desc'), limit(limitCount))
   const snap = await getDocs(q)

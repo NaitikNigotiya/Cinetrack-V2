@@ -1,0 +1,48 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-gap);
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.titleArea {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.title {
+  font-size: var(--fs-section-title);
+  font-weight: 700;
+  color: var(--text-1);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.action {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--accent-text);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: opacity var(--duration-fast) ease;
+}
+
+.action:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.content {
+  width: 100%;
+}

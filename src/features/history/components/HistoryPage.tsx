@@ -1,67 +1,71 @@
 import { useState, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { useAuthStore } from '@/features/auth/store/authStore'
 import { fetchHistory, deleteHistoryEventWithUndo } from '../api/historyApi'
 import { LogPastWatchDialog } from './LogPastWatchDialog'
-import { getPosterUrl } from '@/shared/lib/tmdbImage'
-import { Button, IconButton, Skeleton, EmptyState } from '@/shared/ui'
-import { Plus, Trash2, History as HistoryIcon, Film } from 'lucide-react'
+import { HistoryTimelineView } from './HistoryTimelineView'
+import { HistoryGridView } from './HistoryGridView'
+import { HistoryCompactView } from './HistoryCompactView'
+import {
+  Button,
+  Skeleton,
+  PageShell,
+  PageHeader,
+  StatRow,
+  StatTile,
+  FilterBar,
+  SearchField,
+  EmptyStateCard,
+} from '@/shared/ui'
+import {
+  Plus,
+  History as HistoryIcon,
+  Calendar,
+  Clock,
+  Star,
+  LayoutGrid,
+  List,
+  SlidersHorizontal,
+} from 'lucide-react'
 import type { HistoryEvent } from '@/shared/schemas'
-import styles from './HistoryPage.module.css'
+import {
+  type TimeFilter,
+  type SortOption,
+  calculateGlobalStats,
+  processHistoryEvents,
+  groupEventsByDay,
+} from './historyData'
 
-function formatDayTitle(dateStr: string): string {
-  if (dateStr === 'unknown') return 'Unknown Date'
-  const d = new Date(`${dateStr}T12:00:00Z`)
-  return Number.isNaN(d.getTime())
-    ? dateStr
-    : d.toLocaleDateString(undefined, {
-        weekday: 'long',
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      })
-}
+type ViewMode = 'timeline' | 'grid' | 'compact'
 
 export default function HistoryPage() {
+  const navigate = useNavigate()
   const { user } = useAuthStore()
   const uid = user?.uid
 
   const [typeFilter, setTypeFilter] = useState<'all' | 'movie' | 'tv_episode'>('all')
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>('all')
+  const [sortOption, setSortOption] = useState<SortOption>('newest')
+  const [viewMode, setViewMode] = useState<ViewMode>('timeline')
+  const [searchQuery, setSearchQuery] = useState('')
   const [isLogOpen, setIsLogOpen] = useState(false)
 
   const historyQuery = useQuery({
     queryKey: ['history', uid],
-    queryFn: () => (uid ? fetchHistory(uid) : []),
+    queryFn: () => (uid ? fetchHistory(uid, 150) : []),
     enabled: Boolean(uid),
   })
 
-  const rawEvents = historyQuery.data
+  const rawEvents = historyQuery.data || []
+  const globalStats = useMemo(() => calculateGlobalStats(rawEvents), [rawEvents])
 
-  // Filter by media type
-  const events = useMemo(() => {
-    if (!rawEvents) return []
-    return rawEvents.filter((ev) => {
-      if (typeFilter !== 'all' && ev.type !== typeFilter) return false
-      return true
-    })
-  }, [rawEvents, typeFilter])
+  const processedEvents = useMemo(
+    () => processHistoryEvents(rawEvents, typeFilter, timeFilter, searchQuery, sortOption),
+    [rawEvents, typeFilter, timeFilter, searchQuery, sortOption]
+  )
 
-  // Group events by day key
-  const { dayGroups, totalHours } = useMemo(() => {
-    const groups: Record<string, HistoryEvent[]> = {}
-    let mins = 0
-    events.forEach((ev) => {
-      mins += ev.runtimeMinutes || 0
-      const dateObj = ev.watchedAt && typeof ev.watchedAt.toDate === 'function' ? ev.watchedAt.toDate() : null
-      const dayKey = dateObj ? dateObj.toISOString().slice(0, 10) : 'unknown'
-      if (!groups[dayKey]) groups[dayKey] = []
-      groups[dayKey].push(ev)
-    })
-    return {
-      dayGroups: groups,
-      totalHours: (mins / 60).toFixed(1),
-    }
-  }, [events])
+  const timelineGroups = useMemo(() => groupEventsByDay(processedEvents), [processedEvents])
 
   const handleDelete = async (event: HistoryEvent) => {
     if (!uid) return
@@ -69,11 +73,15 @@ export default function HistoryPage() {
     historyQuery.refetch()
   }
 
+  const currentMonthName = new Date().toLocaleDateString(undefined, { month: 'long' })
+
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <div className={styles.titleRow}>
-          <h1 className={styles.pageTitle}>Watch History</h1>
+    <PageShell>
+      <PageHeader
+        eyebrow="WATCH JOURNAL"
+        title="Viewing History"
+        subtitle="Chronological log of every film and episode you've watched"
+        actions={
           <Button
             variant="primary"
             leftIcon={<Plus size={16} />}
@@ -81,117 +89,188 @@ export default function HistoryPage() {
           >
             Log Past Watch
           </Button>
-        </div>
+        }
+      >
+        <SearchField
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Filter history by title or episode name..."
+          aria-label="Filter history titles"
+        />
+      </PageHeader>
 
-        {/* Monthly Summary Banner */}
-        <div className={styles.monthlyStatsBanner}>
-          <div className={styles.statItem}>
-            <span className={styles.statVal}>{events.length}</span>
-            <span className={styles.statLabel}>Items Logged</span>
-          </div>
-          <div className={styles.statItem}>
-            <span className={styles.statVal}>{totalHours}h</span>
-            <span className={styles.statLabel}>Watch Time</span>
-          </div>
-        </div>
+      <StatRow>
+        <StatTile
+          icon={<HistoryIcon size={20} />}
+          value={globalStats.totalCount}
+          label="Total Logs"
+          sublabel={`${globalStats.movieCount} movies • ${globalStats.tvCount} episodes`}
+        />
+        <StatTile
+          icon={<Clock size={20} />}
+          value={`${globalStats.totalHours}h`}
+          label="Time Watched"
+          sublabel={globalStats.totalCount > 0 ? `~${globalStats.avgMins}m per entry` : '0m avg'}
+        />
+        <StatTile
+          icon={<Calendar size={20} />}
+          value={globalStats.thisMonthCount}
+          label={currentMonthName}
+          sublabel={`${globalStats.thisMonthHours} hours logged`}
+        />
+        <StatTile
+          icon={<Star size={20} />}
+          value={globalStats.avgRating ? `⭐ ${globalStats.avgRating}` : '—'}
+          label="Avg Rating"
+          sublabel={globalStats.ratedCount > 0 ? `From ${globalStats.ratedCount} ratings` : 'No ratings yet'}
+        />
+      </StatRow>
 
-        {/* Filters */}
-        <div className={styles.controlsBar}>
-          <select
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value as 'all' | 'movie' | 'tv_episode')}
-            style={{
-              height: '36px',
-              padding: '0 12px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'var(--surface-overlay)',
-              border: '1px solid var(--border-subtle)',
-              color: 'var(--text-1)',
-              fontSize: 'var(--font-size-xs)',
-              cursor: 'pointer',
-            }}
-            aria-label="Filter history by media type"
+      <FilterBar
+        tabs={[
+          { id: 'all', label: 'All', count: rawEvents.length },
+          { id: 'movie', label: 'Movies', count: globalStats.movieCount },
+          { id: 'tv_episode', label: 'Episodes', count: globalStats.tvCount },
+        ]}
+        activeTab={typeFilter}
+        onTabChange={(id) => setTypeFilter(id as any)}
+        sortOptions={[
+          { value: 'newest', label: 'Newest First' },
+          { value: 'oldest', label: 'Oldest First' },
+          { value: 'runtime_desc', label: 'Longest Runtime' },
+          { value: 'rating_desc', label: 'Highest Rated' },
+        ]}
+        sortValue={sortOption}
+        onSortChange={(val) => setSortOption(val as any)}
+        rightActions={
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div className="history-view-switcher" role="radiogroup" aria-label="View layout mode">
+              <button
+                type="button"
+                className={`history-view-btn ${viewMode === 'timeline' ? 'active' : ''}`}
+                onClick={() => setViewMode('timeline')}
+                aria-label="Timeline View"
+                title="Timeline View"
+              >
+                <SlidersHorizontal size={14} />
+              </button>
+              <button
+                type="button"
+                className={`history-view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                onClick={() => setViewMode('grid')}
+                aria-label="Grid View"
+                title="Grid View"
+              >
+                <LayoutGrid size={14} />
+              </button>
+              <button
+                type="button"
+                className={`history-view-btn ${viewMode === 'compact' ? 'active' : ''}`}
+                onClick={() => setViewMode('compact')}
+                aria-label="Compact View"
+                title="Compact List View"
+              >
+                <List size={14} />
+              </button>
+            </div>
+          </div>
+        }
+      />
+
+      <div className="history-subfilter-chips" role="radiogroup" aria-label="Time period filter">
+        {[
+          { id: 'all', label: 'All Time' },
+          { id: '7d', label: 'Last 7 Days' },
+          { id: '30d', label: 'Last 30 Days' },
+          { id: 'this_month', label: 'This Month' },
+          { id: 'this_year', label: 'This Year' },
+        ].map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            className={`history-period-chip ${timeFilter === t.id ? 'active' : ''}`}
+            onClick={() => setTimeFilter(t.id as TimeFilter)}
           >
-            <option value="all">All Types</option>
-            <option value="movie">Movies Only</option>
-            <option value="tv_episode">TV Episodes Only</option>
-          </select>
-        </div>
+            {t.label}
+          </button>
+        ))}
       </div>
 
-      {/* History Timeline */}
       {historyQuery.isLoading ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} width="100%" height={74} style={{ borderRadius: 'var(--radius-lg)' }} />
+        <div className="history-loading-feed" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} height={120} style={{ borderRadius: 'var(--radius-card)' }} />
           ))}
         </div>
-      ) : Object.keys(dayGroups).length > 0 ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}>
-          {Object.entries(dayGroups).map(([dayKey, dayEvents]) => (
-            <div key={dayKey} className={styles.dayGroup}>
-              <h2 className={styles.dayTitle}>{formatDayTitle(dayKey)}</h2>
-              {dayEvents.map((ev) => {
-                const poster = getPosterUrl(ev.posterPath, 'w92')
-                return (
-                  <div key={ev.eventId} className={styles.historyRow}>
-                    <div className={styles.posterThumb}>
-                      {poster ? (
-                        <img src={poster} alt="" className={styles.posterImg} />
-                      ) : (
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-3)' }}>
-                          <Film size={18} />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className={styles.rowInfo}>
-                      <div className={styles.rowTitle}>
-                        {ev.title}
-                        {ev.episodeLabel && (
-                          <span style={{ marginLeft: '8px', color: 'var(--accent-text)', fontSize: 'var(--font-size-sm)' }}>
-                            {ev.episodeLabel}
-                          </span>
-                        )}
-                      </div>
-                      <div className={styles.rowMeta}>
-                        <span>{ev.runtimeMinutes}m</span>
-                        {ev.rating && <span>Rated {ev.rating}</span>}
-                        <span>{ev.type === 'movie' ? 'Movie' : 'TV'}</span>
-                      </div>
-                    </div>
-
-                    <IconButton
-                      icon={<Trash2 size={16} />}
-                      aria-label={`Delete history entry for ${ev.title}`}
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDelete(ev)}
-                    />
-                  </div>
-                )
-              })}
-            </div>
-          ))}
-        </div>
-      ) : (
-        <EmptyState
-          icon={<HistoryIcon size={40} />}
-          title="No watch history yet"
-          description="Log past watches or mark titles and episodes watched to build your timeline."
-          action={
-            <Button variant="primary" leftIcon={<Plus size={16} />} onClick={() => setIsLogOpen(true)}>
-              Log Your First Watch
-            </Button>
+      ) : processedEvents.length === 0 ? (
+        <EmptyStateCard
+          title={searchQuery || typeFilter !== 'all' || timeFilter !== 'all' ? 'No matching logs found' : 'No watch history yet'}
+          description={
+            searchQuery || typeFilter !== 'all' || timeFilter !== 'all'
+              ? 'Try widening your filters or search terms.'
+              : 'As you watch movies and mark episodes as completed, your history will populate here automatically.'
           }
+          action={
+            <div style={{ display: 'flex', gap: 12 }}>
+              {searchQuery || typeFilter !== 'all' || timeFilter !== 'all' ? (
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setSearchQuery('')
+                    setTypeFilter('all')
+                    setTimeFilter('all')
+                  }}
+                >
+                  Clear Filters
+                </Button>
+              ) : null}
+              <Button
+                variant="primary"
+                leftIcon={<Plus size={16} />}
+                onClick={() => setIsLogOpen(true)}
+              >
+                Log Past Watch
+              </Button>
+            </div>
+          }
+        />
+      ) : viewMode === 'timeline' ? (
+        <HistoryTimelineView
+          timelineGroups={timelineGroups}
+          onDelete={handleDelete}
+          onTitleClick={(titleKey) => navigate(`/title/${titleKey}`)}
+          onOpenEpisodes={(titleKey) => navigate(`/title/${titleKey}/episodes`)}
+          formatWatchDate={(d) => ({
+            timeStr: d ? d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '',
+          })}
+          formatMinutes={(mins) => (mins ? `${mins}m` : '')}
+        />
+      ) : viewMode === 'grid' ? (
+        <HistoryGridView
+          events={processedEvents}
+          onDelete={handleDelete}
+          onTitleClick={(titleKey) => navigate(`/title/${titleKey}`)}
+          formatWatchDate={(d) => ({
+            dayKey: d ? d.toISOString().split('T')[0] ?? '' : '',
+          })}
+        />
+      ) : (
+        <HistoryCompactView
+          events={processedEvents}
+          onDelete={handleDelete}
+          onTitleClick={(titleKey) => navigate(`/title/${titleKey}`)}
+          formatWatchDate={(d) => ({
+            dayKey: d ? d.toISOString().split('T')[0] ?? '' : '',
+            timeStr: d ? d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '',
+          })}
         />
       )}
 
       <LogPastWatchDialog
         isOpen={isLogOpen}
         onClose={() => setIsLogOpen(false)}
-        onSuccess={() => historyQuery.refetch()}
+        onSaved={() => historyQuery.refetch()}
       />
-    </div>
+    </PageShell>
   )
 }

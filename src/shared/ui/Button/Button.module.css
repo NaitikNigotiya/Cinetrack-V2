@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-control);
   font-weight: 600;
   cursor: pointer;
   transition: background-color var(--duration-fast) var(--ease-out),
@@ -35,8 +35,8 @@
 }
 
 .sizeMd {
-  height: 42px;
-  min-width: 42px;
+  height: 40px;
+  min-width: 40px;
   padding: 0 var(--space-4);
   font-size: var(--font-size-base);
 }

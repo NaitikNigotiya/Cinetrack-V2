@@ -5,16 +5,16 @@ import './ContentCarousel.css'
 
 export interface CarouselItem {
   id: number
-  media_type?: 'movie' | 'tv' | 'person' | string
-  title?: string
-  name?: string
-  poster_path?: string | null
-  backdrop_path?: string | null
-  release_date?: string
-  first_air_date?: string
-  vote_average?: number
-  overview?: string
-  genre_ids?: number[]
+  media_type?: 'movie' | 'tv' | 'person' | string | undefined
+  title?: string | undefined
+  name?: string | undefined
+  poster_path?: string | null | undefined
+  backdrop_path?: string | null | undefined
+  release_date?: string | undefined
+  first_air_date?: string | undefined
+  vote_average?: number | undefined
+  overview?: string | undefined
+  genre_ids?: number[] | undefined
 }
 
 interface ContentCarouselProps {

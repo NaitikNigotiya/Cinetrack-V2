@@ -115,3 +115,38 @@ img, video {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-3);
 }
+
+/* ─── Unified Typography Scale Reset ────────────────────────────────────────── */
+h1 {
+  font-size: var(--fs-page-title);
+  font-weight: 900;
+  line-height: var(--lh-tight);
+  letter-spacing: -0.03em;
+  color: var(--text-1);
+  margin: 0;
+}
+
+h2 {
+  font-size: var(--fs-section-title);
+  font-weight: 700;
+  line-height: var(--lh-tight);
+  color: var(--text-1);
+  margin: 0;
+}
+
+h3 {
+  font-size: var(--fs-card-title);
+  font-weight: 700;
+  color: var(--text-1);
+  margin: 0;
+}
+
+p {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  letter-spacing: normal;
+}
+
+small {
+  font-size: var(--fs-small);
+}

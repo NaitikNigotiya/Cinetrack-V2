@@ -1,28 +1,29 @@
 import { useState } from 'react'
 import {
   Button,
-  IconButton,
-  Input,
-  Badge,
-  StatusBadge,
-  RatingControl,
-  Skeleton,
-  Dialog,
-  ConfirmDialog,
-  PosterCard,
-  Tabs,
-  toast,
   ToastContainer,
+  toast,
+  PageShell,
+  PageHeader,
+  StatRow,
+  StatTile,
+  Section,
+  Card,
+  FilterBar,
+  EmptyStateCard,
+  SearchField,
+  Pill,
+  PosterGrid,
+  PosterCard,
 } from '@/shared/ui'
-import { Sun, Moon, Search, Trash2, Heart } from 'lucide-react'
-import styles from './UiPlayground.module.css'
+import { Sun, Moon, Film, Tv, Clock, Star, Plus, Grid, List } from 'lucide-react'
 
 export default function UiPlayground() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark')
-  const [rating, setRating] = useState<number | null>(7.5)
-  const [activeTab, setActiveTab] = useState('all')
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [activeTab, setActiveTab] = useState<'all' | 'movies' | 'tv'>('all')
+  const [sortVal, setSortVal] = useState('recent')
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
   const toggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark'
@@ -32,213 +33,166 @@ export default function UiPlayground() {
   }
 
   return (
-    <div className={styles.container}>
+    <PageShell>
       <ToastContainer />
-      <header className={styles.header}>
-        <div>
-          <h1 className={styles.title}>CineTrack v2 UI Playground</h1>
-          <p style={{ color: 'var(--text-2)', marginTop: '4px' }}>
-            Design tokens and UI primitives visual inspection & verification
-          </p>
-        </div>
-        <Button
-          variant="secondary"
-          onClick={toggleTheme}
-          leftIcon={theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-        >
-          Theme: {theme}
-        </Button>
-      </header>
+      <PageHeader
+        eyebrow="DESIGN SYSTEM & PRIMITIVES"
+        title="UI Component Playground"
+        subtitle="Visual verification for shared tokens, layout primitives, and typography scale"
+        actions={
+          <Button
+            variant="secondary"
+            onClick={toggleTheme}
+            leftIcon={theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          >
+            Theme: {theme}
+          </Button>
+        }
+      >
+        <SearchField
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Test in-card search field with keyboard shortcut hint (/)..."
+        />
+      </PageHeader>
 
-      {/* Buttons */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Buttons & IconButtons</h2>
-        <div className={styles.row}>
-          <Button variant="primary">Primary Action</Button>
-          <Button variant="secondary">Secondary Action</Button>
+      {/* KPI Stats */}
+      <StatRow>
+        <StatTile
+          icon={<Film size={22} />}
+          value="42"
+          label="Movies Watched"
+          sublabel="8 this month"
+        />
+        <StatTile
+          icon={<Tv size={22} />}
+          value="18"
+          label="TV Series"
+          sublabel="142 episodes"
+        />
+        <StatTile
+          icon={<Clock size={22} />}
+          value="156h"
+          label="Total Watch Time"
+          sublabel="6.5 days"
+        />
+        <StatTile
+          icon={<Star size={22} />}
+          value="8.4"
+          label="Avg Rating"
+          sublabel="Based on 50 ratings"
+        />
+      </StatRow>
+
+      {/* FilterBar */}
+      <FilterBar
+        tabs={[
+          { id: 'all', label: 'All', count: 60 },
+          { id: 'movies', label: 'Movies', count: 42 },
+          { id: 'tv', label: 'TV Shows', count: 18 },
+        ]}
+        activeTab={activeTab}
+        onTabChange={(id) => setActiveTab(id as any)}
+        sortOptions={[
+          { value: 'recent', label: 'Recently Watched' },
+          { value: 'rating', label: 'Highest Rated' },
+          { value: 'title', label: 'Title (A-Z)' },
+        ]}
+        sortValue={sortVal}
+        onSortChange={setSortVal}
+        viewMode={viewMode}
+        onViewModeChange={(m) => setViewMode(m)}
+        viewModeOptions={[
+          { mode: 'grid', icon: <Grid size={16} />, label: 'Grid View' },
+          { mode: 'list', icon: <List size={16} />, label: 'List View' },
+        ]}
+      />
+
+      {/* Cards */}
+      <Section title="Card Variants">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 'var(--card-gap)' }}>
+          <Card variant="default">
+            <h3>Default Card</h3>
+            <p style={{ color: 'var(--text-2)', marginTop: '8px' }}>
+              Standard surface card with subtle shadow and border.
+            </p>
+          </Card>
+          <Card variant="interactive" onClick={() => toast.success('Interactive card clicked!')}>
+            <h3>Interactive Card</h3>
+            <p style={{ color: 'var(--text-2)', marginTop: '8px' }}>
+              Hover lift effect, border accent on hover, and accessible focus ring.
+            </p>
+          </Card>
+          <Card variant="flat">
+            <h3>Flat Card</h3>
+            <p style={{ color: 'var(--text-2)', marginTop: '8px' }}>
+              Flat variant without elevation shadow.
+            </p>
+          </Card>
+        </div>
+      </Section>
+
+      {/* Buttons & Pills */}
+      <Section title="Buttons & Pills">
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
+          <Button variant="primary" leftIcon={<Plus size={16} />}>Primary Button</Button>
+          <Button variant="secondary">Secondary Button</Button>
           <Button variant="ghost">Ghost Button</Button>
           <Button variant="danger">Danger Button</Button>
-          <Button variant="outline">Outline Button</Button>
-          <Button variant="primary" isLoading>
-            Loading
-          </Button>
-          <IconButton
-            icon={<Heart size={18} />}
-            aria-label="Add to favorites"
-            variant="ghost"
-          />
+          <Button size="sm" variant="primary">Small (32px)</Button>
+          <Button size="md" variant="primary">Medium (40px)</Button>
+          <Button size="lg" variant="primary">Large (48px)</Button>
         </div>
-        <div className={styles.row}>
-          <Button size="sm" variant="primary">
-            Small
-          </Button>
-          <Button size="md" variant="primary">
-            Medium
-          </Button>
-          <Button size="lg" variant="primary">
-            Large
-          </Button>
-        </div>
-      </section>
 
-      {/* Inputs */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Inputs</h2>
-        <div className={styles.row} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-          <Input
-            label="Search title"
-            placeholder="e.g. Fight Club, Breaking Bad..."
-            startIcon={<Search size={18} />}
-          />
-          <Input
-            label="Input with Error"
-            defaultValue="invalid_value"
-            error="Please enter a valid format"
-          />
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', marginTop: '16px' }}>
+          <Pill variant="default">Default Pill</Pill>
+          <Pill variant="brand">Brand Subtle</Pill>
+          <Pill variant="filledBrand">Filled Brand</Pill>
+          <Pill variant="success">Completed</Pill>
+          <Pill variant="outline">Outline</Pill>
+          <Pill variant="outline" interactive active>Active Filter Chip</Pill>
         </div>
-      </section>
+      </Section>
 
-      {/* Badges & StatusBadges */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Badges & Status Badges</h2>
-        <div className={styles.row}>
-          <Badge variant="primary">HD 4K</Badge>
-          <Badge variant="success">Ended</Badge>
-          <Badge variant="warning">Upcoming</Badge>
-          <Badge variant="info">TMDB 8.9</Badge>
-          <Badge variant="default">Movie</Badge>
-        </div>
-        <div className={styles.row}>
-          <StatusBadge status="watching" />
-          <StatusBadge status="completed" />
-          <StatusBadge status="plan_to_watch" />
-          <StatusBadge status="on_hold" />
-          <StatusBadge status="dropped" />
-        </div>
-      </section>
-
-      {/* Rating Controls */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Rating Controls (10-point & 5-point scales)</h2>
-        <div className={styles.row}>
-          <div>
-            <span style={{ fontSize: '13px', color: 'var(--text-3)', display: 'block', marginBottom: '4px' }}>
-              10-point scale (canonical value: {rating})
-            </span>
-            <RatingControl value={rating} onChange={setRating} scale="ten" />
-          </div>
-          <div>
-            <span style={{ fontSize: '13px', color: 'var(--text-3)', display: 'block', marginBottom: '4px' }}>
-              5-point half-star scale
-            </span>
-            <RatingControl value={rating} onChange={setRating} scale="fivehalf" />
-          </div>
-        </div>
-      </section>
-
-      {/* Tabs */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Tabs</h2>
-        <Tabs
-          tabs={[
-            { id: 'all', label: 'All', count: 124 },
-            { id: 'watching', label: 'Watching', count: 4 },
-            { id: 'plan', label: 'Plan to Watch', count: 48 },
-            { id: 'completed', label: 'Completed', count: 72 },
-          ]}
-          activeTab={activeTab}
-          onChange={setActiveTab}
+      {/* Empty State Card */}
+      <Section title="Empty State Primitive">
+        <EmptyStateCard
+          icon="🍿"
+          title="Nothing in progress"
+          description="You don't have any titles currently being watched. Search for movies and TV shows to track."
+          action={<Button variant="primary">Browse Titles</Button>}
         />
-      </section>
+      </Section>
 
-      {/* Poster Cards */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Poster Cards</h2>
-        <div className={styles.cardGrid}>
+      {/* Poster Grid */}
+      <Section title="Poster Grid Primitive">
+        <PosterGrid>
           <PosterCard
-            title="Fight Club"
-            year={1999}
-            posterPath="/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg"
-            status="completed"
-            rating={9.0}
-          />
-          <PosterCard
-            title="Breaking Bad"
-            year={2008}
-            posterPath="/ztkUQFLlC19CCMYHW9o1zWhJRNq.jpg"
-            status="watching"
-            progress={{ watched: 32, total: 62 }}
-            rating={9.5}
-          />
-          <PosterCard
-            title="Interstellar"
-            year={2014}
-            posterPath="/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"
-            status="plan_to_watch"
+            title="Dune: Part Two"
+            year={2024}
+            type="movie"
             rating={8.6}
+            posterPath="/5zE6GZ66wzV9sK8YnL8W3C5u.jpg"
+            titleKey="movie:693134"
           />
-        </div>
-      </section>
-
-      {/* Skeletons */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Skeletons (Shimmer loaders)</h2>
-        <div className={styles.row}>
-          <Skeleton variant="circle" width={48} height={48} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
-            <Skeleton width="60%" height={20} />
-            <Skeleton width="40%" height={14} />
-          </div>
-        </div>
-      </section>
-
-      {/* Toasts and Dialogs */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Modals & Toasts</h2>
-        <div className={styles.row}>
-          <Button
-            variant="primary"
-            onClick={() =>
-              toast.success('Removed Fight Club from library', {
-                label: 'Undo',
-                onClick: () => toast.info('Restored Fight Club'),
-              })
-            }
-          >
-            Trigger Toast with Undo
-          </Button>
-          <Button variant="secondary" onClick={() => setIsDialogOpen(true)}>
-            Open Dialog
-          </Button>
-          <Button
-            variant="danger"
-            leftIcon={<Trash2 size={16} />}
-            onClick={() => setIsConfirmOpen(true)}
-          >
-            Open Confirm Dialog
-          </Button>
-        </div>
-      </section>
-
-      <Dialog
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        title="Sample Modal Dialog"
-      >
-        <p>This is an accessible dialog with focus trap and Esc key support.</p>
-      </Dialog>
-
-      <ConfirmDialog
-        isOpen={isConfirmOpen}
-        onClose={() => setIsConfirmOpen(false)}
-        onConfirm={() => {
-          setIsConfirmOpen(false)
-          toast.success('Confirmed action successfully!')
-        }}
-        title="Remove Title?"
-        message="Are you sure you want to remove this title from your library? Your watch history will be preserved."
-        confirmText="Remove"
-      />
-    </div>
+          <PosterCard
+            title="Oppenheimer"
+            year={2023}
+            type="movie"
+            rating={8.9}
+            posterPath="/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"
+            titleKey="movie:872585"
+          />
+          <PosterCard
+            title="Shogun"
+            year={2024}
+            type="tv"
+            rating={8.7}
+            progress={{ watched: 6, total: 10 }}
+            titleKey="tv:126308"
+          />
+        </PosterGrid>
+      </Section>
+    </PageShell>
   )
 }

@@ -1,0 +1,141 @@
+.controlBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.leftArea {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.rightArea {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.segmentedControl {
+  display: flex;
+  align-items: center;
+  background-color: var(--surface-card);
+  border: var(--border-card);
+  border-radius: var(--radius-pill);
+  padding: 3px;
+  gap: 2px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.segmentBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--text-2);
+  transition: all var(--duration-fast) var(--ease-out);
+  cursor: pointer;
+  white-space: nowrap;
+  border: none;
+  background: none;
+}
+
+.segmentBtn:hover {
+  color: var(--text-1);
+}
+
+.segmentBtnActive {
+  background-color: var(--accent);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(229, 9, 20, 0.4);
+}
+
+.segmentBadge {
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  font-size: 10px;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.segmentBtn:not(.segmentBtnActive) .segmentBadge {
+  background: var(--surface-overlay);
+  color: var(--text-3);
+}
+
+.selectInput {
+  height: 36px;
+  padding: 0 28px 0 12px;
+  border-radius: var(--radius-pill);
+  background-color: var(--surface-card);
+  border: var(--border-card);
+  color: var(--text-1);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px;
+  transition: border-color var(--duration-fast) ease;
+}
+
+.selectInput:hover,
+.selectInput:focus {
+  border-color: var(--border-strong);
+}
+
+.viewModeGroup {
+  display: flex;
+  align-items: center;
+  background-color: var(--surface-card);
+  border: var(--border-card);
+  border-radius: var(--radius-pill);
+  padding: 3px;
+  gap: 2px;
+}
+
+.viewModeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  color: var(--text-3);
+  transition: all var(--duration-fast) var(--ease-out);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.viewModeBtn:hover {
+  color: var(--text-1);
+}
+
+.viewModeBtnActive {
+  background-color: var(--surface-overlay);
+  color: var(--text-1);
+  box-shadow: var(--shadow-1);
+}
+
+@media (max-width: 640px) {
+  .rightArea {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

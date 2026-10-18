@@ -112,6 +112,46 @@
   --z-modal: 70;
   --z-toast: 80;
 
+  /* ─── Unified History-Aligned Tokens ────────────────────────────────────────── */
+  /* Layout */
+  --page-max: 1600px;            /* ONE content width for every page */
+  --page-gutter: 16px;           /* mobile */
+  --page-gutter-md: 24px;        /* tablet */
+  --page-gutter-lg: 32px;        /* desktop */
+  --page-pad-top: 24px;
+  --page-pad-bottom: 48px;
+  --section-gap: 32px;           /* between sections on a page */
+  --card-gap: 16px;              /* between cards in a row/grid */
+
+  /* Type scale */
+  --fs-eyebrow: 11px;
+  --ls-eyebrow: 0.1em;
+  --fs-page-title: clamp(1.75rem, 3.5vw, 2.5rem);
+  --fs-page-sub: 13px;
+  --fs-section-title: 20px;
+  --fs-card-title: 16px;
+  --fs-body: 15px;
+  --fs-small: 13px;
+  --fs-stat: 24px;
+  --fs-stat-label: 11px;
+  --lh-tight: 1.15;
+  --lh-body: 1.5;
+
+  /* Shape */
+  --radius-hero: 24px;
+  --radius-card: 16px;
+  --radius-tile: 12px;
+  --radius-control: 10px;
+
+  /* Surfaces & Hero */
+  --surface-page: #121214;
+  --surface-card: #1a1a1f;
+  --surface-card-hover: rgba(36, 36, 44, 0.7);
+  --border-card: 1px solid var(--border-subtle);
+  --shadow-hero-glow: 0 8px 32px -8px rgba(0, 0, 0, 0.5);
+  --hero-glow-bg: radial-gradient(circle, rgba(229, 9, 20, 0.12) 0%, rgba(229, 9, 20, 0) 70%);
+  --hero-card-bg: linear-gradient(180deg, rgba(26, 26, 31, 0.8) 0%, rgba(18, 18, 20, 0.6) 100%);
+
   /* Template Design Token Aliases (Dark mode default) */
   --bg-primary: #141414;
   --bg-secondary: #1f1f1f;
@@ -143,6 +183,18 @@
   --transition-slow: 350ms ease;
   --font-family: var(--font-sans);
   --sidebar-width: 240px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --page-gutter: var(--page-gutter-md);
+  }
+}
+
+@media (min-width: 1200px) {
+  :root {
+    --page-gutter: var(--page-gutter-lg);
+  }
 }
 
 /* Light Theme Overrides */
@@ -224,6 +276,15 @@ html[data-theme='light'] {
   --input-focus: #f5c518;
   --skeleton-base: #ebebeb;
   --skeleton-shine: #f5f5f5;
+
+  /* Unified light tokens */
+  --surface-page: #f5f5f7;
+  --surface-card: #ffffff;
+  --surface-card-hover: #eaecee;
+  --border-card: 1px solid rgba(0, 0, 0, 0.08);
+  --shadow-hero-glow: 0 8px 32px -8px rgba(0, 0, 0, 0.08);
+  --hero-glow-bg: radial-gradient(circle, rgba(217, 119, 6, 0.12) 0%, rgba(217, 119, 6, 0) 70%);
+  --hero-card-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(245, 245, 247, 0.8) 100%);
 }
 
 /* Reduced Motion Override */
