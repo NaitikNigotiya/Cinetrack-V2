@@ -1,7 +1,10 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Sparkles } from 'lucide-react'
-import { useLibrary } from '../hooks/useLibrary'
+import { useAppStore } from '@/domain/store'
+import { selectFavoritesList } from '@/domain/selectors'
+import { toggleFavorite } from '@/domain/operations'
+import { useAuthStore } from '@/features/auth/store/authStore'
 import {
   PageShell,
   PageHeader,
@@ -11,40 +14,41 @@ import {
   PosterGrid,
   PosterCard,
   Button,
+  toast,
 } from '@/shared/ui'
 import './FavoritesPage.css'
 
 export default function FavoritesPage() {
   const navigate = useNavigate()
-  const { entries } = useLibrary('favorites')
-  const [activeFilter, setActiveFilter] = useState('All')
-  const [sortBy, setSortBy] = useState('date')
+  const { user } = useAuthStore()
+  const uid = user?.uid
+  const library = useAppStore((state) => state.library)
 
-  const favorites = useMemo(() => entries.filter((e) => e.isFavorite), [entries])
+  const [activeFilter, setActiveFilter] = useState('All')
+  const [sortBy, setSortBy] = useState<'date' | 'rating' | 'title' | 'year'>('date')
+
+  const favorites = useMemo(() => selectFavoritesList(library, sortBy), [library, sortBy])
   const moviesCount = useMemo(() => favorites.filter((e) => e.type === 'movie').length, [favorites])
   const tvCount = useMemo(() => favorites.filter((e) => e.type === 'tv').length, [favorites])
 
   const filteredFavorites = useMemo(() => {
-    return favorites
-      .filter((e) => {
-        if (activeFilter === 'Movies') return e.type === 'movie'
-        if (activeFilter === 'TV Shows') return e.type === 'tv'
-        return true
-      })
-      .sort((a, b) => {
-        if (sortBy === 'rating') return (b.rating || 0) - (a.rating || 0)
-        if (sortBy === 'title') return a.title.localeCompare(b.title)
-        if (sortBy === 'year') return (b.year ?? 0) - (a.year ?? 0)
+    return favorites.filter((e) => {
+      if (activeFilter === 'Movies') return e.type === 'movie'
+      if (activeFilter === 'TV Shows') return e.type === 'tv'
+      return true
+    })
+  }, [favorites, activeFilter])
 
-        const getMs = (val: any) => {
-          if (!val) return 0
-          if (typeof val.toDate === 'function') return val.toDate().getTime()
-          if (val.seconds) return val.seconds * 1000
-          return new Date(val).getTime() || 0
-        }
-        return getMs(b.addedAt) - getMs(a.addedAt)
-      })
-  }, [favorites, activeFilter, sortBy])
+  const handleToggleFavorite = async (e: React.MouseEvent, titleKey: string, currentFav: boolean) => {
+    e.stopPropagation()
+    if (!uid) return
+    try {
+      await toggleFavorite(uid, titleKey, !currentFav)
+      toast.success(currentFav ? 'Removed from favorites' : 'Saved to favorites')
+    } catch {
+      toast.error('Failed to update favorite')
+    }
+  }
 
   return (
     <PageShell>
@@ -74,7 +78,7 @@ export default function FavoritesPage() {
           { value: 'year', label: 'Year' },
         ]}
         sortValue={sortBy}
-        onSortChange={(val) => setSortBy(val)}
+        onSortChange={(val) => setSortBy(val as any)}
       />
 
       {filteredFavorites.length === 0 ? (
@@ -100,6 +104,7 @@ export default function FavoritesPage() {
               type={entry.type}
               isFavorite={true}
               status={entry.status}
+              onToggleFavorite={(e) => handleToggleFavorite(e, entry.titleKey, true)}
               onClick={() => navigate(`/title/${entry.titleKey}`)}
             />
           ))}

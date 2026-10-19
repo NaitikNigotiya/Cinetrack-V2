@@ -4,6 +4,8 @@ import { Button } from '@/shared/ui/Button/Button'
 
 interface SettingsDataCardProps {
   onExport: () => void
+  onRepairData: () => void
+  isRepairing: boolean
   notificationsEnabled: boolean
   onToggleNotifications: () => void
   episodeAlerts: boolean
@@ -14,6 +16,8 @@ interface SettingsDataCardProps {
 
 export function SettingsDataCard({
   onExport,
+  onRepairData,
+  isRepairing,
   notificationsEnabled,
   onToggleNotifications,
   episodeAlerts,
@@ -40,6 +44,18 @@ export function SettingsDataCard({
             <div style={{ width: '8px', height: '8px', background: '#2ECC71', borderRadius: '50%' }} />
             <span style={{ fontSize: '13px', fontWeight: 600, color: '#2ECC71' }}>Connected</span>
           </div>
+        </div>
+
+        <div className="settings-row">
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 'var(--fs-body)', fontWeight: 600 }}>Repair My Data</div>
+            <div style={{ fontSize: 'var(--fs-small)', color: 'var(--text-muted)', marginTop: '2px' }}>
+              Recompute watch counts, total minutes, and statuses from watch journal events
+            </div>
+          </div>
+          <Button variant="secondary" size="sm" onClick={onRepairData} disabled={isRepairing}>
+            {isRepairing ? 'Repairing...' : 'Repair my data'}
+          </Button>
         </div>
 
         <div className="settings-row" style={{ borderBottom: 'none' }}>

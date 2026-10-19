@@ -131,18 +131,39 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
   }
 
   const idToken = authHeader.slice(7).trim()
-  let uid: string
+  let decoded: { uid: string; email?: string; email_verified?: boolean }
   try {
-    uid = await verifyFirebaseIdToken(idToken)
-  } catch (err) {
+    decoded = await verifyFirebaseIdToken(idToken)
+  } catch {
     // In local development, if verifyIdToken fails due to missing service account private key, allow fallback
     if (process.env.NODE_ENV === 'development' && idToken.length > 50) {
-      uid = 'dev-user'
+      decoded = {
+        uid: 'dev-user',
+        email: process.env.OWNER_EMAIL,
+        email_verified: true,
+      }
     } else {
       sendJsonError(res, 401, 'UNAUTHENTICATED', 'Invalid or expired Firebase ID token')
       return
     }
   }
+
+  // Security check: reject with 403 FORBIDDEN unless email_verified is true and matches OWNER_EMAIL
+  // Never log tokens or emails.
+  const configuredOwnerEmail = process.env.OWNER_EMAIL?.trim().toLowerCase()
+  const tokenEmail = decoded.email?.trim().toLowerCase()
+
+  if (
+    !configuredOwnerEmail ||
+    decoded.email_verified !== true ||
+    !tokenEmail ||
+    tokenEmail !== configuredOwnerEmail
+  ) {
+    sendJsonError(res, 403, 'FORBIDDEN', 'Access restricted to owner account')
+    return
+  }
+
+  const uid = decoded.uid
 
   // Per-user rate limit: 60 requests per minute per uid
   if (!checkRateLimit(uid)) {

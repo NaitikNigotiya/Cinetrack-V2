@@ -35,6 +35,7 @@ describe('libraryApi atomic operations', () => {
     genres: [{ id: 18, name: 'Drama' }],
     runtimeMinutes: 139,
     status: 'plan_to_watch',
+    priority: 'normal',
     rating: null,
     isFavorite: false,
     watchCount: 0,

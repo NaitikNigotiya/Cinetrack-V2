@@ -8,13 +8,44 @@ import {
 } from '../../_lib/allowList'
 import { checkRateLimit, resetRateLimiter } from '../../_lib/rateLimiter'
 
+const TEST_OWNER_EMAIL = 'nigotiyanaitik@gmail.com'
+
 vi.mock('../../_lib/admin', () => ({
   verifyFirebaseIdToken: vi.fn(async (token: string) => {
-    if (token === 'valid-user-token') {
-      return 'user-123'
+    if (token === 'valid-user-token' || token === 'owner-token') {
+      return {
+        uid: 'user-123',
+        email: TEST_OWNER_EMAIL,
+        email_verified: true,
+      }
+    }
+    if (token === 'owner-token-uppercase') {
+      return {
+        uid: 'user-123',
+        email: 'NigotiyaNaitik@gmail.com',
+        email_verified: true,
+      }
+    }
+    if (token === 'owner-unverified-token') {
+      return {
+        uid: 'user-123',
+        email: TEST_OWNER_EMAIL,
+        email_verified: false,
+      }
+    }
+    if (token === 'other-user-token') {
+      return {
+        uid: 'user-456',
+        email: 'intruder@example.com',
+        email_verified: true,
+      }
     }
     if (token === 'rate-limit-user-token') {
-      return 'user-rate-limited'
+      return {
+        uid: 'user-rate-limited',
+        email: TEST_OWNER_EMAIL,
+        email_verified: true,
+      }
     }
     throw new Error('Firebase ID token has expired or is invalid')
   }),
@@ -142,15 +173,18 @@ describe('TMDB Server Proxy Allow-list & Param Sanitization', () => {
 
 describe('TMDB Server Proxy Handler', () => {
   const originalEnv = process.env.TMDB_READ_TOKEN
+  const originalOwnerEmail = process.env.OWNER_EMAIL
 
   beforeEach(() => {
     process.env.TMDB_READ_TOKEN = 'test-tmdb-token-abc123xyz'
+    process.env.OWNER_EMAIL = TEST_OWNER_EMAIL
     resetRateLimiter()
     vi.restoreAllMocks()
   })
 
   afterEach(() => {
     process.env.TMDB_READ_TOKEN = originalEnv
+    process.env.OWNER_EMAIL = originalOwnerEmail
   })
 
   it('returns 405 Method Not Allowed on non-GET methods', async () => {
@@ -185,6 +219,45 @@ describe('TMDB Server Proxy Handler', () => {
     const body = JSON.parse(mockRes.body)
     expect(body.error.code).toBe('UNAUTHENTICATED')
     expect(mockRes.body).not.toContain('invalid-token-xyz')
+  })
+
+  it('returns 403 FORBIDDEN when valid token belongs to a non-owner email', async () => {
+    const { req, res, mockRes } = createMockReqRes({
+      authHeader: 'Bearer other-user-token',
+    })
+    await handler(req, res)
+    expect(mockRes.statusCode).toBe(403)
+    const body = JSON.parse(mockRes.body)
+    expect(body.error.code).toBe('FORBIDDEN')
+    expect(mockRes.body).not.toContain('intruder@example.com')
+  })
+
+  it('returns 403 FORBIDDEN when owner email is unverified', async () => {
+    const { req, res, mockRes } = createMockReqRes({
+      authHeader: 'Bearer owner-unverified-token',
+    })
+    await handler(req, res)
+    expect(mockRes.statusCode).toBe(403)
+    const body = JSON.parse(mockRes.body)
+    expect(body.error.code).toBe('FORBIDDEN')
+  })
+
+  it('allows access with case-insensitive owner email comparison', async () => {
+    const mockData = { id: 550, title: 'Fight Club' }
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify(mockData), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    )
+    vi.stubGlobal('fetch', fetchMock)
+
+    const { req, res, mockRes } = createMockReqRes({
+      authHeader: 'Bearer owner-token-uppercase',
+    })
+    await handler(req, res)
+    expect(mockRes.statusCode).toBe(200)
+    expect(JSON.parse(mockRes.body)).toEqual(mockData)
   })
 
   it('returns 400 PATH_NOT_ALLOWED on unknown path', async () => {
@@ -237,6 +310,68 @@ describe('TMDB Server Proxy Handler', () => {
     expect(calledUrl).toContain('append_to_response=credits')
     expect(calledUrl).toContain('include_adult=false')
     expect(calledUrl).not.toContain('malicious=1')
+  })
+
+  it('forwards include_image_language=en,null unchanged and drops unknown params', async () => {
+    const mockData = { id: 550, title: 'Fight Club', images: { backdrops: [], posters: [] } }
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify(mockData), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    )
+    vi.stubGlobal('fetch', fetchMock)
+
+    const { req, res, mockRes } = createMockReqRes({
+      url: '/api/tmdb/movie/550?append_to_response=credits,images&include_image_language=en,null&unknown_evil_param=test123',
+      authHeader: 'Bearer valid-user-token',
+    })
+
+    await handler(req, res)
+
+    expect(mockRes.statusCode).toBe(200)
+    const calledUrl = fetchMock.mock.calls[0]?.[0] as string
+    expect(calledUrl).toContain('include_image_language=en%2Cnull')
+    expect(calledUrl).toContain('append_to_response=credits%2Cimages')
+    expect(calledUrl).toContain('include_adult=false')
+    expect(calledUrl).not.toContain('unknown_evil_param')
+  })
+
+  it('allows dedicated /images and /reviews sub-resources with proper sanitized params', async () => {
+    const mockImages = { backdrops: [], posters: [], logos: [] }
+    const fetchMock = vi.fn().mockImplementation(() =>
+      Promise.resolve(
+        new Response(JSON.stringify(mockImages), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        })
+      )
+    )
+    vi.stubGlobal('fetch', fetchMock)
+
+    // Test images endpoint
+    const { req: reqImg, res: resImg, mockRes: mockResImg } = createMockReqRes({
+      url: '/api/tmdb/movie/550/images?include_image_language=en,null&bad=1',
+      authHeader: 'Bearer valid-user-token',
+    })
+    await handler(reqImg, resImg)
+    expect(mockResImg.statusCode).toBe(200)
+    const calledUrlImg = fetchMock.mock.calls[0]?.[0] as string
+    expect(calledUrlImg).toContain('/movie/550/images')
+    expect(calledUrlImg).toContain('include_image_language=en%2Cnull')
+    expect(calledUrlImg).not.toContain('bad=1')
+
+    // Test reviews endpoint
+    const { req: reqRev, res: resRev, mockRes: mockResRev } = createMockReqRes({
+      url: '/api/tmdb/movie/550/reviews?page=2&rogue_param=abc',
+      authHeader: 'Bearer valid-user-token',
+    })
+    await handler(reqRev, resRev)
+    expect(mockResRev.statusCode).toBe(200)
+    const calledUrlRev = fetchMock.mock.calls[1]?.[0] as string
+    expect(calledUrlRev).toContain('/movie/550/reviews')
+    expect(calledUrlRev).toContain('page=2')
+    expect(calledUrlRev).not.toContain('rogue_param')
   })
 
   it('maps 404 upstream response to NOT_FOUND error', async () => {

@@ -1,20 +1,12 @@
-import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useState, useMemo } from 'react'
+import { useAppStore } from '@/domain/store'
 import {
-  query,
-  where,
-  orderBy,
-  limit,
-  getDocs,
-  getDoc,
-  type QueryConstraint,
-} from 'firebase/firestore'
-import {
-  getLibraryCollection,
-  getStatsSummaryDocRef,
-} from '@/services/firebase/collections'
-import { useAuthStore } from '@/features/auth/store/authStore'
-import type { LibraryEntry, LibraryStatus } from '@/shared/schemas'
+  selectWatchingList,
+  selectWatchlist,
+  selectCompletedList,
+  selectFavoritesList,
+} from '@/domain/selectors'
+import type { LibraryStatus } from '@/shared/schemas'
 
 export type LibraryTab = 'all' | LibraryStatus | 'favorites'
 export type SortOption = 'updatedAt' | 'addedAt' | 'title' | 'year' | 'rating'
@@ -28,8 +20,8 @@ export interface LibraryFilters {
 }
 
 export function useLibrary(initialTab: LibraryTab = 'all') {
-  const { user } = useAuthStore()
-  const uid = user?.uid
+  const library = useAppStore((state) => state.library)
+  const isReady = useAppStore((state) => state.isReady)
 
   const [filters, setFilters] = useState<LibraryFilters>({
     tab: initialTab,
@@ -39,64 +31,58 @@ export function useLibrary(initialTab: LibraryTab = 'all') {
     sortOrder: 'desc',
   })
 
-  // Fetch pre-aggregated tab counts from stats/summary
-  const statsQuery = useQuery({
-    queryKey: ['stats', 'summary', uid],
-    queryFn: async () => {
-      if (!uid) return null
-      const snap = await getDoc(getStatsSummaryDocRef(uid))
-      return snap.exists() ? snap.data() : null
-    },
-    enabled: Boolean(uid),
-  })
+  const counts = useMemo(() => {
+    return {
+      all: library.length,
+      watching: selectWatchingList(library).length,
+      plan_to_watch: selectWatchlist(library).length,
+      completed: selectCompletedList(library).length,
+      on_hold: library.filter((e) => e.status === 'on_hold').length,
+      dropped: library.filter((e) => e.status === 'dropped').length,
+      favorites: selectFavoritesList(library).length,
+    }
+  }, [library])
 
-  // Fetch library titles with query filters & pagination limit
-  const libraryQuery = useQuery({
-    queryKey: ['library', uid, filters],
-    queryFn: async (): Promise<LibraryEntry[]> => {
-      if (!uid) return []
-      const colRef = getLibraryCollection(uid)
-      const constraints: QueryConstraint[] = []
+  const totalCount = library.length
 
-      if (filters.tab === 'favorites') {
-        constraints.push(where('isFavorite', '==', true))
-      } else if (filters.tab !== 'all') {
-        constraints.push(where('status', '==', filters.tab))
+  const entries = useMemo(() => {
+    let list = library
+
+    if (filters.tab === 'favorites') {
+      list = list.filter((e) => e.isFavorite)
+    } else if (filters.tab !== 'all') {
+      list = list.filter((e) => e.status === filters.tab)
+    }
+
+    if (filters.type !== 'all') {
+      list = list.filter((e) => e.type === filters.type)
+    }
+
+    if (filters.searchQuery.trim()) {
+      const q = filters.searchQuery.toLowerCase()
+      list = list.filter((e) => e.title.toLowerCase().includes(q))
+    }
+
+    const sorted = [...list].sort((a, b) => {
+      let diff = 0
+      if (filters.sortBy === 'title') {
+        diff = a.title.localeCompare(b.title)
+      } else if (filters.sortBy === 'year') {
+        diff = (a.year ?? 0) - (b.year ?? 0)
+      } else if (filters.sortBy === 'rating') {
+        diff = (a.rating ?? 0) - (b.rating ?? 0)
+      } else if (filters.sortBy === 'addedAt') {
+        const getMs = (v: any) => (v?.toDate ? v.toDate().getTime() : v?.seconds ? v.seconds * 1000 : new Date(v || 0).getTime() || 0)
+        diff = getMs(a.addedAt) - getMs(b.addedAt)
+      } else {
+        const getMs = (v: any) => (v?.toDate ? v.toDate().getTime() : v?.seconds ? v.seconds * 1000 : new Date(v || 0).getTime() || 0)
+        diff = getMs(a.updatedAt) - getMs(b.updatedAt)
       }
+      return filters.sortOrder === 'asc' ? diff : -diff
+    })
 
-      if (filters.type !== 'all') {
-        constraints.push(where('type', '==', filters.type))
-      }
-
-      // Sort
-      constraints.push(orderBy(filters.sortBy, filters.sortOrder))
-      constraints.push(limit(40))
-
-      try {
-        const q = query(colRef, ...constraints)
-        const snap = await getDocs(q)
-        return snap.docs.map((d) => d.data())
-      } catch (err) {
-        console.warn('Index might be building or query failed, falling back:', err)
-        // Simple fallback query
-        const fallbackQ = query(colRef, limit(40))
-        const snap = await getDocs(fallbackQ)
-        return snap.docs.map((d) => d.data())
-      }
-    },
-    enabled: Boolean(uid),
-  })
-
-  const rawEntries = libraryQuery.data ?? []
-
-  // Client-side text filter
-  const entries = rawEntries.filter((e) => {
-    if (!filters.searchQuery.trim()) return true
-    return e.title.toLowerCase().includes(filters.searchQuery.toLowerCase())
-  })
-
-  const counts = statsQuery.data?.statusCounts || {}
-  const totalCount = Object.values(counts).reduce((sum, n) => sum + (typeof n === 'number' ? n : 0), 0)
+    return sorted
+  }, [library, filters])
 
   return {
     filters,
@@ -104,7 +90,7 @@ export function useLibrary(initialTab: LibraryTab = 'all') {
     entries,
     counts,
     totalCount,
-    isLoading: libraryQuery.isLoading,
-    refetch: libraryQuery.refetch,
+    isLoading: !isReady,
+    refetch: () => Promise.resolve(),
   }
 }

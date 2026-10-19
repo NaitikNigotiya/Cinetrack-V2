@@ -138,6 +138,46 @@ export const TmdbWatchProviderCatalogSchema = z.object({
   results: tolerantArray(TmdbWatchProviderItemSchema, 'watch provider catalog'),
 })
 
+export const TmdbImageItemSchema = z.object({
+  file_path: z.string(),
+  width: z.number().optional().default(0),
+  height: z.number().optional().default(0),
+  iso_639_1: z.string().nullable().optional(),
+  vote_average: z.number().optional().default(0),
+  vote_count: z.number().optional().default(0),
+  aspect_ratio: z.number().optional(),
+})
+
+export const TmdbImagesResponseSchema = z.object({
+  backdrops: tolerantArray(TmdbImageItemSchema, 'backdrop').default([]),
+  posters: tolerantArray(TmdbImageItemSchema, 'poster').default([]),
+  logos: tolerantArray(TmdbImageItemSchema, 'logo').default([]),
+}).default({ backdrops: [], posters: [], logos: [] })
+
+export const TmdbReviewItemSchema = z.object({
+  id: z.string(),
+  author: z.string(),
+  author_details: z
+    .object({
+      name: z.string().optional(),
+      username: z.string().optional(),
+      avatar_path: z.string().nullable().optional(),
+      rating: z.number().nullable().optional(),
+    })
+    .optional(),
+  content: z.string().default(''),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
+  url: z.string().optional(),
+})
+
+export const TmdbReviewsResponseSchema = z.object({
+  page: z.number().default(1),
+  total_pages: z.number().default(1),
+  total_results: z.number().default(0),
+  results: tolerantArray(TmdbReviewItemSchema, 'review').default([]),
+}).default({ page: 1, total_pages: 1, total_results: 0, results: [] })
+
 export const TmdbMovieDetailsSchema = z.object({
   id: z.number(),
   title: z.string(),
@@ -161,6 +201,8 @@ export const TmdbMovieDetailsSchema = z.object({
       results: tolerantArray(TmdbVideoSchema, 'video'),
     })
     .optional(),
+  images: TmdbImagesResponseSchema.optional(),
+  reviews: TmdbReviewsResponseSchema.optional(),
   'watch/providers': TmdbWatchProvidersResponseSchema.optional(),
   recommendations: z
     .object({
@@ -216,6 +258,8 @@ export const TmdbTvDetailsSchema = z.object({
       results: tolerantArray(TmdbVideoSchema, 'video'),
     })
     .optional(),
+  images: TmdbImagesResponseSchema.optional(),
+  reviews: TmdbReviewsResponseSchema.optional(),
   'watch/providers': TmdbWatchProvidersResponseSchema.optional(),
   recommendations: z
     .object({
@@ -247,6 +291,10 @@ export type TmdbTvSeason = z.infer<typeof TmdbTvSeasonSchema>
 export type TmdbTvEpisode = z.infer<typeof TmdbTvEpisodeSchema>
 export type TmdbCastMember = z.infer<typeof TmdbCastMemberSchema>
 export type TmdbVideo = z.infer<typeof TmdbVideoSchema>
+export type TmdbImageItem = z.infer<typeof TmdbImageItemSchema>
+export type TmdbImagesResponse = z.infer<typeof TmdbImagesResponseSchema>
+export type TmdbReviewItem = z.infer<typeof TmdbReviewItemSchema>
+export type TmdbReviewsResponse = z.infer<typeof TmdbReviewsResponseSchema>
 export type TmdbGenreListResponse = z.infer<typeof TmdbGenreListResponseSchema>
 export type TmdbConfiguration = z.infer<typeof TmdbConfigurationSchema>
 export type TmdbWatchProviderCatalog = z.infer<typeof TmdbWatchProviderCatalogSchema>

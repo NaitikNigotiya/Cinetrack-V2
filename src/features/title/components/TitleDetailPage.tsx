@@ -14,23 +14,25 @@ import {
 import { firestore } from '@/services/firebase/db'
 import { useAuthStore } from '@/features/auth/store/authStore'
 import { parseTitleKey } from '@/shared/lib/ids'
-import { useTitleDetails } from '@/services/tmdb/hooks'
+import { useTitleDetails, useTitleReviews } from '@/services/tmdb/hooks'
 import { useLibraryEntry } from '../hooks/useLibraryEntry'
+import { useAppStore } from '@/domain/store'
 import {
   addToLibrary,
   setStatus,
+  markMovieWatched,
   toggleFavorite,
-  removeFromLibraryWithUndo,
-  updateLibraryEntry,
+  removeFromLibrary,
   setRating,
-} from '@/features/library/api/libraryApi'
-import { fetchCollections, addItemToCollection } from '@/features/collections/api/collectionsApi'
+} from '@/domain/operations'
+import { updateLibraryEntry } from '@/features/library/api/libraryApi'
+import { addItemToCollection } from '@/features/collections/api/collectionsApi'
 import { logPastWatch } from '@/features/history/api/historyApi'
 import { toast } from '@/shared/ui'
 import { PageShell } from '@/shared/ui/layout/PageShell'
 import { EmptyStateCard } from '@/shared/ui/layout/EmptyStateCard'
 import { Button } from '@/shared/ui/Button/Button'
-import type { LibraryStatus, Collection } from '@/shared/schemas'
+import type { LibraryStatus } from '@/shared/schemas'
 import { TRIVIA_DATABASE, type UserReview } from './titleTypes'
 import { TitleHeroBanner } from './TitleHeroBanner'
 import { TitleOverviewTab } from './TitleOverviewTab'
@@ -81,11 +83,12 @@ export default function TitleDetailPage() {
   const [showStatusSheet, setShowStatusSheet] = useState(false)
   const [showCollectionSheet, setShowCollectionSheet] = useState(false)
   const [selectedStatus, setSelectedStatus] = useState<LibraryStatus>('plan_to_watch')
-  const [userCollections, setUserCollections] = useState<Collection[]>([])
+  const userCollections = useAppStore((state) => state.collections)
 
   // Watchlist & Details queries
   const { entry, refetch: refetchEntry } = useLibraryEntry(uid, titleKey)
-  const { data: details, isLoading: isDetailsLoading, isError } = useTitleDetails(titleKey)
+  const { data: details, isLoading: isDetailsLoading, isError, refetch: refetchDetails } = useTitleDetails(titleKey)
+  const { data: tmdbReviews = [] } = useTitleReviews(mediaType, tmdbId)
   const isInWatchlist = Boolean(entry)
 
   // Sync reviews
@@ -103,14 +106,6 @@ export default function TitleDetailPage() {
       setReviewsList(items)
     })
   }, [uid, titleKey])
-
-  // Sync collections
-  useEffect(() => {
-    if (!uid) return
-    fetchCollections(uid)
-      .then((cols) => setUserCollections(cols))
-      .catch((err) => console.error(err))
-  }, [uid])
 
   // Sync notes
   useEffect(() => {
@@ -154,23 +149,44 @@ export default function TitleDetailPage() {
     return ''
   }, [details])
 
-  const similarTitles = useMemo(() => details?.recommendations || [], [details])
-  const images = useMemo(() => (details as any)?.images?.backdrops?.slice(0, 12) || [], [details])
+  const similarTitles = useMemo(() => {
+    if (details?.similar && details.similar.length > 0) return details.similar
+    if (details?.recommendations && details.recommendations.length > 0) return details.recommendations
+    return []
+  }, [details])
+
+  const images = useMemo(() => {
+    return details?.images || { backdrops: [], posters: [], logos: [] }
+  }, [details])
+
+  const allImagesFlat = useMemo(() => {
+    const backdrops = (images.backdrops || []).slice(0, 12).map((img) => ({ ...img, group: 'backdrop' as const }))
+    const posters = (images.posters || []).slice(0, 12).map((img) => ({ ...img, group: 'poster' as const }))
+    const logos = (images.logos || []).slice(0, 12).map((img) => ({ ...img, group: 'logo' as const }))
+    return [...backdrops, ...posters, ...logos]
+  }, [images])
+
+  const totalImagesCount = allImagesFlat.length
+  const totalReviewsCount = reviewsList.length + tmdbReviews.length
   const triviaList = TRIVIA_DATABASE[tmdbId] ?? null
 
   // Action Handlers
   const handleRemove = async () => {
     if (!uid || !entry) return
     if (window.confirm('Remove this title from your library?')) {
-      await removeFromLibraryWithUndo(uid, titleKey, entry)
-      refetchEntry()
+      await removeFromLibrary(uid, titleKey)
+      toast.success('Removed from library')
     }
   }
 
   const handleStatusChange = async (status: LibraryStatus) => {
     if (!uid || !entry) return
-    await setStatus(uid, titleKey, status, entry)
-    refetchEntry()
+    if (isMovie && status === 'completed') {
+      await markMovieWatched(uid, titleKey, entry)
+    } else {
+      await setStatus(uid, titleKey, status, entry)
+      toast.success(`Status updated to ${status.replace(/_/g, ' ')}`)
+    }
   }
 
   const handleAddToWatchlist = async (status: LibraryStatus) => {
@@ -187,7 +203,6 @@ export default function TitleDetailPage() {
       runtimeMinutes: details.runtimeMinutes ?? null,
       status,
     })
-    refetchEntry()
     toast.success('Added to library')
   }
 
@@ -206,20 +221,18 @@ export default function TitleDetailPage() {
         status: 'plan_to_watch',
         isFavorite: true,
       })
-      refetchEntry()
       toast.success('Favorited and added to library')
       return
     }
     if (entry) {
       await toggleFavorite(uid, titleKey, !entry.isFavorite)
-      refetchEntry()
+      toast.success(entry.isFavorite ? 'Removed from favorites' : 'Saved to favorites')
     }
   }
 
   const handleRatingSelect = async (ratingVal: number) => {
-    if (!uid || !entry) return
-    await setRating(uid, titleKey, ratingVal, entry.rating ?? null)
-    refetchEntry()
+    if (!uid) return
+    await setRating(uid, titleKey, ratingVal)
     toast.success(`Rated ${ratingVal}/10`)
   }
 
@@ -352,9 +365,9 @@ export default function TitleDetailPage() {
     { key: 'overview', label: 'Overview' },
     ...(mediaType === 'tv' ? [{ key: 'episodes' as const, label: 'Episodes', count: details.tv?.totalEpisodes || undefined }] : []),
     { key: 'cast', label: 'Cast & Crew', count: details.cast?.length },
-    { key: 'reviews', label: 'Reviews', count: reviewsList.length },
+    { key: 'reviews', label: 'Reviews', count: totalReviewsCount > 0 ? totalReviewsCount : undefined },
     { key: 'similar', label: 'Similar', count: similarTitles.length },
-    { key: 'images', label: 'Images', count: images.length },
+    { key: 'images', label: 'Images', count: totalImagesCount > 0 ? totalImagesCount : undefined },
     ...(triviaList ? [{ key: 'trivia' as const, label: 'Trivia', count: triviaList.length }] : []),
   ]
 
@@ -440,6 +453,7 @@ export default function TitleDetailPage() {
           {activeTab === 'reviews' && (
             <TitleReviewsTab
               reviewsList={reviewsList}
+              tmdbReviews={tmdbReviews}
               releaseYear={details.year || 0}
               onOpenWriteReview={openWriteReview}
               onDeleteReview={handleDeleteReview}
@@ -447,7 +461,29 @@ export default function TitleDetailPage() {
           )}
 
           {activeTab === 'similar' && (
-            <TitleSimilarTab titles={similarTitles} />
+            <TitleSimilarTab
+              titles={similarTitles}
+              isLoading={isDetailsLoading}
+              isError={isError}
+              onRetry={() => refetchDetails()}
+              onAddTitle={async (title) => {
+                if (!uid) return
+                await addToLibrary(uid, {
+                  titleKey: title.titleKey,
+                  tmdbId: title.tmdbId,
+                  type: title.type,
+                  title: title.title,
+                  year: title.year ?? 0,
+                  posterPath: title.posterPath ?? null,
+                  backdropPath: title.backdropPath ?? null,
+                  genres: [],
+                  runtimeMinutes: null,
+                  status: 'plan_to_watch',
+                })
+                refetchEntry()
+                toast.success(`Added ${title.title} to library`)
+              }}
+            />
           )}
 
           {activeTab === 'images' && (
@@ -491,7 +527,7 @@ export default function TitleDetailPage() {
           onSaveReview={handleSaveReview}
           lightboxIndex={lightboxIndex}
           setLightboxIndex={setLightboxIndex}
-          images={images}
+          images={allImagesFlat}
           showTrailer={showTrailer}
           setShowTrailer={setShowTrailer}
           trailerKey={details.trailerKey || null}

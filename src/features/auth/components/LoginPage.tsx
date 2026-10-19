@@ -1,41 +1,24 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import {
-  signInWithGoogle,
-  signInWithEmail,
-  registerWithEmail,
-  sendPasswordReset,
-} from '@/services/firebase/auth'
-import { Button, Input, toast } from '@/shared/ui'
-import { Mail, Lock, LogIn, UserPlus } from 'lucide-react'
+import { signInWithGoogle } from '@/services/firebase/auth'
+import { Button } from '@/shared/ui'
 import styles from './LoginPage.module.css'
 
 export default function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const from = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname || '/'
+  const locationState = location.state as { from?: { pathname?: string }; denied?: boolean } | null
+  const from = locationState?.from?.pathname || '/'
+  const accessDenied = locationState?.denied ?? false
 
-  const [isRegister, setIsRegister] = useState(false)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [errorMsg, setErrorMsg] = useState<string | null>(
+    accessDenied ? 'This is a private app. Access denied.' : null
+  )
 
   const mapAuthError = (err: unknown): string => {
     if (typeof err === 'object' && err !== null && 'code' in err) {
       const code = String((err as { code: string }).code)
-      if (code === 'auth/wrong-password' || code === 'auth/invalid-credential') {
-        return 'Incorrect email or password.'
-      }
-      if (code === 'auth/user-not-found') {
-        return 'No account found with this email.'
-      }
-      if (code === 'auth/email-already-in-use') {
-        return 'An account already exists with this email. Try logging in.'
-      }
-      if (code === 'auth/weak-password') {
-        return 'Password should be at least 6 characters long.'
-      }
       if (code === 'auth/popup-closed-by-user') {
         return 'Google sign-in popup was closed before completion.'
       }
@@ -46,7 +29,7 @@ export default function LoginPage() {
         return 'Network connection failed. Please check your internet.'
       }
     }
-    return 'Authentication failed. Please check your inputs and try again.'
+    return 'Authentication failed. Please try again.'
   }
 
   const handleGoogleSignIn = async () => {
@@ -59,42 +42,6 @@ export default function LoginPage() {
       setErrorMsg(mapAuthError(err))
     } finally {
       setIsLoading(false)
-    }
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email || !password) {
-      setErrorMsg('Please enter both email and password.')
-      return
-    }
-
-    setIsLoading(true)
-    setErrorMsg(null)
-    try {
-      if (isRegister) {
-        await registerWithEmail(email, password)
-      } else {
-        await signInWithEmail(email, password)
-      }
-      navigate(from, { replace: true })
-    } catch (err) {
-      setErrorMsg(mapAuthError(err))
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleForgotPassword = async () => {
-    if (!email) {
-      setErrorMsg('Please enter your email above first to receive password reset instructions.')
-      return
-    }
-    try {
-      await sendPasswordReset(email)
-      toast.info(`Password reset email sent to ${email}`)
-    } catch (err) {
-      setErrorMsg(mapAuthError(err))
     }
   }
 
@@ -139,67 +86,8 @@ export default function LoginPage() {
             </svg>
           }
         >
-          Continue with Google
+          {isLoading ? 'Signing in...' : 'Continue with Google'}
         </Button>
-
-        <div className={styles.divider}>or with email</div>
-
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <Input
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="name@example.com"
-            required
-            autoComplete="email"
-            startIcon={<Mail size={16} />}
-          />
-
-          <Input
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            required
-            autoComplete={isRegister ? 'new-password' : 'current-password'}
-            startIcon={<Lock size={16} />}
-          />
-
-          {!isRegister && (
-            <button
-              type="button"
-              className={styles.forgotBtn}
-              onClick={handleForgotPassword}
-            >
-              Forgot password?
-            </button>
-          )}
-
-          <Button
-            type="submit"
-            variant="primary"
-            isLoading={isLoading}
-            leftIcon={isRegister ? <UserPlus size={18} /> : <LogIn size={18} />}
-          >
-            {isRegister ? 'Create Account' : 'Sign In'}
-          </Button>
-        </form>
-
-        <div className={styles.switchMode}>
-          {isRegister ? 'Already have an account?' : "Don't have an account?"}
-          <button
-            type="button"
-            className={styles.switchLink}
-            onClick={() => {
-              setIsRegister(!isRegister)
-              setErrorMsg(null)
-            }}
-          >
-            {isRegister ? 'Sign In' : 'Sign Up'}
-          </button>
-        </div>
       </div>
     </div>
   )

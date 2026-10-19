@@ -43,7 +43,6 @@ export async function saveCollection(
     name: string
     description?: string | undefined
     emoji?: string | undefined
-    isPublic?: boolean | undefined
   }
 ): Promise<string> {
   const colRef = collection(firestore, `users/${uid}/collections`)
@@ -57,7 +56,6 @@ export async function saveCollection(
       name: data.name,
       description: data.description ?? '',
       emoji: data.emoji ?? '🎬',
-      isPublic: data.isPublic ?? false,
       items: existing?.exists() ? existing.data()?.['items'] ?? [] : [],
       updatedAt: serverTimestamp(),
       createdAt: existing?.exists() ? existing.data()?.['createdAt'] || serverTimestamp() : serverTimestamp(),

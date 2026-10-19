@@ -26,13 +26,23 @@ function initAdmin() {
   }
 }
 
+export interface DecodedAuthToken {
+  uid: string
+  email?: string
+  email_verified?: boolean
+}
+
 /**
- * Verifies a Firebase ID token and returns the caller's uid.
- * Does not log tokens.
+ * Verifies a Firebase ID token and returns the caller's decoded auth token.
+ * Never logs tokens or emails.
  */
-export async function verifyFirebaseIdToken(idToken: string): Promise<string> {
+export async function verifyFirebaseIdToken(idToken: string): Promise<DecodedAuthToken> {
   initAdmin()
   const auth = getAuth()
   const decoded = await auth.verifyIdToken(idToken)
-  return decoded.uid
+  return {
+    uid: decoded.uid,
+    email: decoded.email,
+    email_verified: decoded.email_verified,
+  }
 }

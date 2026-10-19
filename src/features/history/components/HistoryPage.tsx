@@ -1,21 +1,23 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
 import { useAuthStore } from '@/features/auth/store/authStore'
-import { fetchHistory, deleteHistoryEventWithUndo } from '../api/historyApi'
+import { useAppStore } from '@/domain/store'
+import { selectDashboardStats } from '@/domain/selectors'
+import { unmarkMovieWatched, recomputeLibraryEntry } from '@/domain/operations'
+import { deleteHistoryEventWithUndo } from '../api/historyApi'
 import { LogPastWatchDialog } from './LogPastWatchDialog'
 import { HistoryTimelineView } from './HistoryTimelineView'
 import { HistoryGridView } from './HistoryGridView'
 import { HistoryCompactView } from './HistoryCompactView'
 import {
   Button,
-  Skeleton,
   PageShell,
   PageHeader,
   StatRow,
   StatTile,
   FilterBar,
   SearchField,
+  Skeleton,
   EmptyStateCard,
 } from '@/shared/ui'
 import {
@@ -24,9 +26,9 @@ import {
   Calendar,
   Clock,
   Star,
+  SlidersHorizontal,
   LayoutGrid,
   List,
-  SlidersHorizontal,
 } from 'lucide-react'
 import type { HistoryEvent } from '@/shared/schemas'
 import {
@@ -44,6 +46,10 @@ export default function HistoryPage() {
   const { user } = useAuthStore()
   const uid = user?.uid
 
+  const library = useAppStore((state) => state.library)
+  const rawEvents = useAppStore((state) => state.history)
+  const isReady = useAppStore((state) => state.isReady)
+
   const [typeFilter, setTypeFilter] = useState<'all' | 'movie' | 'tv_episode'>('all')
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('all')
   const [sortOption, setSortOption] = useState<SortOption>('newest')
@@ -51,13 +57,7 @@ export default function HistoryPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [isLogOpen, setIsLogOpen] = useState(false)
 
-  const historyQuery = useQuery({
-    queryKey: ['history', uid],
-    queryFn: () => (uid ? fetchHistory(uid, 150) : []),
-    enabled: Boolean(uid),
-  })
-
-  const rawEvents = historyQuery.data || []
+  const domainStats = useMemo(() => selectDashboardStats(library, rawEvents), [library, rawEvents])
   const globalStats = useMemo(() => calculateGlobalStats(rawEvents), [rawEvents])
 
   const processedEvents = useMemo(
@@ -69,8 +69,13 @@ export default function HistoryPage() {
 
   const handleDelete = async (event: HistoryEvent) => {
     if (!uid) return
-    await deleteHistoryEventWithUndo(uid, event)
-    historyQuery.refetch()
+    const entry = library.find((e) => e.titleKey === event.titleKey)
+    if (entry) {
+      await unmarkMovieWatched(uid, event.titleKey, entry, event.eventId)
+      await recomputeLibraryEntry(uid, event.titleKey)
+    } else {
+      await deleteHistoryEventWithUndo(uid, event)
+    }
   }
 
   const currentMonthName = new Date().toLocaleDateString(undefined, { month: 'long' })
@@ -108,19 +113,19 @@ export default function HistoryPage() {
         />
         <StatTile
           icon={<Clock size={20} />}
-          value={`${globalStats.totalHours}h`}
+          value={`${domainStats.hoursWatched}h`}
           label="Time Watched"
           sublabel={globalStats.totalCount > 0 ? `~${globalStats.avgMins}m per entry` : '0m avg'}
         />
         <StatTile
           icon={<Calendar size={20} />}
-          value={globalStats.thisMonthCount}
+          value={domainStats.completedThisMonth}
           label={currentMonthName}
           sublabel={`${globalStats.thisMonthHours} hours logged`}
         />
         <StatTile
           icon={<Star size={20} />}
-          value={globalStats.avgRating ? `⭐ ${globalStats.avgRating}` : '—'}
+          value={domainStats.avgRating ? `⭐ ${domainStats.avgRating}` : '—'}
           label="Avg Rating"
           sublabel={globalStats.ratedCount > 0 ? `From ${globalStats.ratedCount} ratings` : 'No ratings yet'}
         />
@@ -196,7 +201,7 @@ export default function HistoryPage() {
         ))}
       </div>
 
-      {historyQuery.isLoading ? (
+      {!isReady ? (
         <div className="history-loading-feed" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {[1, 2, 3].map((i) => (
             <Skeleton key={i} height={120} style={{ borderRadius: 'var(--radius-card)' }} />
@@ -269,7 +274,7 @@ export default function HistoryPage() {
       <LogPastWatchDialog
         isOpen={isLogOpen}
         onClose={() => setIsLogOpen(false)}
-        onSaved={() => historyQuery.refetch()}
+        onSaved={() => {}}
       />
     </PageShell>
   )

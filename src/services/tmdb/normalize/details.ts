@@ -81,6 +81,8 @@ export function normaliseMovieDetails(raw: TmdbMovieDetails): NormalisedTitleDet
     details['watch/providers'] = raw['watch/providers']
   }
   if (raw.credits) details.credits = raw.credits
+  if (raw.images) (details as any).images = raw.images
+  if (raw.reviews) (details as any).reviews = raw.reviews
 
   return details
 }
@@ -168,6 +170,8 @@ export function normaliseTvDetails(raw: TmdbTvDetails): NormalisedTitleDetails {
     details['watch/providers'] = raw['watch/providers']
   }
   if (raw.credits) details.credits = raw.credits
+  if (raw.images) (details as any).images = raw.images
+  if (raw.reviews) (details as any).reviews = raw.reviews
 
   if (raw.next_episode_to_air) {
     details.nextEpisodeToAir = {

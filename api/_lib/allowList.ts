@@ -1,5 +1,6 @@
 export type ProxyErrorCode =
   | 'UNAUTHENTICATED'
+  | 'FORBIDDEN'
   | 'PATH_NOT_ALLOWED'
   | 'BAD_PARAMS'
   | 'NOT_FOUND'
@@ -43,7 +44,7 @@ export const ROUTE_RULES: RouteRule[] = [
   },
   {
     pattern: /^tv\/\d+$/,
-    allowedParams: ['append_to_response', 'language', 'include_image_language'],
+    allowedParams: ['append_to_response', 'language', 'include_image_language', 'region'],
     cacheCategory: 'details',
   },
   {
@@ -59,6 +60,16 @@ export const ROUTE_RULES: RouteRule[] = [
   // Sub-resources
   {
     pattern: /^(movie|tv)\/\d+\/(recommendations|similar|videos|credits|watch\/providers)$/,
+    allowedParams: ['page', 'language'],
+    cacheCategory: 'details',
+  },
+  {
+    pattern: /^(movie|tv)\/\d+\/images$/,
+    allowedParams: ['include_image_language', 'language'],
+    cacheCategory: 'details',
+  },
+  {
+    pattern: /^(movie|tv)\/\d+\/reviews$/,
     allowedParams: ['page', 'language'],
     cacheCategory: 'details',
   },

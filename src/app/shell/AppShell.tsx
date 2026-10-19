@@ -7,12 +7,23 @@ import { ShortcutsModal } from './ShortcutsModal'
 import { ToastContainer } from '@/shared/ui'
 import { OfflineBanner } from '@/shared/ui/Offline/OfflineBanner'
 import { ReloadPrompt } from '@/shared/ui/Pwa/ReloadPrompt'
+import { useAuthStore } from '@/features/auth/store/authStore'
+import { useAppStore, subscribeUserData } from '@/domain/store'
 import styles from './AppShell.module.css'
 
 export function AppShell() {
   const navigate = useNavigate()
+  const { user } = useAuthStore()
+  const { error } = useAppStore()
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false)
+
+  // Real-time user data subscription (single source of truth for library, history, collections)
+  useEffect(() => {
+    if (!user?.uid) return
+    const unsub = subscribeUserData(user.uid)
+    return () => unsub()
+  }, [user?.uid])
 
   // Global key combo listeners: 'g h', 'g l', 'g s', '?'
   useEffect(() => {
@@ -63,6 +74,22 @@ export function AppShell() {
   return (
     <div className={styles.shell}>
       <OfflineBanner />
+      {error && (
+        <div
+          role="alert"
+          style={{
+            background: 'var(--status-dropped, #ef4444)',
+            color: '#fff',
+            padding: '8px 16px',
+            fontSize: 'var(--fs-small, 13px)',
+            fontWeight: 600,
+            textAlign: 'center',
+            zIndex: 1000,
+          }}
+        >
+          Data synchronization issue: {error.message}. Please check your connection.
+        </div>
+      )}
       <Sidebar
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}

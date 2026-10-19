@@ -9,13 +9,25 @@ export const TitleKeySchema = z
 
 export const ImageRefSchema = z.object({
   filePath: z.string(),
-  width: z.number(),
-  height: z.number(),
+  width: z.number().optional().default(0),
+  height: z.number().optional().default(0),
+  aspectRatio: z.number().optional().default(0),
   iso6391: z.string().nullable().default(null),
   voteAverage: z.number().default(0),
 })
 
 export type ImageRef = z.infer<typeof ImageRefSchema>
+
+export const TitleReviewSchema = z.object({
+  id: z.string(),
+  author: z.string(),
+  rating: z.number().nullable().default(null),
+  content: z.string().default(''),
+  createdAt: z.string().nullable().default(null),
+  url: z.string().nullable().default(null),
+})
+
+export type TitleReview = z.infer<typeof TitleReviewSchema>
 
 export const ProviderSchema = z.object({
   id: z.number(),
@@ -146,6 +158,8 @@ export const TitleDetailsSchema = TitleSummarySchema.extend({
     logos: z.array(ImageRefSchema).default([]),
   }).default({ posters: [], backdrops: [], logos: [] }),
   recommendations: z.array(TitleSummarySchema).default([]),
+  similar: z.array(TitleSummarySchema).default([]),
+  reviews: z.array(TitleReviewSchema).default([]),
   providers: WatchProvidersSectionSchema.nullable().default(null),
   belongsToCollection: z.object({ id: z.number(), name: z.string() }).nullable().default(null),
   tv: TvDetailsMetaSchema.nullable().default(null),

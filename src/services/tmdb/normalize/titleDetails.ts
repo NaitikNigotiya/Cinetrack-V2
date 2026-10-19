@@ -5,6 +5,7 @@ import type {
   CrewMember,
   VideoRef,
   WatchProvidersSection,
+  TitleReview,
 } from '@/shared/schemas/title'
 import {
   computeMedian,
@@ -43,6 +44,16 @@ export interface RawFullDetails extends RawMediaSummary {
   images?: { posters?: Array<unknown>; backdrops?: Array<unknown>; logos?: Array<unknown> }
   recommendations?: { results?: RawMediaSummary[] }
   similar?: { results?: RawMediaSummary[] }
+  reviews?: {
+    results?: Array<{
+      id: string
+      author?: string
+      author_details?: { rating?: number | null }
+      content?: string
+      created_at?: string
+      url?: string
+    }>
+  }
   'watch/providers'?: { results?: Record<string, { link?: string | null; flatrate?: Array<{ provider_id: number; provider_name: string; logo_path?: string | null }>; rent?: Array<{ provider_id: number; provider_name: string; logo_path?: string | null }>; buy?: Array<{ provider_id: number; provider_name: string; logo_path?: string | null }>; free?: Array<{ provider_id: number; provider_name: string; logo_path?: string | null }> }> }
   belongs_to_collection?: { id: number; name: string } | null
   number_of_seasons?: number
@@ -158,6 +169,21 @@ export function toTitleDetails(
   const recCandidates = [...(raw.recommendations?.results || []), ...(raw.similar?.results || [])]
   const recommendations = toTitleSummaryList(recCandidates, type, true, 20)
 
+  const similarCandidates = (raw.similar?.results && raw.similar.results.length > 0)
+    ? raw.similar.results
+    : (raw.recommendations?.results || [])
+  const similar = toTitleSummaryList(similarCandidates, type, true, 20)
+
+  const rawReviews = raw.reviews?.results || []
+  const reviews: TitleReview[] = rawReviews.map((r) => ({
+    id: r.id,
+    author: r.author || 'Anonymous',
+    rating: typeof r.author_details?.rating === 'number' ? r.author_details.rating : null,
+    content: (r.content || '').trim(),
+    createdAt: emptyToNull(r.created_at),
+    url: emptyToNull(r.url),
+  }))
+
   let providers: WatchProvidersSection | null = null
   const regionData = raw['watch/providers']?.results?.[userRegion.toUpperCase()]
   if (regionData) {
@@ -244,6 +270,8 @@ export function toTitleDetails(
     trailerKey,
     images,
     recommendations,
+    similar,
+    reviews,
     providers,
     belongsToCollection: raw.belongs_to_collection
       ? { id: raw.belongs_to_collection.id, name: raw.belongs_to_collection.name }

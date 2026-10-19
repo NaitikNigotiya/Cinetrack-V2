@@ -8,7 +8,8 @@ import {
   Star,
 } from 'lucide-react'
 
-import { useLibrary } from '../hooks/useLibrary'
+import { useAppStore } from '@/domain/store'
+import { selectCompletedList, selectDashboardStats } from '@/domain/selectors'
 import { PosterCard } from '@/shared/ui/PosterCard/PosterCard'
 import {
   PageShell,
@@ -36,7 +37,8 @@ function getCompletionDate(e: LibraryEntry): Date {
 
 export default function CompletedPage() {
   const navigate = useNavigate()
-  const { entries } = useLibrary('completed')
+  const library = useAppStore((state) => state.library)
+  const history = useAppStore((state) => state.history)
 
   const [activeTab, setActiveTab] = useState<ViewTab>('timeline')
   const [calendarDate, setCalendarDate] = useState(() => new Date())
@@ -45,32 +47,21 @@ export default function CompletedPage() {
   const [sortAsc, setSortAsc] = useState<boolean>(false)
 
   const completedEntries = useMemo(() => {
-    return entries.filter((e) => e.status === 'completed')
-  }, [entries])
+    return selectCompletedList(library)
+  }, [library])
+
+  const domainStats = useMemo(() => {
+    return selectDashboardStats(library, history)
+  }, [library, history])
 
   const stats = useMemo(() => {
-    const totalCount = completedEntries.length
-    const totalRuntimeMins = completedEntries.reduce(
-      (acc, e) => acc + (e.runtimeMinutes || 110),
-      0
-    )
-    const hours = Math.round(totalRuntimeMins / 60)
-    const rated = completedEntries.filter((e) => e.rating !== null && e.rating !== undefined)
-    const avgRating =
-      rated.length > 0
-        ? (rated.reduce((acc, e) => acc + (e.rating ?? 0), 0) / rated.length).toFixed(1)
-        : null
-
-    const now = new Date()
-    const thisMonth = now.getMonth()
-    const thisYear = now.getFullYear()
-    const thisMonthCount = completedEntries.filter((e) => {
-      const d = getCompletionDate(e)
-      return d.getMonth() === thisMonth && d.getFullYear() === thisYear
-    }).length
-
-    return { totalCount, hours, avgRating, thisMonthCount }
-  }, [completedEntries])
+    return {
+      totalCount: completedEntries.length,
+      hours: domainStats.hoursWatched,
+      avgRating: domainStats.avgRating,
+      thisMonthCount: domainStats.completedThisMonth,
+    }
+  }, [completedEntries.length, domainStats])
 
   const timelineGroups = useMemo(() => {
     const groups: Record<string, LibraryEntry[]> = {}

@@ -5,8 +5,10 @@ import {
   Plus,
 } from 'lucide-react'
 
-import { useLibrary } from '../hooks/useLibrary'
-import { updateLibraryEntry } from '../api/libraryApi'
+import { useAppStore } from '@/domain/store'
+import { selectWatchlist } from '@/domain/selectors'
+import { computeWatchlistSmartGroups } from '@/domain/smartCollections'
+import { toggleFavorite } from '@/domain/operations'
 import { useAuthStore } from '@/features/auth/store/authStore'
 import { PosterCard } from '@/shared/ui/PosterCard/PosterCard'
 import {
@@ -28,7 +30,9 @@ export default function WatchlistPage() {
   const { user } = useAuthStore()
   const uid = user?.uid
 
-  const { entries, isLoading, refetch } = useLibrary('all')
+  const entries = useAppStore((state) => state.library)
+  const isReady = useAppStore((state) => state.isReady)
+  const isLoading = !isReady
 
   const [viewType, setViewType] = useState<'smart' | 'status'>('smart')
   const [activeStatusTab, setActiveStatusTab] = useState<LibraryStatus | 'all'>('plan_to_watch')
@@ -41,6 +45,8 @@ export default function WatchlistPage() {
   const [tempFilterType, setTempFilterType] = useState<'all' | 'movie' | 'tv'>(filterType)
   const [tempGenres, setTempGenres] = useState<string[]>(selectedGenres)
 
+  const watchlistEntries = useMemo(() => selectWatchlist(entries), [entries])
+
   const availableGenres = useMemo(() => {
     const set = new Set<string>()
     entries.forEach((e) => {
@@ -52,21 +58,8 @@ export default function WatchlistPage() {
   }, [entries])
 
   const smartSections = useMemo(() => {
-    const list = entries.filter((e) => e.status !== 'completed' && e.status !== 'dropped')
-
-    const watchSoon = list.filter((e) => e.status === 'watching' || ((e as any).priority != null && (e as any).priority >= 2))
-    const thisWeekend = list.filter((e) => e.status === 'plan_to_watch' && (e.runtimeMinutes ?? 120) <= 100)
-    const currentYear = new Date().getFullYear()
-    const waitingForRelease = list.filter((e) => (e.year ?? 0) >= currentYear && e.status === 'plan_to_watch')
-    const maybeLater = list.filter((e) => e.status === 'on_hold' || ((e as any).priority != null && (e as any).priority === 0))
-
-    return {
-      watchSoon,
-      thisWeekend,
-      waitingForRelease,
-      maybeLater,
-    }
-  }, [entries])
+    return computeWatchlistSmartGroups(watchlistEntries)
+  }, [watchlistEntries])
 
   const statusViewEntries = useMemo(() => {
     let list = entries
@@ -91,9 +84,9 @@ export default function WatchlistPage() {
       if (sortBy === 'year') return (b.year ?? 0) - (a.year ?? 0)
       if (sortBy === 'runtime') return (b.runtimeMinutes ?? 0) - (a.runtimeMinutes ?? 0)
 
-      const dateA = a.updatedAt?.toDate ? a.updatedAt.toDate().getTime() : 0
-      const dateB = b.updatedAt?.toDate ? b.updatedAt.toDate().getTime() : 0
-      return dateB - dateA
+      const getMs = (v: any) =>
+        v?.toDate ? v.toDate().getTime() : v?.seconds ? v.seconds * 1000 : new Date(v || 0).getTime() || 0
+      return getMs(b.updatedAt) - getMs(a.updatedAt)
     })
   }, [entries, activeStatusTab, filterType, selectedGenres, sortBy])
 
@@ -101,9 +94,8 @@ export default function WatchlistPage() {
     e.stopPropagation()
     if (!uid) return
     try {
-      await updateLibraryEntry(uid, entry.titleKey, { isFavorite: !entry.isFavorite })
+      await toggleFavorite(uid, entry.titleKey, !entry.isFavorite)
       toast.success(entry.isFavorite ? 'Removed from favorites' : 'Saved to favorites')
-      refetch()
     } catch {
       toast.error('Failed to update favorite')
     }
@@ -239,6 +231,7 @@ export default function WatchlistPage() {
                   type={entry.type}
                   status={entry.status}
                   isFavorite={entry.isFavorite}
+                  onToggleFavorite={(e) => handleToggleFavorite(e, entry)}
                   onClick={() => navigate(`/title/${entry.titleKey}`)}
                 />
               ))}

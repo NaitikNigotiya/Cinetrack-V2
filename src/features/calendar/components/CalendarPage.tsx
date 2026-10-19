@@ -91,8 +91,8 @@ export default function CalendarPage() {
   )
 
   const plannedByDate = useMemo(() => computePlannedByDate(plannedWatches), [plannedWatches])
-  const watchedByDate = useMemo(() => computeWatchedByDate(libraryEntries), [libraryEntries])
-  const upcomingReleases = useMemo(() => computeUpcomingReleases(libraryEntries), [libraryEntries])
+  const watchedByDate = useMemo(() => computeWatchedByDate(libraryEntries as any), [libraryEntries])
+  const upcomingReleases = useMemo(() => computeUpcomingReleases(libraryEntries as any), [libraryEntries])
 
   const prevMonth = () => {
     setCurrentDate((prev) => {

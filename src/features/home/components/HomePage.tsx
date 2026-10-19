@@ -10,8 +10,8 @@ import {
 } from 'lucide-react'
 
 import { useAuthStore } from '@/features/auth/store/authStore'
-import { useLibrary } from '@/features/library/hooks/useLibrary'
-import { addToLibrary } from '@/features/library/api/libraryApi'
+import { useAppStore } from '@/domain/store'
+import { addToLibrary } from '@/domain/operations'
 import { toast } from '@/shared/ui'
 import { PageShell } from '@/shared/ui/layout/PageShell'
 import { PageHeader } from '@/shared/ui/layout/PageHeader'
@@ -32,7 +32,7 @@ export default function HomePage() {
   const uid = user?.uid
   const firstName = user?.displayName ? user.displayName.split(' ')[0] : 'Explorer'
 
-  const { entries, isLoading: isLibraryLoading } = useLibrary('all')
+  const { library, history, isReady } = useAppStore()
 
   const {
     currentYear,
@@ -58,7 +58,7 @@ export default function HomePage() {
     avgRating,
     recentActivities,
     dailyQuote,
-  } = useDashboardData(uid, entries)
+  } = useDashboardData(uid, library, history)
 
   const handleQuickAdd = async (e: React.MouseEvent, item: any) => {
     e.stopPropagation()
@@ -68,7 +68,7 @@ export default function HomePage() {
     }
     const type = item.media_type === 'tv' ? 'tv' : 'movie'
     const titleKey = `${type}:${item.id}`
-    if (entries.some((w) => w.titleKey === titleKey)) return
+    if (library.some((w) => w.titleKey === titleKey)) return
     const year = parseInt((item.release_date ?? item.first_air_date)?.slice(0, 4) || '0', 10) || undefined
     const title = item.title ?? item.name ?? 'Untitled'
     try {
@@ -89,7 +89,7 @@ export default function HomePage() {
   }
 
   const handleRandomPick = () => {
-    const ptw = entries.filter((e) => e.status === 'plan_to_watch')
+    const ptw = library.filter((e) => e.status === 'plan_to_watch')
     if (!ptw.length) {
       toast.info('No titles in your "Plan to Watch" list yet!')
       return
@@ -173,16 +173,16 @@ export default function HomePage() {
       </Section>
 
       <DashboardRails
-        recentlyAdded={recentlyAdded}
-        isLibraryLoading={isLibraryLoading}
-        seeds={seeds}
-        activeSeed={activeSeed}
+        recentlyAdded={recentlyAdded as any}
+        isLibraryLoading={!isReady}
+        seeds={seeds as any}
+        activeSeed={activeSeed as any}
         seedIndex={seedIndex}
         setSeedIndex={setSeedIndex}
         onSeedChange={setSeedIndex}
         recommendationsLoading={recommendationsQuery.isLoading}
         recommendationItems={recommendationItems}
-        entries={entries}
+        entries={library as any}
         filteredTrending={filteredTrending}
         mood={mood}
         onQuickAdd={handleQuickAdd}

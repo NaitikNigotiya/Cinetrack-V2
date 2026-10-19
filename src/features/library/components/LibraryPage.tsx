@@ -105,7 +105,7 @@ export default function LibraryPage() {
           {entries.map((entry) => {
             const tvProgress =
               entry.type === 'tv' && entry.tv && entry.tv.totalEpisodes
-                ? { watched: entry.tv.episodesWatched, total: entry.tv.totalEpisodes }
+                ? { watched: entry.tv.episodesWatched || 0, total: entry.tv.totalEpisodes }
                 : undefined
 
             return (

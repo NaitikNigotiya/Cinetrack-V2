@@ -240,7 +240,7 @@ export default function NotesPage() {
             <NoteItemCard
               key={note.id}
               note={note}
-              linked={note.titleKey ? libraryMap.get(note.titleKey) : null}
+              linked={note.titleKey ? (libraryMap.get(note.titleKey) as any) : null}
               onOpen={handleOpenEditor}
               onDelete={handleDelete}
             />
@@ -263,7 +263,7 @@ export default function NotesPage() {
         localTitleKey={localTitleKey}
         setLocalTitleKey={setLocalTitleKey}
         saveStatus={saveStatus}
-        selectedEntry={selectedEntry}
+        selectedEntry={selectedEntry as any}
         isLinkPopoverOpen={isLinkPopoverOpen}
         setIsLinkPopoverOpen={setIsLinkPopoverOpen}
         linkSearchQuery={linkSearchQuery}

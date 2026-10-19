@@ -4,17 +4,24 @@ import {
   TmdbTvDetailsSchema,
   TmdbTvSeasonSchema,
   TmdbTvEpisodeSchema,
+  TmdbImagesResponseSchema,
+  TmdbReviewsResponseSchema,
   type TmdbMovieDetails,
   type TmdbTvDetails,
   type TmdbTvSeason,
   type TmdbTvEpisode,
+  type TmdbImagesResponse,
+  type TmdbReviewsResponse,
 } from '../schemas'
 import { MOCK_MOVIE_DETAILS, MOCK_TV_DETAILS } from '../mockData'
 
 export async function getMovieDetails(id: number, signal?: AbortSignal): Promise<TmdbMovieDetails> {
   try {
     const data = await request<unknown>(`movie/${id}`, {
-      params: { append_to_response: 'credits,videos,watch/providers,recommendations,similar' },
+      params: {
+        append_to_response: 'credits,videos,images,recommendations,similar,release_dates,watch/providers,external_ids',
+        include_image_language: 'en,null',
+      },
       signal,
     })
     return TmdbMovieDetailsSchema.parse(data)
@@ -30,7 +37,8 @@ export async function getTvDetails(id: number, signal?: AbortSignal): Promise<Tm
   try {
     const data = await request<unknown>(`tv/${id}`, {
       params: {
-        append_to_response: 'credits,aggregate_credits,videos,watch/providers,recommendations,similar',
+        append_to_response: 'credits,aggregate_credits,videos,images,recommendations,similar,release_dates,watch/providers,external_ids',
+        include_image_language: 'en,null',
       },
       signal,
     })
@@ -52,6 +60,38 @@ export async function getTvDetails(id: number, signal?: AbortSignal): Promise<Tm
     }
     throw err
   }
+}
+
+export async function getMovieImages(id: number, signal?: AbortSignal): Promise<TmdbImagesResponse> {
+  const data = await request<unknown>(`movie/${id}/images`, {
+    params: { include_image_language: 'en,null' },
+    signal,
+  })
+  return TmdbImagesResponseSchema.parse(data)
+}
+
+export async function getTvImages(id: number, signal?: AbortSignal): Promise<TmdbImagesResponse> {
+  const data = await request<unknown>(`tv/${id}/images`, {
+    params: { include_image_language: 'en,null' },
+    signal,
+  })
+  return TmdbImagesResponseSchema.parse(data)
+}
+
+export async function getMovieReviews(id: number, page = 1, signal?: AbortSignal): Promise<TmdbReviewsResponse> {
+  const data = await request<unknown>(`movie/${id}/reviews`, {
+    params: { page: String(page) },
+    signal,
+  })
+  return TmdbReviewsResponseSchema.parse(data)
+}
+
+export async function getTvReviews(id: number, page = 1, signal?: AbortSignal): Promise<TmdbReviewsResponse> {
+  const data = await request<unknown>(`tv/${id}/reviews`, {
+    params: { page: String(page) },
+    signal,
+  })
+  return TmdbReviewsResponseSchema.parse(data)
 }
 
 export async function getTvSeason(

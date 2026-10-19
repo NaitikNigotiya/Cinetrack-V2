@@ -1688,3 +1688,232 @@
   0% { background-position: 100% 50%; }
   100% { background-position: 0 50%; }
 }
+
+/* ── Shared Poster Grid & Similar Tab ─────────────────────────────────────── */
+.poster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--card-gap, var(--space-4, 16px));
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .poster-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3, 12px);
+  }
+}
+
+.title-similar-tab-pane {
+  width: 100%;
+}
+
+.poster-grid > * {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.title-similar-skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.title-similar-skeleton-poster {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: var(--radius-card, 16px);
+}
+
+.title-similar-skeleton-text {
+  height: 14px;
+  width: 80%;
+  border-radius: 4px;
+}
+
+.title-similar-skeleton-sub {
+  height: 12px;
+  width: 40%;
+  border-radius: 4px;
+}
+
+/* ── Multi-group Images Tab ──────────────────────────────────────────────── */
+.title-images-tab-container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+}
+
+.title-image-group-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.title-image-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title-image-group-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-primary, #fff);
+  margin: 0;
+}
+
+.title-image-group-count {
+  font-size: 12px;
+  color: var(--text-muted, #888);
+  font-weight: 600;
+}
+
+.title-posters-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--card-gap, 16px);
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .title-posters-gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3, 12px);
+  }
+}
+
+.title-poster-gallery-item {
+  aspect-ratio: 2 / 3;
+  border-radius: var(--radius-card, 16px);
+  overflow: hidden;
+  border: var(--border-card, 1px solid rgba(255, 255, 255, 0.08));
+  background: var(--surface-card, #1a1a1a);
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease;
+  width: 100%;
+}
+
+.title-poster-gallery-item:hover {
+  transform: scale(1.02);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.title-poster-gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.title-logos-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+.title-logo-gallery-item {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-card, 16px);
+  overflow: hidden;
+  border: var(--border-card, 1px solid rgba(255, 255, 255, 0.08));
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  transition: transform 180ms ease, border-color 180ms ease;
+  width: 100%;
+}
+
+.title-logo-gallery-item:hover {
+  transform: scale(1.02);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.title-logo-gallery-item img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* ── Community Reviews Cards ─────────────────────────────────────────────── */
+.title-tmdb-review-card {
+  padding: 20px 24px;
+}
+
+.title-tmdb-review-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.title-tmdb-review-author {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary, #fff);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.title-tmdb-review-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #f59e0b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.title-tmdb-review-date {
+  font-size: 12px;
+  color: var(--text-muted, #777);
+}
+
+.title-tmdb-review-content {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary, #ccc);
+  margin: 0;
+  white-space: pre-line;
+}
+
+.title-tmdb-review-readmore {
+  background: none;
+  border: none;
+  color: var(--color-brand, #e50914);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 0 0;
+  display: inline-block;
+}
+
+.title-tmdb-review-readmore:hover {
+  text-decoration: underline;
+}
+
+.title-tmdb-review-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted, #888);
+  font-size: 12px;
+  text-decoration: none;
+  margin-top: 10px;
+}
+
+.title-tmdb-review-link:hover {
+  color: var(--text-primary, #fff);
+}

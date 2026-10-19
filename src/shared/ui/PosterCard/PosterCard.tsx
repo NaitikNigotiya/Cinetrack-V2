@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Star, Film } from 'lucide-react'
+import { Star, Film, Heart } from 'lucide-react'
 import clsx from 'clsx'
 import { getPosterUrl, getPosterSrcSet } from '@/shared/lib/tmdbImage'
 import { usePrefetchTitle } from '@/services/tmdb/hooks'
@@ -26,6 +26,7 @@ export interface PosterCardProps {
   isInWatchlist?: boolean | undefined
   onAddClick?: ((e: React.MouseEvent) => void) | undefined
   isFavorite?: boolean | undefined
+  onToggleFavorite?: ((e: React.MouseEvent) => void) | undefined
 }
 
 export function PosterCard({
@@ -46,6 +47,7 @@ export function PosterCard({
   isInWatchlist = false,
   onAddClick,
   isFavorite = false,
+  onToggleFavorite,
 }: PosterCardProps) {
   const { prefetchTitle } = usePrefetchTitle()
   const effectiveTitleKey = titleKey || (detailHref?.startsWith('/title/') ? detailHref.replace('/title/', '') : undefined)
@@ -84,11 +86,42 @@ export function PosterCard({
           </div>
         )}
 
-        {isFavorite && (
+        {onToggleFavorite ? (
+          <button
+            type="button"
+            className={styles.favBtn}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              onToggleFavorite(e)
+            }}
+            aria-label={isFavorite ? 'Remove favorite' : 'Add favorite'}
+            style={{
+              position: 'absolute',
+              top: 6,
+              right: 6,
+              width: 28,
+              height: 28,
+              borderRadius: '50%',
+              background: 'rgba(0,0,0,0.65)',
+              backdropFilter: 'blur(4px)',
+              border: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              zIndex: 4,
+              color: isFavorite ? '#e50914' : 'rgba(255,255,255,0.7)',
+              transition: 'transform 0.15s ease',
+            }}
+          >
+            <Heart size={14} fill={isFavorite ? 'currentColor' : 'none'} />
+          </button>
+        ) : isFavorite ? (
           <div style={{ position: 'absolute', top: 6, right: 6, fontSize: 14, zIndex: 2 }}>
             ❤️
           </div>
-        )}
+        ) : null}
 
         {status && (
           <div className={styles.badgeTopLeft}>
@@ -105,7 +138,11 @@ export function PosterCard({
         {showAddButton && (
           <button
             type="button"
-            onClick={onAddClick}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              onAddClick?.(e)
+            }}
             style={{
               position: 'absolute',
               bottom: 6,

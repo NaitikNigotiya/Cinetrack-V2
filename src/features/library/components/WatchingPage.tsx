@@ -2,8 +2,9 @@ import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Play, Check, Film, Sparkles } from 'lucide-react'
 
-import { useLibrary } from '../hooks/useLibrary'
-import { updateLibraryEntry } from '../api/libraryApi'
+import { useAppStore } from '@/domain/store'
+import { selectWatchingList, toDomainDate } from '@/domain'
+import { markMovieWatched, setStatus } from '@/domain/operations'
 import { useAuthStore } from '@/features/auth/store/authStore'
 import { getPosterUrl } from '@/shared/lib/tmdbImage'
 import {
@@ -14,20 +15,23 @@ import {
   EmptyStateCard,
   Button,
 } from '@/shared/ui'
-import type { LibraryEntry } from '@/shared/schemas'
+import type { DomainLibraryEntry } from '@/domain'
 import './WatchingPage.css'
 
 export default function WatchingPage() {
   const navigate = useNavigate()
   const { user } = useAuthStore()
   const uid = user?.uid
-  const { entries, refetch } = useLibrary('watching')
+  const { library } = useAppStore()
+
+  // Single source of truth: strictly status === 'watching' ONLY (movies and TV)
+  const watchingEntries = useMemo(() => selectWatchingList(library), [library])
 
   const [activeTab, setActiveTab] = useState<'movies' | 'tv'>('movies')
   const [sortBy, setSortBy] = useState<'newest' | 'updated' | 'title'>('newest')
 
-  const movieEntries = useMemo(() => entries.filter((e) => e.type === 'movie'), [entries])
-  const tvEntries = useMemo(() => entries.filter((e) => e.type === 'tv'), [entries])
+  const movieEntries = useMemo(() => watchingEntries.filter((e) => e.type === 'movie'), [watchingEntries])
+  const tvEntries = useMemo(() => watchingEntries.filter((e) => e.type === 'tv'), [watchingEntries])
   const currentEntries = activeTab === 'movies' ? movieEntries : tvEntries
 
   const sortedEntries = useMemo(() => {
@@ -36,26 +40,26 @@ export default function WatchingPage() {
         return a.title.localeCompare(b.title)
       }
       if (sortBy === 'updated') {
-        const secondsA = a.updatedAt?.seconds ?? 0
-        const secondsB = b.updatedAt?.seconds ?? 0
-        return secondsB - secondsA
+        const timeA = toDomainDate(a.updatedAt)?.getTime() || 0
+        const timeB = toDomainDate(b.updatedAt)?.getTime() || 0
+        return timeB - timeA
       }
-      const secondsA = a.addedAt?.seconds ?? 0
-      const secondsB = b.addedAt?.seconds ?? 0
-      return secondsB - secondsA
+      const timeA = toDomainDate(a.addedAt)?.getTime() || 0
+      const timeB = toDomainDate(b.addedAt)?.getTime() || 0
+      return timeB - timeA
     })
   }, [currentEntries, sortBy])
 
-  const handleMarkCompleted = async (e: React.MouseEvent, entry: LibraryEntry) => {
+  const handleMarkCompleted = async (e: React.MouseEvent, entry: DomainLibraryEntry) => {
     e.stopPropagation()
     if (!uid) return
     try {
-      await updateLibraryEntry(uid, entry.titleKey, {
-        status: 'completed',
-        completedAt: new Date(),
-      })
-      toast.success(`Marked "${entry.title}" as completed! 🎉`)
-      void refetch()
+      if (entry.type === 'movie') {
+        await markMovieWatched(uid, entry.titleKey, entry)
+      } else {
+        await setStatus(uid, entry.titleKey, 'completed', entry)
+        toast.success(`Marked "${entry.title}" as completed! 🎉`)
+      }
     } catch {
       toast.error('Failed to update status')
     }
@@ -67,7 +71,7 @@ export default function WatchingPage() {
         eyebrow={<><Sparkles size={14} /> In Progress</>}
         title="Watching"
         subtitle="Titles currently in progress"
-        meta={<span>{entries.length} {entries.length === 1 ? 'title' : 'titles'} in total</span>}
+        meta={<span>{watchingEntries.length} {watchingEntries.length === 1 ? 'title' : 'titles'} in total</span>}
       />
 
       {/* FilterBar with Pill Tabs and Right-aligned Sort */}
@@ -100,77 +104,79 @@ export default function WatchingPage() {
           }
         />
       ) : (
-        <div className="watching-grid-layout">
+        <div className="watching-grid">
           {sortedEntries.map((entry) => {
-            const totalEps = entry.tv?.totalEpisodes ?? 0
-            const watchedEps = entry.tv?.episodesWatched ?? 0
-            const progressPercent =
-              entry.type === 'tv' && totalEps > 0 ? Math.round((watchedEps / totalEps) * 100) : 0
             const poster = getPosterUrl(entry.posterPath, 'w342')
+            const isTv = entry.type === 'tv'
+            const watched = entry.tv?.episodesWatched || 0
+            const total = entry.tv?.totalEpisodes || 0
+            const progressPercent = total > 0 ? Math.min(100, Math.round((watched / total) * 100)) : 0
 
             return (
               <div
                 key={entry.titleKey}
-                className="watching-card-compact"
+                className="watching-card"
                 onClick={() => navigate(`/title/${entry.titleKey}`)}
-                style={{ cursor: 'pointer' }}
               >
-                {/* Poster */}
-                <div className="watching-poster-box">
+                {/* Poster container */}
+                <div className="watching-poster-wrap">
                   {poster ? (
-                    <img src={poster} alt={entry.title} className="watching-poster-img" loading="lazy" />
+                    <img src={poster} alt={entry.title} className="watching-poster-img" />
                   ) : (
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted)' }}>
-                      <Film size={24} />
+                    <div className="watching-poster-fallback">
+                      <Film size={32} />
                     </div>
                   )}
 
-                  {/* Progress bar */}
-                  {entry.type === 'tv' && totalEps > 0 && (
-                    <div className="watching-progress-bar-fixed">
-                      <div className="watching-progress-fill" style={{ width: `${progressPercent}%` }} />
-                    </div>
-                  )}
+                  {/* Complete Action Button Overlay */}
+                  <button
+                    type="button"
+                    className="watching-complete-btn"
+                    title="Mark as completed"
+                    onClick={(e) => handleMarkCompleted(e, entry)}
+                  >
+                    <Check size={16} />
+                  </button>
                 </div>
 
-                {/* Info */}
-                <div className="watching-info-block">
-                  <h4 className="watching-card-title">{entry.title}</h4>
-                  <div className="watching-card-meta">
+                {/* Info Container */}
+                <div className="watching-info">
+                  <h3 className="watching-title">{entry.title}</h3>
+                  <div className="watching-meta">
                     <span>{entry.year || '—'}</span>
-                    {entry.type === 'tv' && totalEps > 0 && (
-                      <span className="watching-pill-stat">
-                        {watchedEps}/{totalEps} eps ({progressPercent}%)
-                      </span>
-                    )}
+                    <span>•</span>
+                    <span>{isTv ? `${total} eps` : entry.runtimeMinutes ? `${entry.runtimeMinutes}m` : 'Movie'}</span>
                   </div>
 
-                  {/* Quick actions */}
-                  <div className="watching-action-row">
-                    <button
-                      className="watching-btn-main"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        if (entry.type === 'tv') {
-                          navigate(`/title/${entry.titleKey}/episodes`)
-                        } else {
+                  {/* TV Progress Bar or Movie CTA */}
+                  {isTv ? (
+                    <div className="watching-progress-container">
+                      <div className="watching-progress-bar">
+                        <div
+                          className="watching-progress-fill"
+                          style={{ width: `${progressPercent}%` }}
+                        />
+                      </div>
+                      <div className="watching-progress-label">
+                        <span>{watched} of {total} watched</span>
+                        <span>{progressPercent}%</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="watching-movie-action">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        leftIcon={<Play size={12} fill="currentColor" />}
+                        onClick={(e) => {
+                          e.stopPropagation()
                           navigate(`/title/${entry.titleKey}`)
-                        }
-                      }}
-                      type="button"
-                    >
-                      <Play size={12} style={{ display: 'inline', marginRight: 4 }} />
-                      {entry.type === 'tv' ? 'Track Episodes' : 'Details'}
-                    </button>
-                    <button
-                      className="watching-btn-sub"
-                      onClick={(e) => handleMarkCompleted(e, entry)}
-                      title="Mark as completed"
-                      type="button"
-                    >
-                      <Check size={14} />
-                    </button>
-                  </div>
+                        }}
+                      >
+                        Details
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             )

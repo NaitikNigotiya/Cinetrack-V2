@@ -127,15 +127,17 @@ export function pickBestTrailer(
 
 interface RawImage {
   file_path?: string
+  filePath?: string
   width?: number
   height?: number
   iso_639_1?: string | null
+  iso6391?: string | null
   vote_average?: number
+  voteAverage?: number
+  vote_count?: number
+  aspect_ratio?: number
 }
 
-/**
- * Normalises raw images: sorts by vote_average desc and caps at 12.
- */
 export function filterAndCapImages(
   images: RawImage[] | undefined | null,
   limit = 12
@@ -143,14 +145,30 @@ export function filterAndCapImages(
   if (!images || !Array.isArray(images)) return []
 
   const valid = images
-    .filter((img): img is Required<RawImage> => Boolean(img.file_path && img.width && img.height))
-    .map((img) => ({
-      filePath: img.file_path,
-      width: img.width,
-      height: img.height,
-      iso6391: img.iso_639_1 ?? null,
-      voteAverage: img.vote_average ?? 0,
-    }))
+    .filter((img): img is RawImage => {
+      const path = (img?.file_path ?? img?.filePath)?.trim()
+      return Boolean(path && path.length > 0)
+    })
+    .map((img) => {
+      const filePath = (img.file_path || img.filePath)!.trim()
+      const width = typeof img.width === 'number' ? img.width : 0
+      const height = typeof img.height === 'number' ? img.height : 0
+      const aspectRatio =
+        typeof img.aspect_ratio === 'number'
+          ? img.aspect_ratio
+          : width > 0 && height > 0
+            ? Number((width / height).toFixed(3))
+            : 0
+
+      return {
+        filePath,
+        width,
+        height,
+        aspectRatio,
+        iso6391: img.iso_639_1 ?? img.iso6391 ?? null,
+        voteAverage: img.vote_average ?? img.voteAverage ?? 0,
+      }
+    })
 
   valid.sort((a, b) => b.voteAverage - a.voteAverage)
   return valid.slice(0, limit)

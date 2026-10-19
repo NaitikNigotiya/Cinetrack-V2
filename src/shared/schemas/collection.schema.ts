@@ -14,8 +14,6 @@ export const CollectionSchema = z.object({
   description: z.string().max(500).default(''),
   emoji: z.string().max(8).optional(),
   items: z.array(CollectionItemSchema).max(500).default([]),
-  isPublic: z.boolean().default(false),
-  shareSlug: z.string().optional(),
   createdAt: z.any(),
   updatedAt: z.any(),
 })

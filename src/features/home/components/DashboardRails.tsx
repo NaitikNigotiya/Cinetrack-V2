@@ -3,6 +3,7 @@ import { Sparkles, Shuffle, Film, Check, Plus, Search } from 'lucide-react'
 import { Section } from '@/shared/ui/layout/Section'
 import { Button } from '@/shared/ui/Button/Button'
 import { getPosterUrl } from '@/shared/lib/tmdbImage'
+import { StatusBadge } from '@/shared/ui/Badge/StatusBadge'
 import type { LibraryEntry } from '@/shared/schemas'
 
 interface DashboardRailsProps {
@@ -72,6 +73,11 @@ export function DashboardRails({
                     ) : (
                       <div className="hp-poster-fallback">
                         <Film size={20} />
+                      </div>
+                    )}
+                    {item.status && (
+                      <div style={{ position: 'absolute', top: 6, left: 6, zIndex: 2 }}>
+                        <StatusBadge status={item.status} showDot={false} />
                       </div>
                     )}
                     {item.rating !== null && item.rating !== undefined && (

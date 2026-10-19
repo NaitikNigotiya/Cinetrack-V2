@@ -16,6 +16,7 @@ export const STATUS_OPTS: { value: LibraryStatus; label: string; emoji: string; 
   { value: 'watching', label: 'Watching', emoji: '👁', desc: 'Actively watching this title', color: 'var(--status-watching, #3b82f6)' },
   { value: 'completed', label: 'Completed', emoji: '✓', desc: 'Finished watching this title', color: 'var(--status-completed, #10b981)' },
   { value: 'plan_to_watch', label: 'Plan to Watch', emoji: '🕐', desc: 'Want to watch in the future', color: 'var(--status-plan, #f59e0b)' },
+  { value: 'on_hold', label: 'On Hold', emoji: '⏸', desc: 'Paused watching for now', color: 'var(--status-on-hold, #f39c12)' },
   { value: 'dropped', label: 'Dropped', emoji: '✗', desc: 'Decided to stop watching', color: 'var(--status-dropped, #ef4444)' },
 ]
 

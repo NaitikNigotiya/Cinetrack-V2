@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
 import { auth } from '@/services/firebase/auth'
 import { useAuthStore } from '@/features/auth/store/authStore'
-import { useLibrary } from '@/features/library/hooks/useLibrary'
+import { useAppStore } from '@/domain/store'
+import { repairAllLibraryData } from '@/domain/operations'
 import { toast } from '@/shared/ui'
 import { PageShell } from '@/shared/ui/layout/PageShell'
 import { PageHeader } from '@/shared/ui/layout/PageHeader'
@@ -17,7 +18,7 @@ import './SettingsPage.css'
 export default function SettingsPage() {
   const navigate = useNavigate()
   const { user } = useAuthStore()
-  const { entries } = useLibrary('all')
+  const entries = useAppStore((state) => state.library)
 
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(
     () => (localStorage.getItem('cinetrack-theme') as any) || 'dark'
@@ -45,6 +46,21 @@ export default function SettingsPage() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false)
   const [episodeAlerts, setEpisodeAlerts] = useState(false)
   const [weeklyRecap, setWeeklyRecap] = useState(false)
+  const [isRepairing, setIsRepairing] = useState(false)
+
+  const handleRepairData = async () => {
+    if (!user?.uid) return
+    setIsRepairing(true)
+    try {
+      const repairedCount = await repairAllLibraryData(user.uid)
+      toast.success(`Data repair complete! Recomputed ${repairedCount} library titles.`)
+    } catch (err) {
+      console.error(err)
+      toast.error('Failed to repair data')
+    } finally {
+      setIsRepairing(false)
+    }
+  }
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
@@ -136,6 +152,8 @@ export default function SettingsPage() {
 
         <SettingsDataCard
           onExport={handleExport}
+          onRepairData={handleRepairData}
+          isRepairing={isRepairing}
           notificationsEnabled={notificationsEnabled}
           onToggleNotifications={() => setNotificationsEnabled(!notificationsEnabled)}
           episodeAlerts={episodeAlerts}

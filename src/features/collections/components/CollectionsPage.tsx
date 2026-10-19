@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
 import {
   Plus,
   Film,
@@ -9,8 +8,8 @@ import {
 } from 'lucide-react'
 
 import { useAuthStore } from '@/features/auth/store/authStore'
-import { useLibrary } from '@/features/library/hooks/useLibrary'
-import { fetchCollections } from '../api/collectionsApi'
+import { useAppStore } from '@/domain/store'
+import { computeSmartCollections } from '@/domain/smartCollections'
 import { useCollectionsMutations } from '../hooks/useCollectionsMutations'
 import type { Collection } from '@/shared/schemas'
 import { PageShell } from '@/shared/ui/layout/PageShell'
@@ -20,7 +19,6 @@ import { StatTile } from '@/shared/ui/layout/StatTile'
 import { FilterBar } from '@/shared/ui/layout/FilterBar'
 import { SearchField } from '@/shared/ui/layout/SearchField'
 import { Button } from '@/shared/ui/Button/Button'
-import { computeSmartCollections } from './smartCollections'
 import { CollectionCreateModal, CollectionAddTitlesSheet } from './CollectionModals'
 import { CollectionDetailView } from './CollectionDetailView'
 import { CollectionListSections } from './CollectionListSections'
@@ -33,13 +31,10 @@ export default function CollectionsPage() {
   const { user } = useAuthStore()
   const uid = user?.uid
 
-  const { entries } = useLibrary('all')
-
-  const { data: collections = [], isLoading } = useQuery({
-    queryKey: ['collections', uid],
-    queryFn: () => (uid ? fetchCollections(uid) : []),
-    enabled: Boolean(uid),
-  })
+  const entries = useAppStore((state) => state.library)
+  const collections = useAppStore((state) => state.collections)
+  const isReady = useAppStore((state) => state.isReady)
+  const isLoading = !isReady
 
   const {
     createMutation,
@@ -128,9 +123,9 @@ export default function CollectionsPage() {
     <PageShell>
       {activeCollection ? (
         <CollectionDetailView
-          activeCollection={activeCollection}
+          activeCollection={activeCollection as any}
           activeCollectionId={activeCollectionId!}
-          entries={entries}
+          entries={entries as any}
           onBack={() => setActiveCollectionId(null)}
           onOpenAddTitles={() => setIsAddTitlesOpen(true)}
           onRemoveItem={(titleKey) =>
@@ -200,8 +195,8 @@ export default function CollectionsPage() {
             tabFilter={tabFilter}
             colSearch={colSearch}
             onClearSearch={() => setColSearch('')}
-            smartCollections={smartCollections}
-            collections={collections}
+            smartCollections={smartCollections as any}
+            collections={collections as any}
             onSelectCollection={setActiveCollectionId}
             onOpenCreate={() => setIsCreateOpen(true)}
             onDeleteCollection={handleDelete}
@@ -230,7 +225,7 @@ export default function CollectionsPage() {
         }}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        candidateTitles={candidateTitles}
+        candidateTitles={candidateTitles as any}
         onAddTitle={(item) =>
           addItemMutation.mutate({
             collectionId: activeCollectionId!,

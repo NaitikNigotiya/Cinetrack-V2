@@ -27,6 +27,7 @@ export async function addToLibrary(
     type: 'movie' | 'tv'
     title: string
     status: LibraryStatus
+    priority?: 'high' | 'normal' | 'low' | undefined
     year?: number | null | undefined
     posterPath?: string | null | undefined
     backdropPath?: string | null | undefined
@@ -58,6 +59,7 @@ export async function addToLibrary(
     genres: entry.genres ?? [],
     runtimeMinutes: entry.runtimeMinutes ?? null,
     status: entry.status,
+    priority: entry.priority ?? 'normal',
     rating: entry.rating ?? null,
     isFavorite: entry.isFavorite ?? false,
     watchCount: entry.watchCount ?? 0,
