@@ -140,6 +140,18 @@ export default function CollectionsPage() {
               name,
             })
           }
+          onUpdateDescription={(description) =>
+            updateMutation.mutate({
+              id: activeCollectionId!,
+              description,
+            })
+          }
+          onDeleteCollection={() => {
+            if (confirm('Are you sure you want to delete this collection?')) {
+              deleteMutation.mutate(activeCollectionId!)
+              setActiveCollectionId(null)
+            }
+          }}
         />
       ) : (
         <div className="col-main-pane animate-fade-in">

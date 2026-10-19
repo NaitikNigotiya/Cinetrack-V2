@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { Check, Trash2, FolderOpen } from 'lucide-react'
+import { FolderOpen } from 'lucide-react'
 import type { LibraryStatus, Collection } from '@/shared/schemas'
 import type { TitleDetails } from '@/shared/schemas/title'
 import { getPosterUrl } from '@/services/tmdb/images'
@@ -7,6 +7,7 @@ import { BottomSheet, TrailerModal } from '@/shared/ui'
 import { STATUS_OPTS, type UserReview } from './titleTypes'
 import { Button } from '@/shared/ui/Button/Button'
 import { TitleLightboxModal } from './TitleLightboxModal'
+import { UpdateWatchStatusModal } from './UpdateWatchStatusModal'
 
 interface TitleModalsProps {
   details: TitleDetails
@@ -14,7 +15,7 @@ interface TitleModalsProps {
   isMovie: boolean
   showStatusSheet: boolean
   setShowStatusSheet: (open: boolean) => void
-  onStatusChange: (status: LibraryStatus) => void
+  onStatusChange: (status: LibraryStatus, date?: Date, rating?: number | null) => void
   onRemoveFromLibrary: () => void
 
   showAddSheet: boolean
@@ -91,46 +92,16 @@ export function TitleModals({
 
   return (
     <>
-      {/* 1. Watch Status Sheet */}
-      <BottomSheet isOpen={showStatusSheet} onClose={() => setShowStatusSheet(false)}>
-        <div className="title-sheet-content">
-          <h3 className="title-sheet-heading">Update Watch Status</h3>
-          <div className="title-status-options-list">
-            {STATUS_OPTS.map((opt) => (
-              <button
-                key={opt.value}
-                type="button"
-                className={`title-status-opt-btn ${entry?.status === opt.value ? 'title-status-opt-btn--active' : ''}`}
-                onClick={() => {
-                  onStatusChange(opt.value)
-                  setShowStatusSheet(false)
-                }}
-              >
-                <span className="title-status-opt-emoji">{opt.emoji}</span>
-                <div className="title-status-opt-texts">
-                  <div className="title-status-opt-label">{opt.label}</div>
-                  <div className="title-status-opt-desc">{opt.desc}</div>
-                </div>
-                {entry?.status === opt.value && <Check size={18} color="var(--color-brand)" />}
-              </button>
-            ))}
-          </div>
-
-          <div className="title-sheet-danger-action">
-            <Button
-              variant="danger"
-              leftIcon={<Trash2 size={15} />}
-              onClick={() => {
-                onRemoveFromLibrary()
-                setShowStatusSheet(false)
-              }}
-              style={{ width: '100%' }}
-            >
-              Remove from Library
-            </Button>
-          </div>
-        </div>
-      </BottomSheet>
+      {/* 1. Watch Status Modal */}
+      <UpdateWatchStatusModal
+        isOpen={showStatusSheet}
+        onClose={() => setShowStatusSheet(false)}
+        details={details}
+        entry={entry}
+        isMovie={isMovie}
+        onSave={onStatusChange}
+        onRemove={onRemoveFromLibrary}
+      />
 
       {/* 2. Add to Watchlist Sheet */}
       <BottomSheet isOpen={showAddSheet} onClose={() => setShowAddSheet(false)}>

@@ -31,7 +31,8 @@ export function CalendarGrid({
   weekDays,
   watchedByDate,
   plannedByDate,
-}: CalendarGridProps) {
+  releasesByDate,
+}: CalendarGridProps & { releasesByDate?: Map<string, any[]> }) {
   return (
     <Card variant="default">
       {/* Month / Week navigator bar */}
@@ -88,6 +89,15 @@ export function CalendarGrid({
               const isSelected = dateKey === selectedDayKey
               const watched = watchedByDate.get(dateKey) ?? []
               const planned = plannedByDate.get(dateKey) ?? []
+              const releases = releasesByDate?.get(dateKey) ?? []
+
+              const allDayItems = [
+                ...watched.map((item) => ({ key: `w_${item.titleKey}`, type: 'watch' as const, label: `✓ ${item.title}` })),
+                ...planned.map((item) => ({ key: `p_${item.id}`, type: 'planned' as const, label: `📅 ${item.title}` })),
+                ...releases.map((item) => ({ key: `r_${item.titleKey}`, type: 'release' as const, label: `🎬 ${item.title}` })),
+              ]
+              const visibleItems = allDayItems.slice(0, 2)
+              const overflowCount = allDayItems.length - 2
 
               return (
                 <div
@@ -104,24 +114,18 @@ export function CalendarGrid({
                   </div>
 
                   <div className="day-pills-list">
-                    {watched.map((item) => (
+                    {visibleItems.map((item) => (
                       <div
-                        key={item.titleKey}
-                        className="day-pill day-pill--watch"
-                        title={`Watched: ${item.title}`}
+                        key={item.key}
+                        className={`day-pill day-pill--${item.type}`}
+                        title={item.label}
                       >
-                        ✓ {item.title}
+                        {item.label}
                       </div>
                     ))}
-                    {planned.map((plan) => (
-                      <div
-                        key={plan.id}
-                        className="day-pill day-pill--planned"
-                        title={`Planned: ${plan.title}`}
-                      >
-                        📅 {plan.title}
-                      </div>
-                    ))}
+                    {overflowCount > 0 && (
+                      <div className="day-pill-more">+{overflowCount} more</div>
+                    )}
                   </div>
                 </div>
               )

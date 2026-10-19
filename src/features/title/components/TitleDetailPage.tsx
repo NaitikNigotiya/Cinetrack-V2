@@ -173,19 +173,41 @@ export default function TitleDetailPage() {
   // Action Handlers
   const handleRemove = async () => {
     if (!uid || !entry) return
-    if (window.confirm('Remove this title from your library?')) {
-      await removeFromLibrary(uid, titleKey)
-      toast.success('Removed from library')
-    }
+    const prevEntry = { ...entry }
+    await removeFromLibrary(uid, titleKey)
+    toast.info(`Removed "${details?.title || 'title'}" from library`, {
+      label: 'Undo',
+      onClick: async () => {
+        await addToLibrary(uid, prevEntry)
+      },
+    })
   }
 
-  const handleStatusChange = async (status: LibraryStatus) => {
+  const handleStatusChange = async (status: LibraryStatus, date?: Date, ratingVal?: number | null) => {
     if (!uid || !entry) return
+    const prevStatus = entry.status
     if (isMovie && status === 'completed') {
-      await markMovieWatched(uid, titleKey, entry)
+      await markMovieWatched(uid, titleKey, entry, ratingVal ?? entry.rating, date ?? new Date())
+      toast.success('Moved to Completed', {
+        label: 'Undo',
+        onClick: async () => {
+          await setStatus(uid, titleKey, prevStatus, entry)
+        },
+      })
     } else {
       await setStatus(uid, titleKey, status, entry)
-      toast.success(`Status updated to ${status.replace(/_/g, ' ')}`)
+      const label =
+        status === 'plan_to_watch'
+          ? 'Plan to Watch'
+          : status === 'on_hold'
+          ? 'On Hold'
+          : status.charAt(0).toUpperCase() + status.slice(1)
+      toast.success(`Moved to ${label}`, {
+        label: 'Undo',
+        onClick: async () => {
+          await setStatus(uid, titleKey, prevStatus, entry)
+        },
+      })
     }
   }
 

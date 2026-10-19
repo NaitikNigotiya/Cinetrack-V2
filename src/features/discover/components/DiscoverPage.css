@@ -147,15 +147,15 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 .dp-hero {
   position: relative;
-  height: 200px;
+  height: 280px;
   width: 100%;
   box-sizing: border-box;
-  border-radius: var(--radius-xl, 16px);
+  border-radius: var(--radius-card);
   overflow: hidden;
-  background-color: var(--bg-secondary, #141522);
+  background-color: var(--surface-card);
   background-size: cover;
   background-position: center 25%;
-  border: 1px solid var(--card-border, #2a2c3d);
+  border: 1px solid var(--border-card);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
@@ -163,32 +163,32 @@
 
 @media (min-width: 768px) {
   .dp-hero {
-    height: 300px;
+    height: 320px;
   }
-}
-
-.dp-hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.85) 30%, rgba(0, 0, 0, 0.3) 65%, transparent 100%);
-  z-index: 1;
 }
 
 .dp-hero-left {
   position: relative;
   z-index: 2;
-  padding: 20px 24px;
+  margin-left: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  max-width: 560px;
+  background: rgba(12, 13, 20, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-card);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.36);
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  flex: 1;
-  min-width: 0;
+  gap: var(--space-2);
 }
 
-@media (min-width: 768px) {
+@media (max-width: 640px) {
   .dp-hero-left {
-    padding: 28px 32px;
-    max-width: 55%;
+    margin: var(--space-3);
+    padding: var(--space-3);
+    max-width: calc(100% - var(--space-6));
   }
 }
 
@@ -288,12 +288,13 @@
 }
 
 .dp-hero-poster {
-  width: 120px;
-  height: 180px;
+  width: 130px;
+  height: 195px;
   object-fit: cover;
-  border-radius: var(--radius-md, 8px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-tile);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: block;
 }
 
 /* Hero skeleton */

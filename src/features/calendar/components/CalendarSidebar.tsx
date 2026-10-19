@@ -35,7 +35,7 @@ export function CalendarSidebar({
   upcomingReleases,
 }: CalendarSidebarProps) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--section-gap)' }}>
+    <div className="cal-sidebar-col">
       {/* 1. Day Inspector Card */}
       <Card variant="default">
         <div
@@ -43,7 +43,7 @@ export function CalendarSidebar({
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'baseline',
-            marginBottom: '16px',
+            marginBottom: 'var(--space-4)',
           }}
         >
           <h3 style={{ fontSize: 'var(--fs-card-title)', fontWeight: 700, margin: 0 }}>
@@ -58,22 +58,22 @@ export function CalendarSidebar({
           </span>
         </div>
 
-        <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+        <div style={{ display: 'flex', gap: 'var(--card-gap)', marginBottom: 'var(--space-4)' }}>
           <Button
             variant="primary"
-            size="sm"
-            style={{ flex: 1 }}
+            size="md"
+            style={{ flex: 1, height: '40px', borderRadius: 'var(--radius-control)' }}
             onClick={() => onOpenAddModal('watched')}
           >
-            + Log Watch
+            Log Watch
           </Button>
           <Button
             variant="secondary"
-            size="sm"
-            style={{ flex: 1 }}
+            size="md"
+            style={{ flex: 1, height: '40px', borderRadius: 'var(--radius-control)' }}
             onClick={() => onOpenAddModal('planned')}
           >
-            + Plan Watch
+            Plan Watch
           </Button>
         </div>
 

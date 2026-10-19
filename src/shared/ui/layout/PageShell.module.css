@@ -27,7 +27,7 @@
 .withAsideLayout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 340px;
-  gap: 24px;
+  gap: var(--section-gap);
   align-items: flex-start;
   width: 100%;
 }

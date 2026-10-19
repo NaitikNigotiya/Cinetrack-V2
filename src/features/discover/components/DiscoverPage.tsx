@@ -180,22 +180,22 @@ export default function DiscoverPage() {
       />
 
       <Section title="Trending Now 🔥">
-        <DiscoverHero
-          heroItem={heroItem}
-          isLoading={trendingLoading}
-          inWatchlist={heroInList}
-          onAdd={() => heroItem && handleOpenAdd(tmdbToCarousel(heroItem))}
-          onWatchTrailer={handleWatchTrailer}
-        />
-        {carouselItems.length > 0 && (
-          <div style={{ marginTop: 'var(--space-3)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--section-gap)' }}>
+          <DiscoverHero
+            heroItem={heroItem}
+            isLoading={trendingLoading}
+            inWatchlist={heroInList}
+            onAdd={() => heroItem && handleOpenAdd(tmdbToCarousel(heroItem))}
+            onWatchTrailer={handleWatchTrailer}
+          />
+          {carouselItems.length > 0 && (
             <ContentCarousel
               items={carouselItems}
               onAdd={handleOpenAdd}
               onClick={(item) => navigate(`/title/${item.media_type || 'movie'}:${item.id}`)}
             />
-          </div>
-        )}
+          )}
+        </div>
       </Section>
 
       <Section

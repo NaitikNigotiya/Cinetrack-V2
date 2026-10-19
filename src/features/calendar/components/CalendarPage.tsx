@@ -94,6 +94,22 @@ export default function CalendarPage() {
   const watchedByDate = useMemo(() => computeWatchedByDate(libraryEntries as any), [libraryEntries])
   const upcomingReleases = useMemo(() => computeUpcomingReleases(libraryEntries as any), [libraryEntries])
 
+  const releasesByDate = useMemo(() => {
+    const map = new Map<string, any[]>()
+    upcomingReleases.forEach((rel) => {
+      if (rel.releaseDate) {
+        const key = rel.releaseDate.length === 10 ? rel.releaseDate : `${rel.releaseDate}-12-31`
+        let list = map.get(key)
+        if (!list) {
+          list = []
+          map.set(key, list)
+        }
+        list.push(rel)
+      }
+    })
+    return map
+  }, [upcomingReleases])
+
   const prevMonth = () => {
     setCurrentDate((prev) => {
       const next = new Date(prev)
@@ -218,6 +234,7 @@ export default function CalendarPage() {
           weekDays={weekDays.map((w) => ({ date: w.date, dateKey: w.dateKey }))}
           plannedByDate={plannedByDate}
           watchedByDate={watchedByDate}
+          releasesByDate={releasesByDate}
           onPrevMonth={prevMonth}
           onNextMonth={nextMonth}
           onGoToToday={goToToday}

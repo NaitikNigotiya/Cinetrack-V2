@@ -73,8 +73,6 @@ export function DiscoverHero({
       }}
       onClick={() => navigate(`/title/${mediaType}:${heroItem.id}`)}
     >
-      <div className="dp-hero-overlay" />
-
       <div className="dp-hero-left">
         <span className="dp-hero-rank-badge">TRENDING #1</span>
         <h2 className="dp-hero-title">{title}</h2>

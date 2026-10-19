@@ -12,47 +12,43 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 5;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: var(--card-bg, #1f1f1f);
-  border: 1px solid var(--border-default, #333);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-  display: none;
+  background: var(--surface-card, #1f1f1f);
+  border: 1px solid var(--border-card, #333);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   color: var(--text-primary, #fff);
-  transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast), opacity var(--transition-fast);
-  margin-top: -24px;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+  margin-top: -20px;
 }
 
-.cc-arrow--left  { left: -16px; }
-.cc-arrow--right { right: -16px; }
+.cc-arrow--left  { left: -14px; }
+.cc-arrow--right { right: -14px; }
 
-/* Show arrows only on desktop */
-@media (min-width: 768px) {
-  .cc-root:hover .cc-arrow {
-    display: flex;
-  }
-  .cc-arrow:hover {
-    background: var(--color-brand);
-    border-color: var(--color-brand);
-    color: var(--text-on-brand, #fff);
-    transform: translateY(-50%) scale(1.08);
-  }
+.cc-arrow:hover {
+  background: var(--brand-primary, #e50914);
+  border-color: var(--brand-primary, #e50914);
+  color: #fff;
+  transform: translateY(-50%) scale(1.1);
 }
 
 /* ── Scroll track ─────────────────────────────────────────────────────────── */
 .cc-scroll {
   display: flex;
-  gap: 12px;
+  gap: var(--card-gap, 16px);
   overflow-x: auto;
   overflow-y: hidden;
-  padding-bottom: 8px;
+  padding: 4px var(--card-gap, 16px) 8px 4px;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   width: 100%;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
 }
 
 .cc-scroll::-webkit-scrollbar {
@@ -63,6 +59,7 @@
 .cc-card {
   flex-shrink: 0;
   cursor: pointer;
+  scroll-snap-align: start;
 }
 
 .cc-poster-wrap {

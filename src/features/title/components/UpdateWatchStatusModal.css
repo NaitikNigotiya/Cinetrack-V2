@@ -1,0 +1,285 @@
+/* ─── UpdateWatchStatusModal.css ─────────────────────────────────────────── */
+
+.status-modal-root {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4) var(--space-5);
+  gap: var(--space-4);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ─── Header ────────────────────────────────────────────────────────────── */
+.status-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.status-modal-header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  flex: 1;
+}
+
+.status-modal-thumb {
+  width: 48px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: var(--radius-control);
+  background: var(--surface-hover);
+  flex-shrink: 0;
+  border: 1px solid var(--border-subtle);
+}
+
+.status-modal-thumb--fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.status-modal-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.status-modal-title {
+  font-size: var(--fs-card-title);
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.status-modal-subtitle {
+  font-size: var(--fs-small);
+  color: var(--text-muted);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.status-modal-header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.status-modal-current-pill {
+  font-size: 11px;
+}
+
+.status-modal-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: var(--radius-control);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.status-modal-close-btn:hover {
+  color: var(--text-main);
+  background: var(--surface-hover);
+}
+
+/* ─── Options List (Radio Group) ────────────────────────────────────────── */
+.status-modal-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.status-modal-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-tile);
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  outline: none;
+  position: relative;
+  user-select: none;
+}
+
+.status-modal-card:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+}
+
+.status-modal-card:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 1px;
+}
+
+.status-modal-card--selected {
+  background: var(--surface-hover);
+  border: 2px solid var(--brand-primary);
+  box-shadow: 0 0 0 1px var(--brand-primary);
+}
+
+.status-modal-icon-tile {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-control);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.status-modal-card:hover .status-modal-icon-tile {
+  transform: scale(1.05);
+}
+
+.status-modal-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.status-modal-card-label {
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.status-modal-card-desc {
+  font-size: var(--fs-stat-label);
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status-modal-check-wrap {
+  color: var(--brand-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--space-1);
+}
+
+/* ─── Completed Movie Extras ────────────────────────────────────────────── */
+.status-modal-completed-extra {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--surface-page);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-tile);
+}
+
+.status-modal-extra-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.status-modal-field-label {
+  font-size: var(--fs-stat-label);
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-modal-date-input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: var(--radius-control);
+  background: var(--surface-card);
+  border: 1px solid var(--border-card);
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: var(--fs-small);
+  box-sizing: border-box;
+}
+
+.status-modal-date-input:focus {
+  outline: 2px solid var(--brand-primary);
+}
+
+.status-modal-rating-wrap {
+  display: flex;
+  align-items: center;
+  padding-top: 2px;
+}
+
+/* ─── Action Buttons ────────────────────────────────────────────────────── */
+.status-modal-actions-row {
+  display: flex;
+  gap: var(--card-gap);
+  width: 100%;
+  margin-top: var(--space-1);
+}
+
+.status-modal-btn-cancel {
+  flex: 1;
+  height: 42px;
+  border-radius: var(--radius-control);
+}
+
+.status-modal-btn-save {
+  flex: 1;
+  height: 42px;
+  border-radius: var(--radius-control);
+}
+
+/* ─── Bottom Footer & Danger Action ─────────────────────────────────────── */
+.status-modal-footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-1);
+}
+
+.status-modal-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+.status-modal-remove-btn {
+  background: transparent;
+  border: none;
+  color: var(--danger, #ef4444);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  padding: 6px 4px;
+  border-radius: var(--radius-control);
+  align-self: flex-start;
+  transition: opacity 0.15s ease;
+}
+
+.status-modal-remove-btn:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}

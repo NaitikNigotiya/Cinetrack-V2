@@ -7,9 +7,13 @@ import { useAuthStore } from './features/auth/store/authStore'
 import './shared/styles/base.css'
 import './shared/styles/motion.css'
 
+import { useAppStore } from './domain/store'
+
 if (import.meta.env.DEV) {
   // @ts-expect-error dev debug helper
   window.__authStore = useAuthStore
+  // @ts-expect-error dev debug helper
+  window.__appStore = useAppStore
 }
 
 const rootEl = document.getElementById('root')

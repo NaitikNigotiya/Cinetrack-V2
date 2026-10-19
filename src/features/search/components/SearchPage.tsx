@@ -18,6 +18,7 @@ import { SearchDefaultState } from './SearchDefaultState'
 import { SearchAddToLibrarySheet } from './SearchAddToLibrarySheet'
 import { FILTER_TABS, filterAndSortSearchResults, SkeletonGrid } from './searchHelpers'
 import type { NormalisedMediaItem } from '@/services/tmdb/normalize'
+import type { CarouselItem } from '@/shared/ui/ContentCarousel/ContentCarousel'
 import type { LibraryStatus } from '@/shared/schemas'
 import './SearchPage.css'
 
@@ -34,11 +35,6 @@ export default function SearchPage() {
   const [query, setQuery] = useState(initialQuery)
   const [debouncedQuery, setDebouncedQuery] = useState(initialQuery)
   const [typeFilter, setTypeFilter] = useState<'all' | 'movie' | 'tv'>('all')
-
-  const [genre, setGenre] = useState('All')
-  const [year, setYear] = useState('All')
-  const [rating, setRating] = useState('All')
-  const [sortBy, setSortBy] = useState('Popular')
 
   const [selectedResult, setSelectedResult] = useState<NormalisedMediaItem | null>(null)
   const [selectedStatus, setSelectedStatus] = useState<LibraryStatus>('plan_to_watch')
@@ -142,6 +138,30 @@ export default function SearchPage() {
     setSelectedStatus('plan_to_watch')
   }
 
+  const handleOpenAddFromCarousel = (item: CarouselItem) => {
+    const isMovie = item.media_type !== 'tv' && (item.media_type === 'movie' || Boolean(item.release_date))
+    const type: 'movie' | 'tv' = isMovie ? 'movie' : 'tv'
+    const title = item.title ?? item.name ?? 'Untitled'
+    const year = Number((item.release_date ?? item.first_air_date)?.slice(0, 4)) || null
+    setSelectedResult({
+      titleKey: `${type}:${item.id}`,
+      id: item.id,
+      type,
+      title,
+      year,
+      posterPath: item.poster_path ?? null,
+      backdropPath: item.backdrop_path ?? null,
+      posterUrl: null,
+      backdropUrl: null,
+      releaseDate: item.release_date ?? item.first_air_date ?? null,
+      voteAverage: item.vote_average ?? 0,
+      voteCount: 0,
+      overview: item.overview ?? '',
+      genreIds: item.genre_ids ?? [],
+    })
+    setSelectedStatus('plan_to_watch')
+  }
+
   const handleConfirmAdd = async () => {
     if (!selectedResult || !uid) return
     setIsAdding(true)
@@ -151,7 +171,7 @@ export default function SearchPage() {
         tmdbId: selectedResult.id,
         type: selectedResult.type,
         title: selectedResult.title,
-        year: selectedResult.year,
+        year: selectedResult.year ?? 0,
         posterPath: selectedResult.posterPath,
         backdropPath: selectedResult.backdropPath,
         status: selectedStatus,
@@ -167,12 +187,26 @@ export default function SearchPage() {
   }
 
   const filteredResults = useMemo(
-    () => filterAndSortSearchResults(results, year, rating, sortBy),
-    [results, year, rating, sortBy]
+    () => filterAndSortSearchResults(results, 'All', 'All', 'Popular'),
+    [results]
   )
 
   const hasQuery = debouncedQuery.trim().length >= 2
-  const trendingItems = (trendingData?.results ?? []).slice(0, 20)
+  const trendingItems = useMemo<CarouselItem[]>(() => {
+    return (trendingData?.results ?? []).slice(0, 20).map((i) => ({
+      id: i.id,
+      media_type: i.media_type ?? (i.release_date ? 'movie' : 'tv'),
+      title: i.title,
+      name: i.name,
+      poster_path: i.poster_path,
+      backdrop_path: i.backdrop_path,
+      release_date: i.release_date,
+      first_air_date: i.first_air_date,
+      vote_average: i.vote_average,
+      overview: i.overview,
+      genre_ids: i.genre_ids,
+    }))
+  }, [trendingData])
 
   return (
     <PageShell>
@@ -200,15 +234,9 @@ export default function SearchPage() {
           onClearAllRecent={clearAll}
           onSelectTerm={handlePillClick}
           onBrowseCategory={handleBrowseCategory}
-          genre={genre}
-          setGenre={setGenre}
-          year={year}
-          setYear={setYear}
-          rating={rating}
-          setRating={setRating}
-          sortBy={sortBy}
-          setSortBy={setSortBy}
           trendingItems={trendingItems}
+          onAddTitle={handleOpenAddFromCarousel}
+          addedTitleKeys={libraryTitleKeys}
         />
       )}
 

@@ -1,3 +1,34 @@
+/* ─── CALENDAR MAIN LAYOUT ──────────────────────────────────────────────── */
+.cal-main-layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--section-gap);
+  width: 100%;
+}
+
+@media (min-width: 1200px) {
+  .cal-main-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: var(--section-gap);
+    align-items: start;
+  }
+}
+
+.cal-sidebar-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--section-gap);
+  width: 100%;
+}
+
+@media (min-width: 1200px) {
+  .cal-sidebar-col {
+    gap: var(--card-gap);
+    width: 340px;
+  }
+}
+
 /* ─── CALENDAR GRID STYLES (Clean Tokenized) ───────────────────────────── */
 
 .calendar-grid-container {
@@ -31,11 +62,13 @@
   overflow: hidden;
 }
 
-/* Day Cell */
+/* Day Cell - equal height, consistent 8px inner padding */
 .calendar-day-cell {
   background: var(--surface-card);
-  min-height: 56px;
-  padding: var(--space-1) var(--space-2);
+  min-height: 96px;
+  height: 96px;
+  padding: 8px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -44,9 +77,11 @@
   overflow: hidden;
 }
 
-@media (min-width: 1024px) {
+@media (max-width: 767px) {
   .calendar-day-cell {
-    min-height: 84px;
+    min-height: 64px;
+    height: 64px;
+    padding: 6px;
   }
 }
 
@@ -71,15 +106,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: var(--radius-pill);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
 }
 
 .calendar-day-cell--today .day-number {
   background: var(--brand-primary);
-  color: var(--text-white, var(--text-main));
+  color: #fff;
   font-weight: 700;
+  border-radius: 50%;
 }
 
 .calendar-day-cell--other-month {

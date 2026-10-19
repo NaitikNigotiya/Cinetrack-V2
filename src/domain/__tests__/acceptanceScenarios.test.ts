@@ -27,7 +27,6 @@ describe('Section 6: Phase 4 End-to-End Acceptance Scenarios', () => {
   })
 
   it('verifies all 11 acceptance scenarios end-to-end with zero drift', () => {
-    const store = useAppStore.getState()
     const now = new Date()
 
     // -------------------------------------------------------------
@@ -323,7 +322,6 @@ describe('Section 6: Phase 4 End-to-End Acceptance Scenarios', () => {
       id: 'col_mind_bending',
       name: 'Mind Benders',
       description: 'Movies that blow your mind',
-      itemCount: 1,
       items: [
         {
           titleKey: 'movie:101',

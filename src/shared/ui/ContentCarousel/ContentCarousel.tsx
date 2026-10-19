@@ -10,8 +10,8 @@ export interface CarouselItem {
   name?: string | undefined
   poster_path?: string | null | undefined
   backdrop_path?: string | null | undefined
-  release_date?: string | undefined
-  first_air_date?: string | undefined
+  release_date?: string | null | undefined
+  first_air_date?: string | null | undefined
   vote_average?: number | undefined
   overview?: string | undefined
   genre_ids?: number[] | undefined
