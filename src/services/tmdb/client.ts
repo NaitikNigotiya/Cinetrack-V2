@@ -60,6 +60,15 @@ export async function request<T>(
     Accept: 'application/json',
   }
 
+  // Ensure Firebase Auth state is resolved before reading currentUser
+  if (typeof auth.authStateReady === 'function') {
+    try {
+      await auth.authStateReady()
+    } catch {
+      // Continue if authStateReady fails
+    }
+  }
+
   // Obtain fresh Firebase ID token if user is signed in
   const currentUser = auth.currentUser
   if (currentUser) {

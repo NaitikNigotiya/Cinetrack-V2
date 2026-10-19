@@ -6,9 +6,16 @@ function initAdmin() {
     return
   }
 
-  const projectId = process.env.FIREBASE_PROJECT_ID
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL
-  const rawPrivateKey = process.env.FIREBASE_PRIVATE_KEY
+  const projectId = process.env.FIREBASE_PROJECT_ID?.replace(/^["']|["']$/g, '').trim()
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL?.replace(/^["']|["']$/g, '').trim()
+  let rawPrivateKey = process.env.FIREBASE_PRIVATE_KEY?.trim()
+  if (rawPrivateKey) {
+    if (rawPrivateKey.startsWith('"') && rawPrivateKey.endsWith('"')) {
+      rawPrivateKey = rawPrivateKey.slice(1, -1)
+    } else if (rawPrivateKey.startsWith("'") && rawPrivateKey.endsWith("'")) {
+      rawPrivateKey = rawPrivateKey.slice(1, -1)
+    }
+  }
   const privateKey = rawPrivateKey ? rawPrivateKey.replace(/\\n/g, '\n') : undefined
 
   if (projectId && clientEmail && privateKey) {

@@ -19,6 +19,9 @@ function sendJsonError(
   res.statusCode = status
   res.setHeader('Content-Type', 'application/json')
   res.setHeader('Cache-Control', 'no-store')
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type')
   res.end(JSON.stringify({ error: { code, message, status } }))
 }
 
@@ -134,7 +137,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
   let decoded: { uid: string; email?: string; email_verified?: boolean }
   try {
     decoded = await verifyFirebaseIdToken(idToken)
-  } catch {
+  } catch (authErr: unknown) {
     // In local development, if verifyIdToken fails due to missing service account private key, allow fallback
     if (process.env.NODE_ENV === 'development' && idToken.length > 50) {
       decoded = {
@@ -143,14 +146,19 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
         email_verified: true,
       }
     } else {
-      sendJsonError(res, 401, 'UNAUTHENTICATED', 'Invalid or expired Firebase ID token')
+      sendJsonError(
+        res,
+        401,
+        'UNAUTHENTICATED',
+        `Invalid or expired Firebase ID token: ${authErr instanceof Error ? authErr.message : String(authErr)}`
+      )
       return
     }
   }
 
   // Security check: reject with 403 FORBIDDEN unless email_verified is true and matches OWNER_EMAIL
   // Never log tokens or emails.
-  const configuredOwnerEmail = process.env.OWNER_EMAIL?.trim().toLowerCase()
+  const configuredOwnerEmail = process.env.OWNER_EMAIL?.trim().toLowerCase().replace(/^["']|["']$/g, '')
   const tokenEmail = decoded.email?.trim().toLowerCase()
 
   if (
@@ -171,9 +179,21 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     return
   }
 
-  // Parse path from URL
+  // Parse path from URL or Vercel query parameter
+  const reqQuery = (req as { query?: Record<string, string | string[]> }).query
+  let targetPath = ''
+
+  if (reqQuery && reqQuery['path']) {
+    const p = reqQuery['path']
+    targetPath = Array.isArray(p) ? p.join('/') : p
+  }
+
   const url = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`)
-  const targetPath = url.pathname.replace(/^\/api\/tmdb\/?/, '')
+  if (!targetPath || targetPath === '[...path]') {
+    targetPath = url.pathname.replace(/^\/api\/tmdb\/?/, '')
+  }
+
+  targetPath = targetPath.replace(/^\/+|\/+$/g, '')
 
   // Allow-list and path validation
   const matchedRule = matchRoute(targetPath)
@@ -182,14 +202,30 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     return
   }
 
-  const tmdbToken = process.env.TMDB_READ_TOKEN || process.env.TMDB_API_KEY
+  let tmdbToken = (process.env.TMDB_READ_TOKEN || process.env.TMDB_API_KEY || '').trim()
+  if (tmdbToken.startsWith('"') && tmdbToken.endsWith('"')) {
+    tmdbToken = tmdbToken.slice(1, -1)
+  }
   if (!tmdbToken) {
     sendJsonError(res, 500, 'UPSTREAM_ERROR', 'TMDB_READ_TOKEN not configured on server')
     return
   }
 
+  // Collect query params from both URL and Vercel parsed query
+  const rawParams = new URLSearchParams()
+  url.searchParams.forEach((val, key) => {
+    if (key !== 'path') rawParams.set(key, val)
+  })
+  if (reqQuery) {
+    for (const [key, val] of Object.entries(reqQuery)) {
+      if (key !== 'path' && val !== undefined) {
+        rawParams.set(key, Array.isArray(val) ? val[0] : String(val))
+      }
+    }
+  }
+
   // Sanitize query params (drop unknown, clamp page & query length, force include_adult=false)
-  const cleanParams = sanitizeParams(url.searchParams, matchedRule.allowedParams)
+  const cleanParams = sanitizeParams(rawParams, matchedRule.allowedParams)
   const queryString = cleanParams.toString()
   const upstreamUrl = `${TMDB_API_BASE}/${targetPath}${queryString ? `?${queryString}` : ''}`
 
@@ -216,6 +252,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     res.statusCode = 200
     res.setHeader('Content-Type', 'application/json')
     res.setHeader('Cache-Control', cacheHeader)
+    res.setHeader('Access-Control-Allow-Origin', '*')
 
     const data = await upstreamRes.text()
     res.end(data)
