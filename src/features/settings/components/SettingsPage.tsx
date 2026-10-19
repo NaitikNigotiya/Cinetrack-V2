@@ -43,9 +43,6 @@ export default function SettingsPage() {
     () => localStorage.getItem('cinetrack-spoiler-free') === 'true'
   )
 
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false)
-  const [episodeAlerts, setEpisodeAlerts] = useState(false)
-  const [weeklyRecap, setWeeklyRecap] = useState(false)
   const [isRepairing, setIsRepairing] = useState(false)
 
   const handleRepairData = async () => {
@@ -154,12 +151,6 @@ export default function SettingsPage() {
           onExport={handleExport}
           onRepairData={handleRepairData}
           isRepairing={isRepairing}
-          notificationsEnabled={notificationsEnabled}
-          onToggleNotifications={() => setNotificationsEnabled(!notificationsEnabled)}
-          episodeAlerts={episodeAlerts}
-          onToggleEpisodeAlerts={() => setEpisodeAlerts(!episodeAlerts)}
-          weeklyRecap={weeklyRecap}
-          onToggleWeeklyRecap={() => setWeeklyRecap(!weeklyRecap)}
         />
 
         <SettingsAccountCard
