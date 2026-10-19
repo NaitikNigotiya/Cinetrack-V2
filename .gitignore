@@ -28,3 +28,14 @@ data/
 *.njsproj
 *.sln
 *.sw?
+
+# Backups and temporary files
+*.bak
+*.orig
+*.zip
+Thumbs.db
+
+# Duplicate lockfiles
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
