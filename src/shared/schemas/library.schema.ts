@@ -59,6 +59,9 @@ export const LibraryEntrySchema = z.object({
   completedAt: z.any().nullable().default(null),
   updatedAt: z.any(),
   schemaVersion: z.literal(1).default(1),
+  source: z.string().optional(),
+  needsAttention: z.boolean().optional(),
+  approximate: z.boolean().optional(),
 })
 
 export type LibraryEntry = z.infer<typeof LibraryEntrySchema>

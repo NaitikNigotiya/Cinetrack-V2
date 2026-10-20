@@ -17,18 +17,17 @@ export interface RouteRule {
 export const ROUTE_RULES: RouteRule[] = [
   // Search
   {
-    pattern: /^search\/multi$/,
-    allowedParams: ['query', 'page', 'include_adult', 'language', 'region'],
-    cacheCategory: 'search',
-  },
-  {
-    pattern: /^search\/movie$/,
-    allowedParams: ['query', 'year', 'primary_release_year', 'region', 'page', 'language', 'include_adult'],
-    cacheCategory: 'search',
-  },
-  {
-    pattern: /^search\/tv$/,
-    allowedParams: ['query', 'first_air_date_year', 'page', 'language', 'include_adult'],
+    pattern: /^search\/(multi|movie|tv|person|collection|company|keyword)$/,
+    allowedParams: [
+      'query',
+      'year',
+      'primary_release_year',
+      'first_air_date_year',
+      'region',
+      'page',
+      'language',
+      'include_adult',
+    ],
     cacheCategory: 'search',
   },
   {
@@ -49,18 +48,18 @@ export const ROUTE_RULES: RouteRule[] = [
   },
   {
     pattern: /^tv\/\d+\/season\/\d+$/,
-    allowedParams: ['append_to_response', 'language'],
+    allowedParams: ['append_to_response', 'language', 'include_image_language'],
     cacheCategory: 'details',
   },
   {
     pattern: /^tv\/\d+\/season\/\d+\/episode\/\d+$/,
-    allowedParams: ['append_to_response', 'language'],
+    allowedParams: ['append_to_response', 'language', 'include_image_language'],
     cacheCategory: 'details',
   },
-  // Sub-resources
+  // Sub-resources (credits, aggregate_credits, images, videos, etc.)
   {
-    pattern: /^(movie|tv)\/\d+\/(recommendations|similar|videos|credits|watch\/providers)$/,
-    allowedParams: ['page', 'language'],
+    pattern: /^(movie|tv)\/\d+\/(recommendations|similar|videos|credits|aggregate_credits|watch\/providers|release_dates|external_ids|keywords|content_ratings)$/,
+    allowedParams: ['page', 'language', 'region', 'watch_region'],
     cacheCategory: 'details',
   },
   {
@@ -73,10 +72,26 @@ export const ROUTE_RULES: RouteRule[] = [
     allowedParams: ['page', 'language'],
     cacheCategory: 'details',
   },
+  // Person
+  {
+    pattern: /^person\/\d+$/,
+    allowedParams: ['append_to_response', 'language'],
+    cacheCategory: 'details',
+  },
+  {
+    pattern: /^person\/\d+\/(movie_credits|tv_credits|combined_credits|images|external_ids|tagged_images)$/,
+    allowedParams: ['language', 'page'],
+    cacheCategory: 'details',
+  },
+  {
+    pattern: /^person\/(popular|latest)$/,
+    allowedParams: ['page', 'language'],
+    cacheCategory: 'lists',
+  },
   // Trending & Lists
   {
-    pattern: /^trending\/(all|movie|tv)\/(day|week)$/,
-    allowedParams: ['page', 'language'],
+    pattern: /^trending\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$/,
+    allowedParams: ['page', 'language', 'region'],
     cacheCategory: 'lists',
   },
   {
@@ -98,6 +113,8 @@ export const ROUTE_RULES: RouteRule[] = [
       'sort_by',
       'primary_release_date.gte',
       'primary_release_date.lte',
+      'release_date.gte',
+      'release_date.lte',
       'vote_average.gte',
       'vote_average.lte',
       'vote_count.gte',
@@ -121,6 +138,8 @@ export const ROUTE_RULES: RouteRule[] = [
       'sort_by',
       'first_air_date.gte',
       'first_air_date.lte',
+      'air_date.gte',
+      'air_date.lte',
       'vote_average.gte',
       'vote_average.lte',
       'vote_count.gte',
@@ -128,6 +147,8 @@ export const ROUTE_RULES: RouteRule[] = [
       'with_status',
       'with_type',
       'with_original_language',
+      'with_runtime.gte',
+      'with_runtime.lte',
       'watch_region',
       'with_watch_providers',
       'page',
@@ -143,7 +164,7 @@ export const ROUTE_RULES: RouteRule[] = [
     cacheCategory: 'details',
   },
   {
-    pattern: /^configuration$/,
+    pattern: /^configuration(\/[a-zA-Z0-9_-]+)?$/,
     allowedParams: [],
     cacheCategory: 'details',
   },
@@ -155,13 +176,14 @@ export const ROUTE_RULES: RouteRule[] = [
 ]
 
 export function matchRoute(path: string): RouteRule | null {
+  const cleanPath = path.trim().replace(/^\/+|\/+$/g, '')
   // Reject path traversal attempts explicitly
-  if (path.includes('..') || path.includes('//') || path.includes('\\')) {
+  if (cleanPath.includes('..') || cleanPath.includes('//') || cleanPath.includes('\\')) {
     return null
   }
 
   for (const rule of ROUTE_RULES) {
-    if (rule.pattern.test(path)) {
+    if (rule.pattern.test(cleanPath)) {
       return rule
     }
   }

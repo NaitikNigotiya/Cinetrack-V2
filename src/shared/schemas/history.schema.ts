@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const HistoryEventTypeEnum = z.enum(['movie', 'tv_episode'])
 export type HistoryEventType = z.infer<typeof HistoryEventTypeEnum>
 
-export const HistorySourceEnum = z.enum(['manual', 'season_bulk', 'import'])
+export const HistorySourceEnum = z.enum(['manual', 'season_bulk', 'import', 'import-v1'])
 export type HistorySource = z.infer<typeof HistorySourceEnum>
 
 export const HistoryEventSchema = z.object({
@@ -20,6 +20,7 @@ export const HistoryEventSchema = z.object({
   posterPath: z.string().nullable().default(null),
   genreIds: z.array(z.number().int()).default([]),
   source: HistorySourceEnum.default('manual'),
+  approximate: z.boolean().optional(),
   createdAt: z.any(),
   schemaVersion: z.literal(1).default(1),
 })

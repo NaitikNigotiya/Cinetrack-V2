@@ -8,6 +8,8 @@ export const SeasonDocSchema = z.object({
   minutesWatched: z.number().int().min(0).default(0),
   completed: z.boolean().default(false),
   updatedAt: z.any(),
+  source: z.string().optional(),
+  approximate: z.boolean().optional(),
 })
 
 export type SeasonDoc = z.infer<typeof SeasonDocSchema>

@@ -12,6 +12,9 @@
     "test:watch": "vitest",
     "knip": "knip",
     "check:ui-guardrails": "node scripts/verify-ui-guardrails.mjs",
+    "import:v1": "tsx scripts/import-v1.ts",
+    "import:rollback": "tsx scripts/rollback-v1.ts",
+    "import:verify": "tsx scripts/verify-v1.ts",
     "preview": "vite preview"
   },
   "dependencies": {

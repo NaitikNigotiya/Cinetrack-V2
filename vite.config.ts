@@ -75,12 +75,19 @@ export default defineConfig(({ mode }) => {
       react(),
       tmdbDevProxyPlugin(env),
       VitePWA({
-        registerType: 'prompt',
+        registerType: 'autoUpdate',
         injectRegister: 'auto',
         manifest: false,
         workbox: {
           globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
+          skipWaiting: true,
+          clientsClaim: true,
+          navigateFallbackDenylist: [/^\/api\/.*/],
           runtimeCaching: [
+            {
+              urlPattern: /^\/api\/.*/i,
+              handler: 'NetworkOnly',
+            },
             {
               urlPattern: /^https:\/\/image\.tmdb\.org\/.*/i,
               handler: 'CacheFirst',
@@ -89,20 +96,6 @@ export default defineConfig(({ mode }) => {
                 expiration: {
                   maxEntries: 600,
                   maxAgeSeconds: 30 * 24 * 60 * 60,
-                },
-                cacheableResponse: {
-                  statuses: [0, 200],
-                },
-              },
-            },
-            {
-              urlPattern: /\/api\/tmdb\/.*/i,
-              handler: 'StaleWhileRevalidate',
-              options: {
-                cacheName: 'tmdb-api',
-                expiration: {
-                  maxEntries: 300,
-                  maxAgeSeconds: 24 * 60 * 60,
                 },
                 cacheableResponse: {
                   statuses: [0, 200],

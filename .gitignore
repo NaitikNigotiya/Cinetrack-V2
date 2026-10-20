@@ -17,6 +17,7 @@ dist-ssr
 coverage
 .system_generated
 data/
+data/imports/
 
 # Editor directories and files
 .vscode/*

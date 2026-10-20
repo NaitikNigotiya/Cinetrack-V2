@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { Star, Flame, Clock, Film, Layers, Play } from 'lucide-react'
+import { Star, Flame, Clock, Film, Layers, Play, Info, X } from 'lucide-react'
 import { useAppStore } from '@/domain/store'
 import { selectAnalyticsMetrics } from '@/domain/selectors'
 import { PageShell } from '@/shared/ui/layout/PageShell'
@@ -68,6 +68,30 @@ export function AnalyticsPage() {
     isEmpty,
   } = metrics
 
+  const hasImportedData = useMemo(() => {
+    return (
+      library.some((e) => (e as any).source === 'import-v1' || (e as any).approximate) ||
+      history.some((h) => h.source === 'import-v1' || (h as any).approximate)
+    )
+  }, [library, history])
+
+  const [dismissedNotice, setDismissedNotice] = useState(() => {
+    try {
+      return localStorage.getItem('cinetrack_imported_analytics_dismissed') === 'true'
+    } catch {
+      return false
+    }
+  })
+
+  const handleDismissNotice = () => {
+    setDismissedNotice(true)
+    try {
+      localStorage.setItem('cinetrack_imported_analytics_dismissed', 'true')
+    } catch {
+      // ignore
+    }
+  }
+
   return (
     <PageShell>
       <PageHeader
@@ -104,6 +128,23 @@ export function AnalyticsPage() {
           </div>
         </div>
       </PageHeader>
+
+      {hasImportedData && !dismissedNotice && (
+        <div className="analytics-imported-banner" role="status" aria-live="polite">
+          <div className="analytics-imported-banner-content">
+            <Info size={16} className="analytics-imported-banner-icon" />
+            <span>Includes imported data with approximate watch dates</span>
+          </div>
+          <button
+            type="button"
+            className="analytics-imported-banner-close"
+            onClick={handleDismissNotice}
+            aria-label="Dismiss note"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
 
       {isLoading ? (
         <div className="analytics-loading-grid">

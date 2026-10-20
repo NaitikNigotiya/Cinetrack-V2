@@ -132,6 +132,8 @@ export async function request<T>(
     else if (response.status === 429) errorCode = 'RATE_LIMITED'
     else if (response.status === 504) errorCode = 'TIMEOUT'
 
+    console.warn(`[CineTrack TMDB Proxy Error ${response.status}]: ${errorMessage} (${cleanPath})`)
+
     throw new TmdbError(errorCode, response.status, errorMessage)
   }
 
