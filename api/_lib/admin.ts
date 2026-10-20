@@ -1,36 +1,105 @@
 import { initializeApp, getApps, cert } from 'firebase-admin/app'
 import { getAuth } from 'firebase-admin/auth'
 
-export function initAdmin() {
+export interface AdminInitResult {
+  ok: boolean
+  status: string
+}
+
+let lastInitResult: AdminInitResult = { ok: false, status: 'error:uninitialized' }
+
+export function normalizePrivateKey(key: string | undefined): string | undefined {
+  if (!key) return undefined
+  let clean = key.trim()
+  if (
+    (clean.startsWith('"') && clean.endsWith('"')) ||
+    (clean.startsWith("'") && clean.endsWith("'"))
+  ) {
+    clean = clean.slice(1, -1).trim()
+  }
+  // Replace escaped \r\n and \n sequences with actual newlines
+  clean = clean.replace(/\\r\\n/g, '\n').replace(/\\n/g, '\n')
+  return clean
+}
+
+export function initAdmin(): AdminInitResult {
   if (getApps().length > 0) {
-    return
+    lastInitResult = { ok: true, status: 'ok' }
+    return lastInitResult
   }
 
-  const projectId = process.env.FIREBASE_PROJECT_ID?.replace(/^["']|["']$/g, '').trim()
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL?.replace(/^["']|["']$/g, '').trim()
-  let rawPrivateKey = process.env.FIREBASE_PRIVATE_KEY?.trim()
-  if (rawPrivateKey) {
-    if (rawPrivateKey.startsWith('"') && rawPrivateKey.endsWith('"')) {
-      rawPrivateKey = rawPrivateKey.slice(1, -1)
-    } else if (rawPrivateKey.startsWith("'") && rawPrivateKey.endsWith("'")) {
-      rawPrivateKey = rawPrivateKey.slice(1, -1)
+  // Parse service account JSON if provided in env
+  let serviceAccountJson: Record<string, string> | null = null
+  const rawServiceAccount =
+    process.env.FIREBASE_SERVICE_ACCOUNT || process.env.FIREBASE_SERVICE_ACCOUNT_KEY
+  if (rawServiceAccount) {
+    try {
+      serviceAccountJson = JSON.parse(rawServiceAccount)
+    } catch {
+      // Ignore JSON parse errors for non-JSON content
     }
   }
-  const privateKey = rawPrivateKey ? rawPrivateKey.replace(/\\n/g, '\n') : undefined
+
+  const projectId = (
+    process.env.FIREBASE_PROJECT_ID ||
+    process.env.VITE_FIREBASE_PROJECT_ID ||
+    serviceAccountJson?.project_id ||
+    'cinetrack-v2'
+  )
+    .replace(/^["']|["']$/g, '')
+    .trim()
+
+  const clientEmail = (
+    process.env.FIREBASE_CLIENT_EMAIL ||
+    process.env.FIREBASE_ADMIN_CLIENT_EMAIL ||
+    serviceAccountJson?.client_email ||
+    ''
+  )
+    .replace(/^["']|["']$/g, '')
+    .trim()
+
+  const rawPrivateKey =
+    process.env.FIREBASE_PRIVATE_KEY || serviceAccountJson?.private_key
+  const privateKey = normalizePrivateKey(rawPrivateKey)
 
   if (projectId && clientEmail && privateKey) {
-    initializeApp({
-      credential: cert({
-        projectId,
-        clientEmail,
-        privateKey,
-      }),
-    })
+    try {
+      initializeApp({
+        credential: cert({
+          projectId,
+          clientEmail,
+          privateKey,
+        }),
+      })
+      lastInitResult = { ok: true, status: 'ok' }
+      return lastInitResult
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      console.error('[Firebase Admin Init Error]', msg)
+      const shortReason = msg.toLowerCase().includes('private key')
+        ? 'invalid_private_key'
+        : 'cert_failed'
+      lastInitResult = { ok: false, status: `error:${shortReason}` }
+      return lastInitResult
+    }
   } else if (projectId) {
-    initializeApp({ projectId })
-  } else {
-    initializeApp()
+    try {
+      initializeApp({ projectId })
+      lastInitResult = { ok: true, status: 'ok' }
+      return lastInitResult
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      lastInitResult = { ok: false, status: `error:${msg.slice(0, 30)}` }
+      return lastInitResult
+    }
   }
+
+  lastInitResult = { ok: false, status: 'error:missing_credentials' }
+  return lastInitResult
+}
+
+export function getAdminInitStatus(): AdminInitResult {
+  return lastInitResult
 }
 
 export interface DecodedAuthToken {
@@ -60,7 +129,9 @@ export async function verifyFirebaseIdToken(idToken: string): Promise<DecodedAut
       process.env.VITE_FIREBASE_API_KEY ||
       process.env.FIREBASE_API_KEY ||
       ''
-    ).replace(/^["']|["']$/g, '').trim()
+    )
+      .replace(/^["']|["']$/g, '')
+      .trim()
 
     if (apiKey) {
       try {

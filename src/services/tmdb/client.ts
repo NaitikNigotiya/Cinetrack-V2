@@ -1,3 +1,4 @@
+import type { User } from 'firebase/auth'
 import { auth } from '@/services/firebase/auth'
 import { useAuthStore } from '@/features/auth/store/authStore'
 import { TmdbError, type TmdbErrorCode } from './errors'
@@ -27,9 +28,62 @@ function getUserLocale(): { language: string; region: string } {
 }
 
 /**
+ * Resolves current authenticated user, waiting for auth state resolution if needed.
+ */
+async function resolveCurrentUser(timeoutMs = 2500): Promise<User | null> {
+  if (auth.currentUser) {
+    return auth.currentUser
+  }
+
+  // 1. Wait for authStateReady if supported
+  if (typeof auth.authStateReady === 'function') {
+    try {
+      await auth.authStateReady()
+    } catch {
+      // Continue
+    }
+  }
+
+  if (auth.currentUser) {
+    return auth.currentUser
+  }
+
+  // 2. Check auth store
+  const storeUser = useAuthStore.getState().user
+  if (storeUser) {
+    return storeUser
+  }
+
+  // 3. Wait for store initialization if still loading
+  if (!useAuthStore.getState().isInitialized) {
+    await new Promise<void>((resolve) => {
+      let resolved = false
+      const timer = setTimeout(() => {
+        if (!resolved) {
+          resolved = true
+          resolve()
+        }
+      }, timeoutMs)
+
+      const unsub = useAuthStore.subscribe((state) => {
+        if (state.isInitialized && !resolved) {
+          resolved = true
+          clearTimeout(timer)
+          unsub()
+          resolve()
+        }
+      })
+    })
+  }
+
+  return auth.currentUser || useAuthStore.getState().user
+}
+
+/**
  * Dispatches an authenticated request to the TMDB server proxy.
- * - Injects fresh Firebase ID token (refreshes if expired).
- * - Passes AbortSignal for React Query query cancellation.
+ * - Injects fresh Firebase ID token (waits for auth state on first load).
+ * - Retries once with getIdToken(true) on a 401 response.
+ * - Passes AbortSignal for query cancellation.
  * - Merges user locale (language/region).
  * - Maps upstream proxy error responses to typed TmdbError instances.
  * - Never logs tokens or sensitive URLs.
@@ -60,20 +114,11 @@ export async function request<T>(
     Accept: 'application/json',
   }
 
-  // Ensure Firebase Auth state is resolved before reading currentUser
-  if (typeof auth.authStateReady === 'function') {
+  // Obtain Firebase ID token, waiting for auth state if not yet ready
+  const user = await resolveCurrentUser()
+  if (user && typeof user.getIdToken === 'function') {
     try {
-      await auth.authStateReady()
-    } catch {
-      // Continue if authStateReady fails
-    }
-  }
-
-  // Obtain fresh Firebase ID token if user is signed in
-  const currentUser = auth.currentUser
-  if (currentUser) {
-    try {
-      const idToken = await currentUser.getIdToken()
+      const idToken = await user.getIdToken()
       if (idToken) {
         headers['Authorization'] = `Bearer ${idToken}`
       }
@@ -82,16 +127,20 @@ export async function request<T>(
     }
   }
 
-  let response: Response
-  try {
+  const doFetch = async (currentHeaders: HeadersInit): Promise<Response> => {
     const init: RequestInit = {
       method: 'GET',
-      headers,
+      headers: currentHeaders,
     }
     if (options.signal) {
       init.signal = options.signal
     }
-    response = await fetch(url.toString(), init)
+    return fetch(url.toString(), init)
+  }
+
+  let response: Response
+  try {
+    response = await doFetch(headers)
   } catch (err: unknown) {
     const isAbort =
       options.signal?.aborted ||
@@ -111,26 +160,50 @@ export async function request<T>(
     )
   }
 
+  // Handle 401: retry once with forced token refresh getIdToken(true)
+  if (response.status === 401) {
+    const activeUser = auth.currentUser || user
+    if (activeUser && typeof activeUser.getIdToken === 'function') {
+      try {
+        const refreshedToken = await activeUser.getIdToken(true)
+        if (refreshedToken) {
+          const retryHeaders: HeadersInit = {
+            ...headers,
+            Authorization: `Bearer ${refreshedToken}`,
+          }
+          response = await doFetch(retryHeaders)
+        }
+      } catch (refreshErr) {
+        console.warn('[TMDB Client] 401 token refresh retry failed:', refreshErr)
+      }
+    }
+  }
+
   if (!response.ok) {
     let errorCode: TmdbErrorCode = 'UPSTREAM_ERROR'
     let errorMessage = `HTTP ${response.status}`
 
     try {
       const errorJson = await response.json()
-      if (errorJson?.error?.code) {
+      if (errorJson?.code) {
+        errorCode = errorJson.code as TmdbErrorCode
+      } else if (errorJson?.error?.code) {
         errorCode = errorJson.error.code as TmdbErrorCode
       }
-      if (errorJson?.error?.message) {
+      if (errorJson?.message) {
+        errorMessage = errorJson.message
+      } else if (errorJson?.error?.message) {
         errorMessage = errorJson.error.message
       }
     } catch {
       // Non-JSON response body
     }
 
-    if (response.status === 401) errorCode = 'UNAUTHENTICATED'
-    else if (response.status === 404) errorCode = 'NOT_FOUND'
-    else if (response.status === 429) errorCode = 'RATE_LIMITED'
-    else if (response.status === 504) errorCode = 'TIMEOUT'
+    if (response.status === 401 && errorCode === 'UPSTREAM_ERROR') errorCode = 'UNAUTHENTICATED'
+    else if (response.status === 403 && errorCode === 'UPSTREAM_ERROR') errorCode = 'NOT_OWNER'
+    else if (response.status === 404 && errorCode === 'UPSTREAM_ERROR') errorCode = 'NOT_FOUND'
+    else if (response.status === 429 && errorCode === 'UPSTREAM_ERROR') errorCode = 'RATE_LIMITED'
+    else if (response.status === 504 && errorCode === 'UPSTREAM_ERROR') errorCode = 'TIMEOUT'
 
     console.warn(`[CineTrack TMDB Proxy Error ${response.status}]: ${errorMessage} (${cleanPath})`)
 

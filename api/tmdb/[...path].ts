@@ -183,13 +183,14 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
 
     // Auth: require Authorization: Bearer <Firebase ID token>
     const authHeader = req.headers.authorization
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!authHeader || !authHeader.startsWith('Bearer ') || !authHeader.slice(7).trim()) {
       sendJsonError(
         res,
         401,
-        'UNAUTHENTICATED',
-        'Missing or invalid Authorization header',
-        targetPath
+        'MISSING_TOKEN',
+        'Missing or empty Authorization header',
+        targetPath,
+        'Authorization header was missing, malformed, or empty'
       )
       return
     }
@@ -203,15 +204,16 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       if (process.env.NODE_ENV === 'development' && idToken.length > 50) {
         decoded = {
           uid: 'dev-user',
-          email: process.env.OWNER_EMAIL,
+          email: process.env.OWNER_EMAIL || 'nigotiyanaitik@gmail.com',
           email_verified: true,
         }
       } else {
+        const errMsg = authErr instanceof Error ? authErr.message : String(authErr)
         sendJsonError(
           res,
           401,
-          'UNAUTHENTICATED',
-          `Invalid or expired Firebase ID token: ${authErr instanceof Error ? authErr.message : String(authErr)}`,
+          'INVALID_TOKEN',
+          `Invalid or expired Firebase ID token: ${errMsg}`,
           targetPath,
           authErr
         )
@@ -219,11 +221,11 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       }
     }
 
-    // Security check: reject with 403 FORBIDDEN unless email_verified is true and matches OWNER_EMAIL
+    // Security check: reject with 403 NOT_OWNER unless email_verified is true and matches OWNER_EMAIL
     const configuredOwnerEmail = (
       process.env.OWNER_EMAIL ||
       process.env.VITE_OWNER_EMAIL ||
-      ''
+      'nigotiyanaitik@gmail.com'
     )
       .trim()
       .toLowerCase()
@@ -240,10 +242,10 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       sendJsonError(
         res,
         403,
-        'FORBIDDEN',
+        'NOT_OWNER',
         'Access restricted to owner account',
         targetPath,
-        `Token email "${tokenEmail}" (verified: ${decoded.email_verified}) does not match configured owner`
+        `Token email "${tokenEmail}" (verified: ${decoded.email_verified}) does not match configured owner "${configuredOwnerEmail}"`
       )
       return
     }

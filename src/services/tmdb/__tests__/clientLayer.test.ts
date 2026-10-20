@@ -117,6 +117,30 @@ describe('TMDB Client Layer - client.ts', () => {
       request('search/multi', { params: { query: 'test' }, signal: controller.signal })
     ).rejects.toThrow('The operation was aborted')
   })
+
+  it('retries once with getIdToken(true) on a 401 and succeeds on second attempt', async () => {
+    const mockData = { id: 550, title: 'Fight Club' }
+    let callCount = 0
+
+    const fetchMock = vi.fn().mockImplementation(async () => {
+      callCount++
+      if (callCount === 1) {
+        return new Response(
+          JSON.stringify({ error: { code: 'INVALID_TOKEN', message: 'Token expired' } }),
+          { status: 401, headers: { 'Content-Type': 'application/json' } }
+        )
+      }
+      return new Response(JSON.stringify(mockData), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const result = await request<typeof mockData>('movie/550')
+    expect(result).toEqual(mockData)
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+  })
 })
 
 describe('TMDB Image and Genre Utilities', () => {

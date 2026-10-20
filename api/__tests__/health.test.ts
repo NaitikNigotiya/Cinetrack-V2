@@ -3,7 +3,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http'
 import handler from '../health'
 
 vi.mock('../_lib/admin', () => ({
-  initAdmin: vi.fn(),
+  initAdmin: vi.fn(() => ({ ok: true, status: 'ok' })),
 }))
 
 vi.mock('firebase-admin/app', () => ({
@@ -58,7 +58,7 @@ describe('Health Check Endpoint GET /api/health', () => {
     process.env.TMDB_READ_TOKEN = 'mock-tmdb-token'
   })
 
-  it('returns 200 with boolean health fields', async () => {
+  it('returns 200 with boolean health fields and adminInit status', async () => {
     const { req, res, mockRes } = createMockReqRes({ method: 'GET' })
 
     await handler(req, res)
@@ -70,10 +70,12 @@ describe('Health Check Endpoint GET /api/health', () => {
       ok: true,
       tmdbTokenPresent: true,
       firebaseAdminOk: true,
+      adminInit: 'ok',
     })
     expect(typeof json.ok).toBe('boolean')
     expect(typeof json.tmdbTokenPresent).toBe('boolean')
     expect(typeof json.firebaseAdminOk).toBe('boolean')
+    expect(json.adminInit).toBe('ok')
   })
 
   it('returns 204 on OPTIONS preflight', async () => {

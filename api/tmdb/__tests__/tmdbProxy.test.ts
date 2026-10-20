@@ -201,45 +201,49 @@ describe('TMDB Server Proxy Handler', () => {
     expect(mockRes.statusCode).toBe(204)
   })
 
-  it('returns 401 UNAUTHENTICATED when Authorization header is missing', async () => {
+  it('returns 401 MISSING_TOKEN when Authorization header is missing', async () => {
     const { req, res, mockRes } = createMockReqRes({})
     await handler(req, res)
     expect(mockRes.statusCode).toBe(401)
     const body = JSON.parse(mockRes.body)
-    expect(body.error.code).toBe('UNAUTHENTICATED')
+    expect(body.error.code).toBe('MISSING_TOKEN')
+    expect(body.code).toBe('MISSING_TOKEN')
     expect(mockRes.headers['cache-control']).toBe('no-store')
   })
 
-  it('returns 401 UNAUTHENTICATED on invalid Firebase ID token without leaking token', async () => {
+  it('returns 401 INVALID_TOKEN on invalid Firebase ID token without leaking token', async () => {
     const { req, res, mockRes } = createMockReqRes({
       authHeader: 'Bearer invalid-token-xyz',
     })
     await handler(req, res)
     expect(mockRes.statusCode).toBe(401)
     const body = JSON.parse(mockRes.body)
-    expect(body.error.code).toBe('UNAUTHENTICATED')
+    expect(body.error.code).toBe('INVALID_TOKEN')
+    expect(body.code).toBe('INVALID_TOKEN')
     expect(mockRes.body).not.toContain('invalid-token-xyz')
   })
 
-  it('returns 403 FORBIDDEN when valid token belongs to a non-owner email', async () => {
+  it('returns 403 NOT_OWNER when valid token belongs to a non-owner email', async () => {
     const { req, res, mockRes } = createMockReqRes({
       authHeader: 'Bearer other-user-token',
     })
     await handler(req, res)
     expect(mockRes.statusCode).toBe(403)
     const body = JSON.parse(mockRes.body)
-    expect(body.error.code).toBe('FORBIDDEN')
+    expect(body.error.code).toBe('NOT_OWNER')
+    expect(body.code).toBe('NOT_OWNER')
     expect(mockRes.body).not.toContain('intruder@example.com')
   })
 
-  it('returns 403 FORBIDDEN when owner email is unverified', async () => {
+  it('returns 403 NOT_OWNER when owner email is unverified', async () => {
     const { req, res, mockRes } = createMockReqRes({
       authHeader: 'Bearer owner-unverified-token',
     })
     await handler(req, res)
     expect(mockRes.statusCode).toBe(403)
     const body = JSON.parse(mockRes.body)
-    expect(body.error.code).toBe('FORBIDDEN')
+    expect(body.error.code).toBe('NOT_OWNER')
+    expect(body.code).toBe('NOT_OWNER')
   })
 
   it('allows access with case-insensitive owner email comparison', async () => {

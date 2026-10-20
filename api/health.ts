@@ -31,12 +31,16 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
   const tmdbTokenPresent = rawToken.length > 0
 
   let firebaseAdminOk = false
+  let adminInit = 'error:uninitialized'
   try {
-    initAdmin()
-    firebaseAdminOk = getApps().length > 0
+    const adminRes = initAdmin()
+    firebaseAdminOk = adminRes.ok && getApps().length > 0
+    adminInit = adminRes.status
   } catch (err: unknown) {
     console.error('[Health Check Error] Firebase Admin initialization failed:', err)
     firebaseAdminOk = false
+    const msg = err instanceof Error ? err.message : String(err)
+    adminInit = `error:${msg.slice(0, 30)}`
   }
 
   const ok = tmdbTokenPresent && firebaseAdminOk
@@ -47,6 +51,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       ok,
       tmdbTokenPresent,
       firebaseAdminOk,
+      adminInit,
     })
   )
 }

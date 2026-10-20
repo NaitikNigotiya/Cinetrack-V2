@@ -46,17 +46,40 @@ export async function fetchFromProxy<T>(
   })
 
   const headers: HeadersInit = { Accept: 'application/json' }
-  const currentUser = auth.currentUser
-  if (currentUser) {
+  let currentUser = auth.currentUser
+  if (!currentUser && typeof auth.authStateReady === 'function') {
     try {
-      const idToken = await currentUser.getIdToken()
-      headers['Authorization'] = `Bearer ${idToken}`
+      await auth.authStateReady()
+      currentUser = auth.currentUser
     } catch {
       // Continue without token
     }
   }
 
-  const response = await fetch(url.toString(), { headers })
+  if (currentUser) {
+    try {
+      const idToken = await currentUser.getIdToken()
+      if (idToken) {
+        headers['Authorization'] = `Bearer ${idToken}`
+      }
+    } catch {
+      // Continue without token
+    }
+  }
+
+  let response = await fetch(url.toString(), { headers })
+  if (response.status === 401 && currentUser) {
+    try {
+      const refreshed = await currentUser.getIdToken(true)
+      if (refreshed) {
+        headers['Authorization'] = `Bearer ${refreshed}`
+        response = await fetch(url.toString(), { headers })
+      }
+    } catch {
+      // Ignore retry error
+    }
+  }
+
   if (!response.ok) {
     throw new Error(`TMDB Proxy error: ${response.status} ${response.statusText}`)
   }

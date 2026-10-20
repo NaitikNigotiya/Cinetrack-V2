@@ -8,7 +8,7 @@ const TEST_OWNER_EMAIL = 'nigotiyanaitik@gmail.com'
 
 vi.mock('../../_lib/admin', () => ({
   verifyFirebaseIdToken: vi.fn(async (token: string) => {
-    if (token === 'valid-owner-token') {
+    if (token === 'valid-owner-token' || token === 'owner-token') {
       return {
         uid: 'user-owner',
         email: TEST_OWNER_EMAIL,
@@ -24,7 +24,7 @@ vi.mock('../../_lib/admin', () => ({
     }
     throw new Error('Invalid token')
   }),
-  initAdmin: vi.fn(),
+  initAdmin: vi.fn(() => ({ ok: true, status: 'ok' })),
 }))
 
 interface MockResponse {
@@ -37,7 +37,7 @@ function createVercelReqRes(options: {
   method?: string
   url?: string
   query?: Record<string, string | string[]>
-  authHeader?: string
+  authHeader?: string | null
 }): {
   req: IncomingMessage
   res: ServerResponse
@@ -49,9 +49,9 @@ function createVercelReqRes(options: {
     query: options.query,
     headers: {
       host: 'cinetrack-v2-bice.vercel.app',
-      ...(options.authHeader !== undefined
-        ? { authorization: options.authHeader }
-        : { authorization: 'Bearer valid-owner-token' }),
+      ...(options.authHeader === null
+        ? {}
+        : { authorization: options.authHeader ?? 'Bearer valid-owner-token' }),
     },
   } as unknown as IncomingMessage
 
@@ -234,7 +234,7 @@ describe('Vercel-style Request Handling & Path Normalization', () => {
       expect(data.path).toBe('admin/secrets')
     })
 
-    it('returns JSON 403 FORBIDDEN for non-owner tokens', async () => {
+    it('returns JSON 403 NOT_OWNER for non-owner tokens', async () => {
       const { req, res, mockRes } = createVercelReqRes({
         url: '/api/tmdb/discover/movie',
         authHeader: 'Bearer non-owner-token',
@@ -244,9 +244,58 @@ describe('Vercel-style Request Handling & Path Normalization', () => {
 
       expect(mockRes.statusCode).toBe(403)
       const data = JSON.parse(mockRes.body)
-      expect(data.code).toBe('FORBIDDEN')
+      expect(data.code).toBe('NOT_OWNER')
       expect(data.error).toBeDefined()
       expect(data.path).toBe('discover/movie')
+    })
+
+    describe('Auth path end-to-end verification (Requirement 6)', () => {
+      it('no token → 401 MISSING_TOKEN', async () => {
+        const { req, res, mockRes } = createVercelReqRes({
+          url: '/api/tmdb/discover/movie',
+          authHeader: null,
+        })
+        await handler(req, res)
+        expect(mockRes.statusCode).toBe(401)
+        const data = JSON.parse(mockRes.body)
+        expect(data.code).toBe('MISSING_TOKEN')
+        expect(data.error.code).toBe('MISSING_TOKEN')
+      })
+
+      it('bad token → 401 INVALID_TOKEN', async () => {
+        const { req, res, mockRes } = createVercelReqRes({
+          url: '/api/tmdb/discover/movie',
+          authHeader: 'Bearer invalid-token',
+        })
+        await handler(req, res)
+        expect(mockRes.statusCode).toBe(401)
+        const data = JSON.parse(mockRes.body)
+        expect(data.code).toBe('INVALID_TOKEN')
+        expect(data.error.code).toBe('INVALID_TOKEN')
+      })
+
+      it('non-owner → 403 NOT_OWNER', async () => {
+        const { req, res, mockRes } = createVercelReqRes({
+          url: '/api/tmdb/discover/movie',
+          authHeader: 'Bearer non-owner-token',
+        })
+        await handler(req, res)
+        expect(mockRes.statusCode).toBe(403)
+        const data = JSON.parse(mockRes.body)
+        expect(data.code).toBe('NOT_OWNER')
+        expect(data.error.code).toBe('NOT_OWNER')
+      })
+
+      it('owner → 200', async () => {
+        const { req, res, mockRes } = createVercelReqRes({
+          url: '/api/tmdb/discover/movie',
+          authHeader: 'Bearer owner-token',
+        })
+        await handler(req, res)
+        expect(mockRes.statusCode).toBe(200)
+        const data = JSON.parse(mockRes.body)
+        expect(data).toEqual(mockSuccess)
+      })
     })
   })
 })

@@ -1,5 +1,9 @@
 export type TmdbErrorCode =
   | 'UNAUTHENTICATED'
+  | 'MISSING_TOKEN'
+  | 'INVALID_TOKEN'
+  | 'NOT_OWNER'
+  | 'FORBIDDEN'
   | 'PATH_NOT_ALLOWED'
   | 'BAD_PARAMS'
   | 'NOT_FOUND'
@@ -11,6 +15,10 @@ export type TmdbErrorCode =
 
 export const TMDB_USER_MESSAGES: Record<TmdbErrorCode, string> = {
   UNAUTHENTICATED: 'Please sign in to access TMDB data.',
+  MISSING_TOKEN: 'Please sign in to access TMDB data.',
+  INVALID_TOKEN: 'Your session has expired. Please sign in again.',
+  NOT_OWNER: 'Access restricted to owner account.',
+  FORBIDDEN: 'Access restricted.',
   PATH_NOT_ALLOWED: 'The requested TMDB endpoint is not allowed.',
   BAD_PARAMS: 'Invalid search or filter parameters.',
   NOT_FOUND: 'The requested movie or TV show could not be found.',
