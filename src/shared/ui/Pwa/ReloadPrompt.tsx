@@ -9,14 +9,30 @@ export function ReloadPrompt() {
   } = useRegisterSW({
     onRegistered(r) {
       if (r) {
-        // Check for updates periodically (every 60 min)
-        setInterval(() => {
+        // Check for updates immediately upon load
+        r.update().catch(() => {})
+
+        // Check for updates when user returns to / refocuses tab
+        const handleVisibilityChange = () => {
+          if (document.visibilityState === 'visible') {
+            r.update().catch(() => {})
+          }
+        }
+        document.addEventListener('visibilitychange', handleVisibilityChange)
+
+        // Check for updates periodically (every 60 seconds)
+        const interval = setInterval(() => {
           r.update().catch(() => {})
-        }, 60 * 60 * 1000)
+        }, 60 * 1000)
+
+        return () => {
+          document.removeEventListener('visibilitychange', handleVisibilityChange)
+          clearInterval(interval)
+        }
       }
     },
-    onRegisterError() {
-      // SW registration error fallback
+    onRegisterError(err) {
+      console.warn('[PWA] Service worker registration failed:', err)
     },
   })
 
