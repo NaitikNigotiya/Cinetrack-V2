@@ -27,56 +27,71 @@ function getUserLocale(): { language: string; region: string } {
   }
 }
 
+let sharedAuthPromise: Promise<User | null> | null = null
+
 /**
  * Resolves current authenticated user, waiting for auth state resolution if needed.
+ * Shares a single pending promise among all concurrent callers to prevent request waterfalls.
  */
-async function resolveCurrentUser(timeoutMs = 2500): Promise<User | null> {
+async function resolveCurrentUser(timeoutMs = 800): Promise<User | null> {
   if (auth.currentUser) {
     return auth.currentUser
   }
 
-  // 1. Wait for authStateReady if supported
-  if (typeof auth.authStateReady === 'function') {
-    try {
-      await auth.authStateReady()
-    } catch {
-      // Continue
+  if (sharedAuthPromise) {
+    return sharedAuthPromise
+  }
+
+  sharedAuthPromise = (async () => {
+    // 1. Wait for authStateReady if supported
+    if (typeof auth.authStateReady === 'function') {
+      try {
+        await auth.authStateReady()
+      } catch {
+        // Continue
+      }
     }
-  }
 
-  if (auth.currentUser) {
-    return auth.currentUser
-  }
+    if (auth.currentUser) {
+      return auth.currentUser
+    }
 
-  // 2. Check auth store
-  const storeUser = useAuthStore.getState().user
-  if (storeUser) {
-    return storeUser
-  }
+    // 2. Check auth store
+    const storeUser = useAuthStore.getState().user
+    if (storeUser) {
+      return storeUser
+    }
 
-  // 3. Wait for store initialization if still loading
-  if (!useAuthStore.getState().isInitialized) {
-    await new Promise<void>((resolve) => {
-      let resolved = false
-      const timer = setTimeout(() => {
-        if (!resolved) {
-          resolved = true
-          resolve()
-        }
-      }, timeoutMs)
+    // 3. Wait for store initialization if still loading
+    if (!useAuthStore.getState().isInitialized) {
+      await new Promise<void>((resolve) => {
+        let resolved = false
+        const timer = setTimeout(() => {
+          if (!resolved) {
+            resolved = true
+            resolve()
+          }
+        }, timeoutMs)
 
-      const unsub = useAuthStore.subscribe((state) => {
-        if (state.isInitialized && !resolved) {
-          resolved = true
-          clearTimeout(timer)
-          unsub()
-          resolve()
-        }
+        const unsub = useAuthStore.subscribe((state) => {
+          if (state.isInitialized && !resolved) {
+            resolved = true
+            clearTimeout(timer)
+            unsub()
+            resolve()
+          }
+        })
       })
-    })
-  }
+    }
 
-  return auth.currentUser || useAuthStore.getState().user
+    return auth.currentUser || useAuthStore.getState().user
+  })().finally(() => {
+    setTimeout(() => {
+      sharedAuthPromise = null
+    }, 500)
+  })
+
+  return sharedAuthPromise
 }
 
 /**

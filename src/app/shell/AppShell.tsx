@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
 import { TopBar } from './TopBar'
@@ -98,7 +98,34 @@ export function AppShell() {
       <div className={styles.mainWrapper}>
         <TopBar onOpenShortcuts={() => setIsShortcutsOpen(true)} />
         <main id="main-content" className={styles.content}>
-          <Outlet />
+          <Suspense
+            fallback={
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: '50vh',
+                  color: 'var(--text-muted, #94a3b8)',
+                }}
+                role="status"
+                aria-label="Loading page content"
+              >
+                <div
+                  style={{
+                    width: 32,
+                    height: 32,
+                    border: '3px solid rgba(255, 255, 255, 0.1)',
+                    borderTopColor: 'var(--primary, #e50914)',
+                    borderRadius: '50%',
+                    animation: 'spin 0.8s linear infinite',
+                  }}
+                />
+              </div>
+            }
+          >
+            <Outlet />
+          </Suspense>
         </main>
       </div>
 
