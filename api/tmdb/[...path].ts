@@ -1,6 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { initializeApp, getApps, cert } from 'firebase-admin/app'
-import { getAuth } from 'firebase-admin/auth'
 
 export type ProxyErrorCode =
   | 'UNAUTHENTICATED'
@@ -266,6 +265,10 @@ export function normalizeTmdbPath(
       if (pathname.startsWith(prefix)) {
         pathname = pathname.slice(prefix.length)
       } else if (pathname === exactPrefix) {
+        const queryParam = urlObj.searchParams.get('path')
+        if (queryParam) {
+          return queryParam.trim().replace(/^\/+|\/+$/g, '')
+        }
         pathname = ''
       }
       return pathname.replace(/^\/+|\/+$/g, '')
@@ -360,54 +363,40 @@ export interface DecodedToken {
 }
 
 export async function verifyFirebaseIdTokenInternal(idToken: string): Promise<DecodedToken> {
-  try {
-    initAdmin()
-    const auth = getAuth()
-    const decoded = await auth.verifyIdToken(idToken)
-    return {
-      uid: decoded.uid,
-      email: decoded.email,
-      email_verified: decoded.email_verified,
+  const apiKey = (
+    process.env.VITE_FIREBASE_API_KEY ||
+    process.env.FIREBASE_API_KEY ||
+    'AIzaSyAheZOOqo4RNUqKI6J4rSUDUSsUvxSSUaU'
+  )
+    .replace(/^["']|["']$/g, '')
+    .trim()
+
+  const lookupRes = await fetch(
+    `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${apiKey}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken }),
     }
-  } catch (adminErr: unknown) {
-    const apiKey = (
-      process.env.VITE_FIREBASE_API_KEY ||
-      process.env.FIREBASE_API_KEY ||
-      ''
-    )
-      .replace(/^["']|["']$/g, '')
-      .trim()
+  )
 
-    if (apiKey) {
-      try {
-        const lookupRes = await fetch(
-          `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${apiKey}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ idToken }),
-          }
-        )
+  if (!lookupRes.ok) {
+    const errorBody = await lookupRes.text().catch(() => '')
+    throw new Error(`Firebase token validation failed: ${lookupRes.status} ${errorBody}`)
+  }
 
-        if (lookupRes.ok) {
-          const data = (await lookupRes.json()) as {
-            users?: Array<{ localId: string; email?: string; emailVerified?: boolean }>
-          }
-          const user = data.users?.[0]
-          if (user?.localId) {
-            return {
-              uid: user.localId,
-              email: user.email,
-              email_verified: Boolean(user.emailVerified),
-            }
-          }
-        }
-      } catch {
-        // Fall through
-      }
-    }
+  const data = (await lookupRes.json()) as {
+    users?: Array<{ localId: string; email?: string; emailVerified?: boolean }>
+  }
+  const user = data.users?.[0]
+  if (!user || !user.localId) {
+    throw new Error('No user record found for Firebase token')
+  }
 
-    throw adminErr
+  return {
+    uid: user.localId,
+    email: user.email,
+    email_verified: Boolean(user.emailVerified),
   }
 }
 
