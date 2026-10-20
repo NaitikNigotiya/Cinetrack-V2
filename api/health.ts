@@ -117,7 +117,47 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     )
       .trim()
       .replace(/^["']|["']$/g, '')
-    const tmdbTokenPresent = rawToken.length > 0
+    const is32Hex = /^[a-f0-9]{32}$/i.test(rawToken)
+    const audMatch = rawToken.match(/[a-f0-9]{32}/i)
+    const apiKey = is32Hex
+      ? rawToken
+      : audMatch
+        ? audMatch[0]
+        : (process.env.TMDB_API_KEY || process.env.VITE_TMDB_API_KEY || '')
+            .trim()
+            .replace(/^["']|["']$/g, '')
+
+    const tokenLen = rawToken.length
+    const tokenPrefix = rawToken.slice(0, 3)
+    const tmdbTokenPresent = tokenLen > 0
+    console.log(`[TMDB Token]: length=${tokenLen}, prefix=${tokenPrefix}`)
+    if (apiKey) {
+      console.log(`[TMDB API Key]: length=${apiKey.length}, prefix=${apiKey.slice(0, 3)}`)
+    }
+
+    let tmdbReachable = false
+    if (tmdbTokenPresent) {
+      try {
+        let testUrl = 'https://api.themoviedb.org/3/configuration'
+        const headers: Record<string, string> = {
+          Accept: 'application/json',
+        }
+        if (apiKey) {
+          testUrl += `?api_key=${apiKey}`
+        } else if (rawToken) {
+          headers['Authorization'] = `Bearer ${rawToken}`
+        }
+
+        const probeRes = await fetch(testUrl, {
+          headers,
+          signal: AbortSignal.timeout(6000),
+        })
+        tmdbReachable = probeRes.ok
+      } catch (err: unknown) {
+        console.error('[Health Check TMDB Probe Error]:', err)
+        tmdbReachable = false
+      }
+    }
 
     let firebaseAdminOk = false
     let adminInit = 'error:uninitialized'
@@ -132,13 +172,16 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       adminInit = `error:${msg.slice(0, 30)}`
     }
 
-    const ok = tmdbTokenPresent && firebaseAdminOk
+    const ok = tmdbTokenPresent && firebaseAdminOk && tmdbReachable
 
     res.statusCode = 200
     res.end(
       JSON.stringify({
         ok,
         tmdbTokenPresent,
+        tmdbReachable,
+        tmdbTokenLength: tokenLen,
+        tmdbTokenPrefix: tokenPrefix,
         firebaseAdminOk,
         adminInit,
       })

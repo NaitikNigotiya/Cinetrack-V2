@@ -453,21 +453,31 @@ function sendJsonError(
 
 async function fetchWithRetry(
   url: string,
-  token: string,
+  rawToken: string,
+  apiKey: string,
   maxRetries = 2
 ): Promise<Response> {
   const delays = [500, 1000]
+
+  let targetUrl = url
+  const headers: Record<string, string> = {
+    Accept: 'application/json',
+  }
+
+  if (apiKey) {
+    const sep = targetUrl.includes('?') ? '&' : '?'
+    targetUrl = `${targetUrl}${sep}api_key=${apiKey}`
+  } else if (rawToken) {
+    headers['Authorization'] = `Bearer ${rawToken}`
+  }
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), 8000)
 
-      const res = await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json',
-        },
+      const res = await fetch(targetUrl, {
+        headers,
         signal: controller.signal,
       })
 
@@ -631,6 +641,20 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       return
     }
 
+    const is32Hex = /^[a-f0-9]{32}$/i.test(rawToken)
+    const audMatch = rawToken.match(/[a-f0-9]{32}/i)
+    const apiKey = is32Hex
+      ? rawToken
+      : audMatch
+        ? audMatch[0]
+        : (process.env.TMDB_API_KEY || process.env.VITE_TMDB_API_KEY || '')
+            .trim()
+            .replace(/^["']|["']$/g, '')
+
+    console.log(
+      `[TMDB Proxy Auth] tokenLen=${rawToken.length}, prefix=${rawToken.slice(0, 3)} | apiKeyLen=${apiKey.length}, prefix=${apiKey.slice(0, 3)}`
+    )
+
     let parsedQuery = new URLSearchParams()
     if (req.url && req.url.includes('?')) {
       const qIndex = req.url.indexOf('?')
@@ -653,7 +677,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
 
     let upstreamResponse: Response
     try {
-      upstreamResponse = await fetchWithRetry(targetUrl, rawToken)
+      upstreamResponse = await fetchWithRetry(targetUrl, rawToken, apiKey)
     } catch (upstreamErr: unknown) {
       const isTimeout =
         upstreamErr instanceof Error &&

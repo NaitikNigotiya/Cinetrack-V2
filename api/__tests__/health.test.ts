@@ -56,6 +56,19 @@ function createMockReqRes(options: { method?: string }) {
 describe('Health Check Endpoint GET /api/health', () => {
   beforeEach(() => {
     process.env.TMDB_READ_TOKEN = 'mock-tmdb-token'
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        new Response(JSON.stringify({ images: {} }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        })
+      )
+    )
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
 
   it('returns 200 with boolean health fields and adminInit status', async () => {
@@ -69,11 +82,15 @@ describe('Health Check Endpoint GET /api/health', () => {
     expect(json).toEqual({
       ok: true,
       tmdbTokenPresent: true,
+      tmdbReachable: true,
+      tmdbTokenLength: 15,
+      tmdbTokenPrefix: 'moc',
       firebaseAdminOk: true,
       adminInit: 'ok',
     })
     expect(typeof json.ok).toBe('boolean')
     expect(typeof json.tmdbTokenPresent).toBe('boolean')
+    expect(typeof json.tmdbReachable).toBe('boolean')
     expect(typeof json.firebaseAdminOk).toBe('boolean')
     expect(json.adminInit).toBe('ok')
   })
