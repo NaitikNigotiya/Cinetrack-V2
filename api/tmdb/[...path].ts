@@ -1,12 +1,12 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
-import { verifyFirebaseIdToken } from '../_lib/admin.ts'
-import { checkRateLimit } from '../_lib/rateLimiter.ts'
+import { verifyFirebaseIdToken } from '../_lib/admin'
+import { checkRateLimit } from '../_lib/rateLimiter'
 import {
   matchRoute,
   sanitizeParams,
   getCacheControlHeader,
   type ProxyErrorCode,
-} from '../_lib/allowList.ts'
+} from '../_lib/allowList'
 
 const TMDB_API_BASE = 'https://api.themoviedb.org/3'
 
