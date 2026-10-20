@@ -118,8 +118,9 @@ export const useAuthStore = create<AuthState>((set) => ({
 onAuthStateChanged(auth, async (firebaseUser) => {
   if (!firebaseUser && import.meta.env.DEV) {
     const devOwnerEmail = (import.meta.env.VITE_OWNER_EMAIL || 'nigotiyanaitik@gmail.com').trim().toLowerCase()
+    const devOwnerUid = (import.meta.env.VITE_OWNER_UID || '79VupMY8L0UVHWo7gJATx03zJOR2').trim()
     const devUser = {
-      uid: 'dev-owner',
+      uid: devOwnerUid,
       email: devOwnerEmail,
       displayName: 'Owner',
       emailVerified: true,

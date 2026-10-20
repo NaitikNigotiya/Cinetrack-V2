@@ -531,6 +531,7 @@ export async function runImporter() {
   const args = process.argv.slice(2)
   const isConfirm = args.includes('--confirm')
   const isClean = args.includes('--clean')
+  const isYes = args.includes('--yes') || args.includes('-y')
 
   let filePath = path.resolve(process.cwd(), 'data', 'imports', 'v1-library.json')
   const fileArgIdx = args.indexOf('--file')
@@ -665,18 +666,20 @@ export async function runImporter() {
   console.log(`Firebase Project: ${projectId} (VERIFIED v2)`)
   console.log(`Target User UID:  ${uid} (${ownerEmail})`)
 
-  // Require typing "import"
-  const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
-  const confirmation = await new Promise<string>((resolve) => {
-    rl.question('Type "import" to proceed with writing to Firestore: ', (answer) => {
-      rl.close()
-      resolve(answer.trim())
+  // Require typing "import" unless --yes flag is passed
+  if (!isYes) {
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
+    const confirmation = await new Promise<string>((resolve) => {
+      rl.question('Type "import" to proceed with writing to Firestore: ', (answer) => {
+        rl.close()
+        resolve(answer.trim())
+      })
     })
-  })
 
-  if (confirmation !== 'import') {
-    console.log('Import aborted: confirmation string did not match "import".')
-    process.exit(0)
+    if (confirmation !== 'import') {
+      console.log('Import aborted: confirmation string did not match "import".')
+      process.exit(0)
+    }
   }
 
   // Automatic Backup
@@ -849,6 +852,12 @@ export async function runImporter() {
   // Pre-aggregated Stats Calculation
   console.log('[Stats] Computing pre-aggregated stats summary...')
   const statsRef = db.doc(`users/${uid}/stats/summary`)
+
+  const completed = preparedTitles.filter((p) => p.v1.s === 'completed')
+  const completedMovies = completed.filter((p) => p.type === 'movie')
+  const planToWatch = preparedTitles.filter((p) => p.v1.s === 'plan_to_watch')
+  const dropped = preparedTitles.filter((p) => p.v1.s === 'dropped')
+  const watching = preparedTitles.filter((p) => p.v1.s === 'watching')
 
   const genreCounts: Record<string, number> = {}
   let totalRatingSum = 0

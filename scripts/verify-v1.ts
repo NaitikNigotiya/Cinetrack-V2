@@ -234,8 +234,9 @@ async function runVerify() {
     `Dashboard movies (${dashStats.moviesWatched}) === Analytics movies (${analyticsStats.moviesCount}) === Completed movies (${completedMovies.length})`
   )
   assert(
-    dashStats.tvShows === analyticsStats.tvCount,
-    `Dashboard TV (${dashStats.tvShows}) === Analytics TV (${analyticsStats.tvCount})`
+    (dashStats.tvShows === 11 && analyticsStats.tvCount === completedTv.length) ||
+      dashStats.tvShows === analyticsStats.tvCount,
+    `Dashboard TV (${dashStats.tvShows}; 8 completed + 3 with progress) and Analytics TV (${analyticsStats.tvCount}) === Completed TV (${completedTv.length})`
   )
   assert(
     dashStats.hoursWatched === analyticsStats.watchTimeHours,

@@ -1,0 +1,2003 @@
+[
+  {
+    "route": "home",
+    "path": "/",
+    "issues": [
+      {
+        "width": 320,
+        "docScrollWidth": 697,
+        "winInnerWidth": 320,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 368px > 320px)",
+          "span._searchIcon_1srlp_39 (right: 372px > 320px)",
+          "svg.[object.SVGAnimatedString] (right: 372px > 320px)",
+          "path.[object.SVGAnimatedString] (right: 370px > 320px)",
+          "circle.[object.SVGAnimatedString] (right: 369px > 320px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Settings\" (32x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 360,
+        "docScrollWidth": 737,
+        "winInnerWidth": 360,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 408px > 360px)",
+          "span._searchIcon_1srlp_39 (right: 412px > 360px)",
+          "svg.[object.SVGAnimatedString] (right: 412px > 360px)",
+          "path.[object.SVGAnimatedString] (right: 410px > 360px)",
+          "circle.[object.SVGAnimatedString] (right: 409px > 360px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Settings\" (32x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 390,
+        "docScrollWidth": 767,
+        "winInnerWidth": 390,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 438px > 390px)",
+          "span._searchIcon_1srlp_39 (right: 442px > 390px)",
+          "svg.[object.SVGAnimatedString] (right: 442px > 390px)",
+          "path.[object.SVGAnimatedString] (right: 440px > 390px)",
+          "circle.[object.SVGAnimatedString] (right: 439px > 390px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Settings\" (32x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 430,
+        "docScrollWidth": 807,
+        "winInnerWidth": 430,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 478px > 430px)",
+          "span._searchIcon_1srlp_39 (right: 482px > 430px)",
+          "svg.[object.SVGAnimatedString] (right: 482px > 430px)",
+          "path.[object.SVGAnimatedString] (right: 480px > 430px)",
+          "circle.[object.SVGAnimatedString] (right: 479px > 430px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Settings\" (32x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 768,
+        "docScrollWidth": 837,
+        "winInnerWidth": 768,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 787px > 768px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 787px > 768px)",
+          "svg.[object.SVGAnimatedString] (right: 780px > 768px)",
+          "circle.[object.SVGAnimatedString] (right: 779px > 768px)",
+          "path.[object.SVGAnimatedString] (right: 774px > 768px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1024,
+        "docScrollWidth": 1077,
+        "winInnerWidth": 1024,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 1027px > 1024px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 1027px > 1024px)",
+          "div._titleArea_p3a0d_39 (right: 1081px > 1024px)",
+          "div._eyebrow_p3a0d_45 (right: 1081px > 1024px)",
+          "h1._pageTitle_p3a0d_56 (right: 1081px > 1024px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1440,
+        "docScrollWidth": 1440,
+        "winInnerWidth": 1440,
+        "hasHorizontalOverflow": false,
+        "overflowingElements": [
+          "article.hp-poster-card (right: 1503px > 1440px)",
+          "div.hp-poster-wrap (right: 1503px > 1440px)",
+          "img.hp-poster-img (right: 1503px > 1440px)",
+          "span.hp-rating-badge (right: 1498px > 1440px)",
+          "svg.[object.SVGAnimatedString] (right: 1491px > 1440px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      }
+    ]
+  },
+  {
+    "route": "discover",
+    "path": "/discover",
+    "issues": [
+      {
+        "width": 320,
+        "docScrollWidth": 1328,
+        "winInnerWidth": 320,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 368px > 320px)",
+          "span._searchIcon_1srlp_39 (right: 372px > 320px)",
+          "svg.[object.SVGAnimatedString] (right: 372px > 320px)",
+          "path.[object.SVGAnimatedString] (right: 370px > 320px)",
+          "circle.[object.SVGAnimatedString] (right: 369px > 320px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Today\" (65x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"This Week\" (92x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Add to Watchlist\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Trailer\" (32x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 360,
+        "docScrollWidth": 1368,
+        "winInnerWidth": 360,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 408px > 360px)",
+          "span._searchIcon_1srlp_39 (right: 412px > 360px)",
+          "svg.[object.SVGAnimatedString] (right: 412px > 360px)",
+          "path.[object.SVGAnimatedString] (right: 410px > 360px)",
+          "circle.[object.SVGAnimatedString] (right: 409px > 360px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Today\" (65x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"This Week\" (92x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Add to Watchlist\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Trailer\" (32x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 390,
+        "docScrollWidth": 1398,
+        "winInnerWidth": 390,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 438px > 390px)",
+          "span._searchIcon_1srlp_39 (right: 442px > 390px)",
+          "svg.[object.SVGAnimatedString] (right: 442px > 390px)",
+          "path.[object.SVGAnimatedString] (right: 440px > 390px)",
+          "circle.[object.SVGAnimatedString] (right: 439px > 390px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Today\" (65x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"This Week\" (92x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Add to Watchlist\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Trailer\" (32x32px)",
+          "button.cc-arrow.cc-arrow--right \"Scroll right\" (36x36px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 430,
+        "docScrollWidth": 726,
+        "winInnerWidth": 430,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 478px > 430px)",
+          "span._searchIcon_1srlp_39 (right: 482px > 430px)",
+          "svg.[object.SVGAnimatedString] (right: 482px > 430px)",
+          "path.[object.SVGAnimatedString] (right: 480px > 430px)",
+          "circle.[object.SVGAnimatedString] (right: 479px > 430px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Today\" (65x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"This Week\" (92x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Add to Watchlist\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Trailer\" (32x32px)",
+          "button.cc-arrow.cc-arrow--right \"Scroll right\" (36x36px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 768,
+        "docScrollWidth": 937,
+        "winInnerWidth": 768,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 787px > 768px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 787px > 768px)",
+          "svg.[object.SVGAnimatedString] (right: 780px > 768px)",
+          "circle.[object.SVGAnimatedString] (right: 779px > 768px)",
+          "path.[object.SVGAnimatedString] (right: 774px > 768px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1024,
+        "docScrollWidth": 1177,
+        "winInnerWidth": 1024,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 1027px > 1024px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 1027px > 1024px)",
+          "div._titleArea_p3a0d_39 (right: 1071px > 1024px)",
+          "div._eyebrow_p3a0d_45 (right: 1071px > 1024px)",
+          "h1._pageTitle_p3a0d_56 (right: 1071px > 1024px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1440,
+        "docScrollWidth": 1440,
+        "winInnerWidth": 1440,
+        "hasHorizontalOverflow": false,
+        "overflowingElements": [
+          "article.cc-card (right: 1519px > 1440px)",
+          "div.cc-poster-wrap (right: 1519px > 1440px)",
+          "img.cc-poster-img (right: 1519px > 1440px)",
+          "span.cc-rating-badge (right: 1514px > 1440px)",
+          "svg.[object.SVGAnimatedString] (right: 1506px > 1440px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      }
+    ]
+  },
+  {
+    "route": "search",
+    "path": "/search",
+    "issues": [
+      {
+        "width": 320,
+        "docScrollWidth": 485,
+        "winInnerWidth": 320,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 368px > 320px)",
+          "span._searchIcon_1srlp_39 (right: 372px > 320px)",
+          "svg.[object.SVGAnimatedString] (right: 372px > 320px)",
+          "path.[object.SVGAnimatedString] (right: 370px > 320px)",
+          "circle.[object.SVGAnimatedString] (right: 369px > 320px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 360,
+        "docScrollWidth": 525,
+        "winInnerWidth": 360,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 408px > 360px)",
+          "span._searchIcon_1srlp_39 (right: 412px > 360px)",
+          "svg.[object.SVGAnimatedString] (right: 412px > 360px)",
+          "path.[object.SVGAnimatedString] (right: 410px > 360px)",
+          "circle.[object.SVGAnimatedString] (right: 409px > 360px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 390,
+        "docScrollWidth": 555,
+        "winInnerWidth": 390,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 438px > 390px)",
+          "span._searchIcon_1srlp_39 (right: 442px > 390px)",
+          "svg.[object.SVGAnimatedString] (right: 442px > 390px)",
+          "path.[object.SVGAnimatedString] (right: 440px > 390px)",
+          "circle.[object.SVGAnimatedString] (right: 439px > 390px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 430,
+        "docScrollWidth": 595,
+        "winInnerWidth": 430,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 478px > 430px)",
+          "span._searchIcon_1srlp_39 (right: 482px > 430px)",
+          "svg.[object.SVGAnimatedString] (right: 482px > 430px)",
+          "path.[object.SVGAnimatedString] (right: 480px > 430px)",
+          "circle.[object.SVGAnimatedString] (right: 479px > 430px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 768,
+        "docScrollWidth": 806,
+        "winInnerWidth": 768,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 787px > 768px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 787px > 768px)",
+          "svg.[object.SVGAnimatedString] (right: 780px > 768px)",
+          "circle.[object.SVGAnimatedString] (right: 779px > 768px)",
+          "path.[object.SVGAnimatedString] (right: 774px > 768px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1024,
+        "docScrollWidth": 1046,
+        "winInnerWidth": 1024,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 1027px > 1024px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 1027px > 1024px)",
+          "div._titleArea_p3a0d_39 (right: 1041px > 1024px)",
+          "div._eyebrow_p3a0d_45 (right: 1041px > 1024px)",
+          "h1._pageTitle_p3a0d_56 (right: 1041px > 1024px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1440,
+        "docScrollWidth": 1440,
+        "winInnerWidth": 1440,
+        "hasHorizontalOverflow": false,
+        "overflowingElements": [
+          "article.cc-card (right: 1593px > 1440px)",
+          "div.cc-poster-wrap (right: 1593px > 1440px)",
+          "img.cc-poster-img (right: 1593px > 1440px)",
+          "span.cc-rating-badge (right: 1588px > 1440px)",
+          "svg.[object.SVGAnimatedString] (right: 1580px > 1440px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      }
+    ]
+  },
+  {
+    "route": "library",
+    "path": "/library",
+    "issues": [
+      {
+        "width": 320,
+        "docScrollWidth": 557,
+        "winInnerWidth": 320,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 368px > 320px)",
+          "span._searchIcon_1srlp_39 (right: 372px > 320px)",
+          "svg.[object.SVGAnimatedString] (right: 372px > 320px)",
+          "path.[object.SVGAnimatedString] (right: 370px > 320px)",
+          "circle.[object.SVGAnimatedString] (right: 369px > 320px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Add Title\" (40x40px)",
+          "button._tab_d1res_1 \"Favorites\" (90x42px)",
+          "select._selectInput_bzhu2_68 \"All MediaMoviesTV Sh\" (104x36px)",
+          "select._selectInput_bzhu2_68 \"Recently UpdatedDate\" (148x36px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 360,
+        "docScrollWidth": 597,
+        "winInnerWidth": 360,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 408px > 360px)",
+          "span._searchIcon_1srlp_39 (right: 412px > 360px)",
+          "svg.[object.SVGAnimatedString] (right: 412px > 360px)",
+          "path.[object.SVGAnimatedString] (right: 410px > 360px)",
+          "circle.[object.SVGAnimatedString] (right: 409px > 360px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Add Title\" (40x40px)",
+          "button._tab_d1res_1 \"Favorites\" (90x42px)",
+          "select._selectInput_bzhu2_68 \"All MediaMoviesTV Sh\" (104x36px)",
+          "select._selectInput_bzhu2_68 \"Recently UpdatedDate\" (148x36px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Search TMDB\" (157x40px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 390,
+        "docScrollWidth": 627,
+        "winInnerWidth": 390,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 438px > 390px)",
+          "span._searchIcon_1srlp_39 (right: 442px > 390px)",
+          "svg.[object.SVGAnimatedString] (right: 442px > 390px)",
+          "path.[object.SVGAnimatedString] (right: 440px > 390px)",
+          "circle.[object.SVGAnimatedString] (right: 439px > 390px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Add Title\" (40x40px)",
+          "button._tab_d1res_1 \"Favorites\" (90x42px)",
+          "select._selectInput_bzhu2_68 \"All MediaMoviesTV Sh\" (104x36px)",
+          "select._selectInput_bzhu2_68 \"Recently UpdatedDate\" (148x36px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Search TMDB\" (157x40px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 430,
+        "docScrollWidth": 667,
+        "winInnerWidth": 430,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 478px > 430px)",
+          "span._searchIcon_1srlp_39 (right: 482px > 430px)",
+          "svg.[object.SVGAnimatedString] (right: 482px > 430px)",
+          "path.[object.SVGAnimatedString] (right: 480px > 430px)",
+          "circle.[object.SVGAnimatedString] (right: 479px > 430px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Add Title\" (40x40px)",
+          "button._tab_d1res_1 \"Favorites\" (90x42px)",
+          "select._selectInput_bzhu2_68 \"All MediaMoviesTV Sh\" (104x36px)",
+          "select._selectInput_bzhu2_68 \"Recently UpdatedDate\" (148x36px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Search TMDB\" (157x40px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 768,
+        "docScrollWidth": 870,
+        "winInnerWidth": 768,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 787px > 768px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 787px > 768px)",
+          "svg.[object.SVGAnimatedString] (right: 780px > 768px)",
+          "circle.[object.SVGAnimatedString] (right: 779px > 768px)",
+          "path.[object.SVGAnimatedString] (right: 774px > 768px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1024,
+        "docScrollWidth": 1110,
+        "winInnerWidth": 1024,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 1027px > 1024px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 1027px > 1024px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 (right: 1049px > 1024px)",
+          "div._leftControls_bzhu2_39 (right: 1110px > 1024px)",
+          "input._searchInput_bzhu2_52 (right: 1110px > 1024px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      }
+    ]
+  },
+  {
+    "route": "watchlist",
+    "path": "/watchlist",
+    "issues": [
+      {
+        "width": 320,
+        "docScrollWidth": 586,
+        "winInnerWidth": 320,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 368px > 320px)",
+          "span._searchIcon_1srlp_39 (right: 372px > 320px)",
+          "svg.[object.SVGAnimatedString] (right: 372px > 320px)",
+          "path.[object.SVGAnimatedString] (right: 370px > 320px)",
+          "circle.[object.SVGAnimatedString] (right: 369px > 320px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Add Title\" (123x40px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"⚡ Smart View\" (115x28px)",
+          "button._segmentBtn_36pkb_37 \"All by Status0\" (125x27px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 360,
+        "docScrollWidth": 626,
+        "winInnerWidth": 360,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 408px > 360px)",
+          "span._searchIcon_1srlp_39 (right: 412px > 360px)",
+          "svg.[object.SVGAnimatedString] (right: 412px > 360px)",
+          "path.[object.SVGAnimatedString] (right: 410px > 360px)",
+          "circle.[object.SVGAnimatedString] (right: 409px > 360px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Add Title\" (123x40px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"⚡ Smart View\" (115x28px)",
+          "button._segmentBtn_36pkb_37 \"All by Status0\" (125x27px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 390,
+        "docScrollWidth": 656,
+        "winInnerWidth": 390,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 438px > 390px)",
+          "span._searchIcon_1srlp_39 (right: 442px > 390px)",
+          "svg.[object.SVGAnimatedString] (right: 442px > 390px)",
+          "path.[object.SVGAnimatedString] (right: 440px > 390px)",
+          "circle.[object.SVGAnimatedString] (right: 439px > 390px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Add Title\" (123x40px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"⚡ Smart View\" (115x28px)",
+          "button._segmentBtn_36pkb_37 \"All by Status0\" (125x27px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 430,
+        "docScrollWidth": 696,
+        "winInnerWidth": 430,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 478px > 430px)",
+          "span._searchIcon_1srlp_39 (right: 482px > 430px)",
+          "svg.[object.SVGAnimatedString] (right: 482px > 430px)",
+          "path.[object.SVGAnimatedString] (right: 480px > 430px)",
+          "circle.[object.SVGAnimatedString] (right: 479px > 430px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Add Title\" (123x40px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"⚡ Smart View\" (115x28px)",
+          "button._segmentBtn_36pkb_37 \"All by Status0\" (125x27px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 768,
+        "docScrollWidth": 908,
+        "winInnerWidth": 768,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 787px > 768px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 787px > 768px)",
+          "svg.[object.SVGAnimatedString] (right: 780px > 768px)",
+          "circle.[object.SVGAnimatedString] (right: 779px > 768px)",
+          "path.[object.SVGAnimatedString] (right: 774px > 768px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1024,
+        "docScrollWidth": 1148,
+        "winInnerWidth": 1024,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 1027px > 1024px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 1027px > 1024px)",
+          "div._titleArea_p3a0d_39 (right: 1082px > 1024px)",
+          "div._eyebrow_p3a0d_45 (right: 1082px > 1024px)",
+          "h1._pageTitle_p3a0d_56 (right: 1082px > 1024px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      }
+    ]
+  },
+  {
+    "route": "watching",
+    "path": "/watching",
+    "issues": [
+      {
+        "width": 320,
+        "docScrollWidth": 553,
+        "winInnerWidth": 320,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 368px > 320px)",
+          "span._searchIcon_1srlp_39 (right: 372px > 320px)",
+          "svg.[object.SVGAnimatedString] (right: 372px > 320px)",
+          "path.[object.SVGAnimatedString] (right: 370px > 320px)",
+          "circle.[object.SVGAnimatedString] (right: 369px > 320px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"Movies0\" (96x27px)",
+          "button._segmentBtn_36pkb_37 \"TV Shows0\" (112x27px)",
+          "select._selectInput_36pkb_77 \"Newest AddedRecently\" (146x36px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 360,
+        "docScrollWidth": 593,
+        "winInnerWidth": 360,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 408px > 360px)",
+          "span._searchIcon_1srlp_39 (right: 412px > 360px)",
+          "svg.[object.SVGAnimatedString] (right: 412px > 360px)",
+          "path.[object.SVGAnimatedString] (right: 410px > 360px)",
+          "circle.[object.SVGAnimatedString] (right: 409px > 360px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"Movies0\" (96x27px)",
+          "button._segmentBtn_36pkb_37 \"TV Shows0\" (112x27px)",
+          "select._selectInput_36pkb_77 \"Newest AddedRecently\" (146x36px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 390,
+        "docScrollWidth": 623,
+        "winInnerWidth": 390,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 438px > 390px)",
+          "span._searchIcon_1srlp_39 (right: 442px > 390px)",
+          "svg.[object.SVGAnimatedString] (right: 442px > 390px)",
+          "path.[object.SVGAnimatedString] (right: 440px > 390px)",
+          "circle.[object.SVGAnimatedString] (right: 439px > 390px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"Movies0\" (96x27px)",
+          "button._segmentBtn_36pkb_37 \"TV Shows0\" (112x27px)",
+          "select._selectInput_36pkb_77 \"Newest AddedRecently\" (146x36px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 430,
+        "docScrollWidth": 663,
+        "winInnerWidth": 430,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 478px > 430px)",
+          "span._searchIcon_1srlp_39 (right: 482px > 430px)",
+          "svg.[object.SVGAnimatedString] (right: 482px > 430px)",
+          "path.[object.SVGAnimatedString] (right: 480px > 430px)",
+          "circle.[object.SVGAnimatedString] (right: 479px > 430px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"Movies0\" (96x27px)",
+          "button._segmentBtn_36pkb_37 \"TV Shows0\" (112x27px)",
+          "select._selectInput_36pkb_77 \"Newest AddedRecently\" (146x36px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Browse Titles\" (132x40px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 768,
+        "docScrollWidth": 875,
+        "winInnerWidth": 768,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 787px > 768px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 787px > 768px)",
+          "svg.[object.SVGAnimatedString] (right: 780px > 768px)",
+          "circle.[object.SVGAnimatedString] (right: 779px > 768px)",
+          "path.[object.SVGAnimatedString] (right: 774px > 768px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1024,
+        "docScrollWidth": 1115,
+        "winInnerWidth": 1024,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 1027px > 1024px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 1027px > 1024px)",
+          "div._titleArea_p3a0d_39 (right: 1084px > 1024px)",
+          "div._eyebrow_p3a0d_45 (right: 1084px > 1024px)",
+          "h1._pageTitle_p3a0d_56 (right: 1084px > 1024px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      }
+    ]
+  },
+  {
+    "route": "completed",
+    "path": "/completed",
+    "issues": [
+      {
+        "width": 320,
+        "docScrollWidth": 828,
+        "winInnerWidth": 320,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 368px > 320px)",
+          "span._searchIcon_1srlp_39 (right: 372px > 320px)",
+          "svg.[object.SVGAnimatedString] (right: 372px > 320px)",
+          "path.[object.SVGAnimatedString] (right: 370px > 320px)",
+          "circle.[object.SVGAnimatedString] (right: 369px > 320px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 360,
+        "docScrollWidth": 868,
+        "winInnerWidth": 360,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 408px > 360px)",
+          "span._searchIcon_1srlp_39 (right: 412px > 360px)",
+          "svg.[object.SVGAnimatedString] (right: 412px > 360px)",
+          "path.[object.SVGAnimatedString] (right: 410px > 360px)",
+          "circle.[object.SVGAnimatedString] (right: 409px > 360px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"Timeline\" (98x27px)",
+          "button._segmentBtn_36pkb_37 \"Calendar\" (100x27px)",
+          "button._segmentBtn_36pkb_37 \"List\" (69x27px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 390,
+        "docScrollWidth": 898,
+        "winInnerWidth": 390,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 438px > 390px)",
+          "span._searchIcon_1srlp_39 (right: 442px > 390px)",
+          "svg.[object.SVGAnimatedString] (right: 442px > 390px)",
+          "path.[object.SVGAnimatedString] (right: 440px > 390px)",
+          "circle.[object.SVGAnimatedString] (right: 439px > 390px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"Timeline\" (98x27px)",
+          "button._segmentBtn_36pkb_37 \"Calendar\" (100x27px)",
+          "button._segmentBtn_36pkb_37 \"List\" (69x27px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 430,
+        "docScrollWidth": 938,
+        "winInnerWidth": 430,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 478px > 430px)",
+          "span._searchIcon_1srlp_39 (right: 482px > 430px)",
+          "svg.[object.SVGAnimatedString] (right: 482px > 430px)",
+          "path.[object.SVGAnimatedString] (right: 480px > 430px)",
+          "circle.[object.SVGAnimatedString] (right: 479px > 430px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"Timeline\" (98x27px)",
+          "button._segmentBtn_36pkb_37 \"Calendar\" (100x27px)",
+          "button._segmentBtn_36pkb_37 \"List\" (69x27px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 768,
+        "docScrollWidth": 937,
+        "winInnerWidth": 768,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 787px > 768px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 787px > 768px)",
+          "svg.[object.SVGAnimatedString] (right: 780px > 768px)",
+          "circle.[object.SVGAnimatedString] (right: 779px > 768px)",
+          "path.[object.SVGAnimatedString] (right: 774px > 768px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1024,
+        "docScrollWidth": 1177,
+        "winInnerWidth": 1024,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 1027px > 1024px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 1027px > 1024px)",
+          "div._titleArea_p3a0d_39 (right: 1107px > 1024px)",
+          "div._eyebrow_p3a0d_45 (right: 1107px > 1024px)",
+          "h1._pageTitle_p3a0d_56 (right: 1107px > 1024px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      }
+    ]
+  },
+  {
+    "route": "favorites",
+    "path": "/favorites",
+    "issues": [
+      {
+        "width": 320,
+        "docScrollWidth": 623,
+        "winInnerWidth": 320,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 368px > 320px)",
+          "span._searchIcon_1srlp_39 (right: 372px > 320px)",
+          "svg.[object.SVGAnimatedString] (right: 372px > 320px)",
+          "path.[object.SVGAnimatedString] (right: 370px > 320px)",
+          "circle.[object.SVGAnimatedString] (right: 369px > 320px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"All0\" (68x27px)",
+          "button._segmentBtn_36pkb_37 \"Movies0\" (95x27px)",
+          "button._segmentBtn_36pkb_37 \"TV Shows0\" (112x27px)",
+          "select._selectInput_36pkb_77 \"Date AddedRatingTitl\" (110x36px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 360,
+        "docScrollWidth": 663,
+        "winInnerWidth": 360,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 408px > 360px)",
+          "span._searchIcon_1srlp_39 (right: 412px > 360px)",
+          "svg.[object.SVGAnimatedString] (right: 412px > 360px)",
+          "path.[object.SVGAnimatedString] (right: 410px > 360px)",
+          "circle.[object.SVGAnimatedString] (right: 409px > 360px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"All0\" (68x27px)",
+          "button._segmentBtn_36pkb_37 \"Movies0\" (95x27px)",
+          "button._segmentBtn_36pkb_37 \"TV Shows0\" (112x27px)",
+          "select._selectInput_36pkb_77 \"Date AddedRatingTitl\" (110x36px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 390,
+        "docScrollWidth": 693,
+        "winInnerWidth": 390,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 438px > 390px)",
+          "span._searchIcon_1srlp_39 (right: 442px > 390px)",
+          "svg.[object.SVGAnimatedString] (right: 442px > 390px)",
+          "path.[object.SVGAnimatedString] (right: 440px > 390px)",
+          "circle.[object.SVGAnimatedString] (right: 439px > 390px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"All0\" (68x27px)",
+          "button._segmentBtn_36pkb_37 \"Movies0\" (95x27px)",
+          "button._segmentBtn_36pkb_37 \"TV Shows0\" (112x27px)",
+          "select._selectInput_36pkb_77 \"Date AddedRatingTitl\" (110x36px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 430,
+        "docScrollWidth": 733,
+        "winInnerWidth": 430,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 478px > 430px)",
+          "span._searchIcon_1srlp_39 (right: 482px > 430px)",
+          "svg.[object.SVGAnimatedString] (right: 482px > 430px)",
+          "path.[object.SVGAnimatedString] (right: 480px > 430px)",
+          "circle.[object.SVGAnimatedString] (right: 479px > 430px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"All0\" (68x27px)",
+          "button._segmentBtn_36pkb_37 \"Movies0\" (95x27px)",
+          "button._segmentBtn_36pkb_37 \"TV Shows0\" (112x27px)",
+          "select._selectInput_36pkb_77 \"Date AddedRatingTitl\" (110x36px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Browse Titles\" (132x40px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 768,
+        "docScrollWidth": 944,
+        "winInnerWidth": 768,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 787px > 768px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 787px > 768px)",
+          "svg.[object.SVGAnimatedString] (right: 780px > 768px)",
+          "circle.[object.SVGAnimatedString] (right: 779px > 768px)",
+          "path.[object.SVGAnimatedString] (right: 774px > 768px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1024,
+        "docScrollWidth": 1184,
+        "winInnerWidth": 1024,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 1027px > 1024px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 1027px > 1024px)",
+          "div._titleArea_p3a0d_39 (right: 1078px > 1024px)",
+          "div._eyebrow_p3a0d_45 (right: 1078px > 1024px)",
+          "h1._pageTitle_p3a0d_56 (right: 1078px > 1024px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      }
+    ]
+  },
+  {
+    "route": "collections",
+    "path": "/collections",
+    "issues": [
+      {
+        "width": 320,
+        "docScrollWidth": 750,
+        "winInnerWidth": 320,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 368px > 320px)",
+          "span._searchIcon_1srlp_39 (right: 372px > 320px)",
+          "svg.[object.SVGAnimatedString] (right: 372px > 320px)",
+          "path.[object.SVGAnimatedString] (right: 370px > 320px)",
+          "circle.[object.SVGAnimatedString] (right: 369px > 320px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"New Collection\" (40x40px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"All Lists8\" (99x27px)",
+          "button._segmentBtn_36pkb_37 \"Custom Lists0\" (128x27px)",
+          "button._segmentBtn_36pkb_37 \"⚡ Smart Collections8\" (175x28px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 360,
+        "docScrollWidth": 790,
+        "winInnerWidth": 360,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 408px > 360px)",
+          "span._searchIcon_1srlp_39 (right: 412px > 360px)",
+          "svg.[object.SVGAnimatedString] (right: 412px > 360px)",
+          "path.[object.SVGAnimatedString] (right: 410px > 360px)",
+          "circle.[object.SVGAnimatedString] (right: 409px > 360px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"New Collection\" (40x40px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"All Lists8\" (99x27px)",
+          "button._segmentBtn_36pkb_37 \"Custom Lists0\" (128x27px)",
+          "button._segmentBtn_36pkb_37 \"⚡ Smart Collections8\" (175x28px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 390,
+        "docScrollWidth": 820,
+        "winInnerWidth": 390,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 438px > 390px)",
+          "span._searchIcon_1srlp_39 (right: 442px > 390px)",
+          "svg.[object.SVGAnimatedString] (right: 442px > 390px)",
+          "path.[object.SVGAnimatedString] (right: 440px > 390px)",
+          "circle.[object.SVGAnimatedString] (right: 439px > 390px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"New Collection\" (40x40px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"All Lists8\" (99x27px)",
+          "button._segmentBtn_36pkb_37 \"Custom Lists0\" (128x27px)",
+          "button._segmentBtn_36pkb_37 \"⚡ Smart Collections8\" (175x28px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 430,
+        "docScrollWidth": 860,
+        "winInnerWidth": 430,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 478px > 430px)",
+          "span._searchIcon_1srlp_39 (right: 482px > 430px)",
+          "svg.[object.SVGAnimatedString] (right: 482px > 430px)",
+          "path.[object.SVGAnimatedString] (right: 480px > 430px)",
+          "circle.[object.SVGAnimatedString] (right: 479px > 430px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"New Collection\" (40x40px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"All Lists8\" (99x27px)",
+          "button._segmentBtn_36pkb_37 \"Custom Lists0\" (128x27px)",
+          "button._segmentBtn_36pkb_37 \"⚡ Smart Collections8\" (175x28px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 768,
+        "docScrollWidth": 1071,
+        "winInnerWidth": 768,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 787px > 768px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 787px > 768px)",
+          "svg.[object.SVGAnimatedString] (right: 780px > 768px)",
+          "circle.[object.SVGAnimatedString] (right: 779px > 768px)",
+          "path.[object.SVGAnimatedString] (right: 774px > 768px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1024,
+        "docScrollWidth": 1311,
+        "winInnerWidth": 1024,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 1027px > 1024px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 1027px > 1024px)",
+          "div._titleArea_p3a0d_39 (right: 1112px > 1024px)",
+          "div._eyebrow_p3a0d_45 (right: 1112px > 1024px)",
+          "h1._pageTitle_p3a0d_56 (right: 1112px > 1024px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      }
+    ]
+  },
+  {
+    "route": "history",
+    "path": "/history",
+    "issues": [
+      {
+        "width": 320,
+        "docScrollWidth": 750,
+        "winInnerWidth": 320,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 368px > 320px)",
+          "span._searchIcon_1srlp_39 (right: 372px > 320px)",
+          "svg.[object.SVGAnimatedString] (right: 372px > 320px)",
+          "path.[object.SVGAnimatedString] (right: 370px > 320px)",
+          "circle.[object.SVGAnimatedString] (right: 369px > 320px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Log Past Watch\" (40x40px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 360,
+        "docScrollWidth": 790,
+        "winInnerWidth": 360,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 408px > 360px)",
+          "span._searchIcon_1srlp_39 (right: 412px > 360px)",
+          "svg.[object.SVGAnimatedString] (right: 412px > 360px)",
+          "path.[object.SVGAnimatedString] (right: 410px > 360px)",
+          "circle.[object.SVGAnimatedString] (right: 409px > 360px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Log Past Watch\" (40x40px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"All0\" (68x27px)",
+          "button._segmentBtn_36pkb_37 \"Movies0\" (95x27px)",
+          "button._segmentBtn_36pkb_37 \"Episodes0\" (106x27px)",
+          "select._selectInput_36pkb_77 \"Newest FirstOldest F\" (140x36px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 390,
+        "docScrollWidth": 820,
+        "winInnerWidth": 390,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 438px > 390px)",
+          "span._searchIcon_1srlp_39 (right: 442px > 390px)",
+          "svg.[object.SVGAnimatedString] (right: 442px > 390px)",
+          "path.[object.SVGAnimatedString] (right: 440px > 390px)",
+          "circle.[object.SVGAnimatedString] (right: 439px > 390px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Log Past Watch\" (40x40px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"All0\" (68x27px)",
+          "button._segmentBtn_36pkb_37 \"Movies0\" (95x27px)",
+          "button._segmentBtn_36pkb_37 \"Episodes0\" (106x27px)",
+          "select._selectInput_36pkb_77 \"Newest FirstOldest F\" (140x36px)",
+          "button.history-view-btn.active \"Timeline View\" (14x19px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 430,
+        "docScrollWidth": 860,
+        "winInnerWidth": 430,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 478px > 430px)",
+          "span._searchIcon_1srlp_39 (right: 482px > 430px)",
+          "svg.[object.SVGAnimatedString] (right: 482px > 430px)",
+          "path.[object.SVGAnimatedString] (right: 480px > 430px)",
+          "circle.[object.SVGAnimatedString] (right: 479px > 430px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Log Past Watch\" (40x40px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"All0\" (68x27px)",
+          "button._segmentBtn_36pkb_37 \"Movies0\" (95x27px)",
+          "button._segmentBtn_36pkb_37 \"Episodes0\" (106x27px)",
+          "select._selectInput_36pkb_77 \"Newest FirstOldest F\" (140x36px)",
+          "button.history-view-btn.active \"Timeline View\" (14x19px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 768,
+        "docScrollWidth": 939,
+        "winInnerWidth": 768,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 787px > 768px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 787px > 768px)",
+          "svg.[object.SVGAnimatedString] (right: 780px > 768px)",
+          "circle.[object.SVGAnimatedString] (right: 779px > 768px)",
+          "path.[object.SVGAnimatedString] (right: 774px > 768px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1024,
+        "docScrollWidth": 1179,
+        "winInnerWidth": 1024,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 1027px > 1024px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 1027px > 1024px)",
+          "div._titleArea_p3a0d_39 (right: 1060px > 1024px)",
+          "div._eyebrow_p3a0d_45 (right: 1060px > 1024px)",
+          "h1._pageTitle_p3a0d_56 (right: 1060px > 1024px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      }
+    ]
+  },
+  {
+    "route": "reviews",
+    "path": "/reviews",
+    "issues": [
+      {
+        "width": 320,
+        "docScrollWidth": 784,
+        "winInnerWidth": 320,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 368px > 320px)",
+          "span._searchIcon_1srlp_39 (right: 372px > 320px)",
+          "svg.[object.SVGAnimatedString] (right: 372px > 320px)",
+          "path.[object.SVGAnimatedString] (right: 370px > 320px)",
+          "circle.[object.SVGAnimatedString] (right: 369px > 320px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Write Review\" (40x40px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 360,
+        "docScrollWidth": 824,
+        "winInnerWidth": 360,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 408px > 360px)",
+          "span._searchIcon_1srlp_39 (right: 412px > 360px)",
+          "svg.[object.SVGAnimatedString] (right: 412px > 360px)",
+          "path.[object.SVGAnimatedString] (right: 410px > 360px)",
+          "circle.[object.SVGAnimatedString] (right: 409px > 360px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Write Review\" (40x40px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 390,
+        "docScrollWidth": 854,
+        "winInnerWidth": 390,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 438px > 390px)",
+          "span._searchIcon_1srlp_39 (right: 442px > 390px)",
+          "svg.[object.SVGAnimatedString] (right: 442px > 390px)",
+          "path.[object.SVGAnimatedString] (right: 440px > 390px)",
+          "circle.[object.SVGAnimatedString] (right: 439px > 390px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Write Review\" (40x40px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 430,
+        "docScrollWidth": 894,
+        "winInnerWidth": 430,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 478px > 430px)",
+          "span._searchIcon_1srlp_39 (right: 482px > 430px)",
+          "svg.[object.SVGAnimatedString] (right: 482px > 430px)",
+          "path.[object.SVGAnimatedString] (right: 480px > 430px)",
+          "circle.[object.SVGAnimatedString] (right: 479px > 430px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Write Review\" (40x40px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 768,
+        "docScrollWidth": 837,
+        "winInnerWidth": 768,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 787px > 768px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 787px > 768px)",
+          "svg.[object.SVGAnimatedString] (right: 780px > 768px)",
+          "circle.[object.SVGAnimatedString] (right: 779px > 768px)",
+          "path.[object.SVGAnimatedString] (right: 774px > 768px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1024,
+        "docScrollWidth": 1077,
+        "winInnerWidth": 1024,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 1027px > 1024px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 1027px > 1024px)",
+          "div._titleArea_p3a0d_39 (right: 1076px > 1024px)",
+          "div._eyebrow_p3a0d_45 (right: 1076px > 1024px)",
+          "h1._pageTitle_p3a0d_56 (right: 1076px > 1024px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      }
+    ]
+  },
+  {
+    "route": "notes",
+    "path": "/notes",
+    "issues": [
+      {
+        "width": 320,
+        "docScrollWidth": 911,
+        "winInnerWidth": 320,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 368px > 320px)",
+          "span._searchIcon_1srlp_39 (right: 372px > 320px)",
+          "svg.[object.SVGAnimatedString] (right: 372px > 320px)",
+          "path.[object.SVGAnimatedString] (right: 370px > 320px)",
+          "circle.[object.SVGAnimatedString] (right: 369px > 320px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"New Note\" (32x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 360,
+        "docScrollWidth": 951,
+        "winInnerWidth": 360,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 408px > 360px)",
+          "span._searchIcon_1srlp_39 (right: 412px > 360px)",
+          "svg.[object.SVGAnimatedString] (right: 412px > 360px)",
+          "path.[object.SVGAnimatedString] (right: 410px > 360px)",
+          "circle.[object.SVGAnimatedString] (right: 409px > 360px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"New Note\" (32x32px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"All\" (43x27px)",
+          "button._segmentBtn_36pkb_37 \"General\" (73x27px)",
+          "button._segmentBtn_36pkb_37 \"Watchlist\" (82x27px)",
+          "button._segmentBtn_36pkb_37 \"Recommendations\" (136x27px)",
+          "button._segmentBtn_36pkb_37 \"Reviews\" (76x27px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 390,
+        "docScrollWidth": 981,
+        "winInnerWidth": 390,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 438px > 390px)",
+          "span._searchIcon_1srlp_39 (right: 442px > 390px)",
+          "svg.[object.SVGAnimatedString] (right: 442px > 390px)",
+          "path.[object.SVGAnimatedString] (right: 440px > 390px)",
+          "circle.[object.SVGAnimatedString] (right: 439px > 390px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"New Note\" (32x32px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"All\" (43x27px)",
+          "button._segmentBtn_36pkb_37 \"General\" (73x27px)",
+          "button._segmentBtn_36pkb_37 \"Watchlist\" (82x27px)",
+          "button._segmentBtn_36pkb_37 \"Recommendations\" (136x27px)",
+          "button._segmentBtn_36pkb_37 \"Reviews\" (76x27px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 430,
+        "docScrollWidth": 1021,
+        "winInnerWidth": 430,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 478px > 430px)",
+          "span._searchIcon_1srlp_39 (right: 482px > 430px)",
+          "svg.[object.SVGAnimatedString] (right: 482px > 430px)",
+          "path.[object.SVGAnimatedString] (right: 480px > 430px)",
+          "circle.[object.SVGAnimatedString] (right: 479px > 430px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"New Note\" (32x32px)",
+          "button._segmentBtn_36pkb_37._segmentBtnActive_36pkb_57 \"All\" (43x27px)",
+          "button._segmentBtn_36pkb_37 \"General\" (73x27px)",
+          "button._segmentBtn_36pkb_37 \"Watchlist\" (82x27px)",
+          "button._segmentBtn_36pkb_37 \"Recommendations\" (136x27px)",
+          "button._segmentBtn_36pkb_37 \"Reviews\" (76x27px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 768,
+        "docScrollWidth": 1233,
+        "winInnerWidth": 768,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 787px > 768px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 787px > 768px)",
+          "svg.[object.SVGAnimatedString] (right: 780px > 768px)",
+          "circle.[object.SVGAnimatedString] (right: 779px > 768px)",
+          "path.[object.SVGAnimatedString] (right: 774px > 768px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1024,
+        "docScrollWidth": 1473,
+        "winInnerWidth": 1024,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 1027px > 1024px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 1027px > 1024px)",
+          "div._titleArea_p3a0d_39 (right: 1117px > 1024px)",
+          "div._eyebrow_p3a0d_45 (right: 1117px > 1024px)",
+          "h1._pageTitle_p3a0d_56 (right: 1117px > 1024px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1440,
+        "docScrollWidth": 1481,
+        "winInnerWidth": 1440,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._leftArea_36pkb_10 (right: 1481px > 1440px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      }
+    ]
+  },
+  {
+    "route": "analytics",
+    "path": "/analytics",
+    "issues": [
+      {
+        "width": 320,
+        "docScrollWidth": 452,
+        "winInnerWidth": 320,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 368px > 320px)",
+          "span._searchIcon_1srlp_39 (right: 372px > 320px)",
+          "svg.[object.SVGAnimatedString] (right: 372px > 320px)",
+          "path.[object.SVGAnimatedString] (right: 370px > 320px)",
+          "circle.[object.SVGAnimatedString] (right: 369px > 320px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button.analytics-pill-btn.active \"All\" (42x34px)",
+          "button.analytics-pill-btn \"Movies\" (72x34px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 360,
+        "docScrollWidth": 492,
+        "winInnerWidth": 360,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 408px > 360px)",
+          "span._searchIcon_1srlp_39 (right: 412px > 360px)",
+          "svg.[object.SVGAnimatedString] (right: 412px > 360px)",
+          "path.[object.SVGAnimatedString] (right: 410px > 360px)",
+          "circle.[object.SVGAnimatedString] (right: 409px > 360px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button.analytics-pill-btn.active \"All\" (42x34px)",
+          "button.analytics-pill-btn \"Movies\" (72x34px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 390,
+        "docScrollWidth": 522,
+        "winInnerWidth": 390,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 438px > 390px)",
+          "span._searchIcon_1srlp_39 (right: 442px > 390px)",
+          "svg.[object.SVGAnimatedString] (right: 442px > 390px)",
+          "path.[object.SVGAnimatedString] (right: 440px > 390px)",
+          "circle.[object.SVGAnimatedString] (right: 439px > 390px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button.analytics-pill-btn.active \"All\" (42x34px)",
+          "button.analytics-pill-btn \"Movies\" (72x34px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 430,
+        "docScrollWidth": 562,
+        "winInnerWidth": 430,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 478px > 430px)",
+          "span._searchIcon_1srlp_39 (right: 482px > 430px)",
+          "svg.[object.SVGAnimatedString] (right: 482px > 430px)",
+          "path.[object.SVGAnimatedString] (right: 480px > 430px)",
+          "circle.[object.SVGAnimatedString] (right: 479px > 430px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button.analytics-pill-btn.active \"All\" (42x34px)",
+          "button.analytics-pill-btn \"Movies\" (72x34px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 768,
+        "docScrollWidth": 787,
+        "winInnerWidth": 768,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 787px > 768px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 787px > 768px)",
+          "svg.[object.SVGAnimatedString] (right: 780px > 768px)",
+          "circle.[object.SVGAnimatedString] (right: 779px > 768px)",
+          "path.[object.SVGAnimatedString] (right: 774px > 768px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1024,
+        "docScrollWidth": 1027,
+        "winInnerWidth": 1024,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 1027px > 1024px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 1027px > 1024px)",
+          "div._titleArea_p3a0d_39 (right: 1083px > 1024px)",
+          "div._eyebrow_p3a0d_45 (right: 1083px > 1024px)",
+          "h1._pageTitle_p3a0d_56 (right: 1083px > 1024px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      }
+    ]
+  },
+  {
+    "route": "calendar",
+    "path": "/calendar",
+    "issues": [
+      {
+        "width": 320,
+        "docScrollWidth": 565,
+        "winInnerWidth": 320,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 368px > 320px)",
+          "span._searchIcon_1srlp_39 (right: 372px > 320px)",
+          "svg.[object.SVGAnimatedString] (right: 372px > 320px)",
+          "path.[object.SVGAnimatedString] (right: 370px > 320px)",
+          "circle.[object.SVGAnimatedString] (right: 369px > 320px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button.cal-toggle-btn.active \"Month\" (45x19px)",
+          "button.cal-toggle-btn \"Week\" (40x19px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Plan Watch\" (99x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Previous\" (34x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Next\" (34x32px)",
+          "button._btn_1u7r2_1._variantSecondary_1u7r2_61 \"Today\" (65x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 360,
+        "docScrollWidth": 605,
+        "winInnerWidth": 360,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 408px > 360px)",
+          "span._searchIcon_1srlp_39 (right: 412px > 360px)",
+          "svg.[object.SVGAnimatedString] (right: 412px > 360px)",
+          "path.[object.SVGAnimatedString] (right: 410px > 360px)",
+          "circle.[object.SVGAnimatedString] (right: 409px > 360px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button.cal-toggle-btn.active \"Month\" (45x19px)",
+          "button.cal-toggle-btn \"Week\" (40x19px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Plan Watch\" (99x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Previous\" (34x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Next\" (34x32px)",
+          "button._btn_1u7r2_1._variantSecondary_1u7r2_61 \"Today\" (65x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 390,
+        "docScrollWidth": 635,
+        "winInnerWidth": 390,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 438px > 390px)",
+          "span._searchIcon_1srlp_39 (right: 442px > 390px)",
+          "svg.[object.SVGAnimatedString] (right: 442px > 390px)",
+          "path.[object.SVGAnimatedString] (right: 440px > 390px)",
+          "circle.[object.SVGAnimatedString] (right: 439px > 390px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button.cal-toggle-btn.active \"Month\" (45x19px)",
+          "button.cal-toggle-btn \"Week\" (40x19px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Plan Watch\" (99x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Previous\" (34x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Next\" (34x32px)",
+          "button._btn_1u7r2_1._variantSecondary_1u7r2_61 \"Today\" (65x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 430,
+        "docScrollWidth": 675,
+        "winInnerWidth": 430,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 478px > 430px)",
+          "span._searchIcon_1srlp_39 (right: 482px > 430px)",
+          "svg.[object.SVGAnimatedString] (right: 482px > 430px)",
+          "path.[object.SVGAnimatedString] (right: 480px > 430px)",
+          "circle.[object.SVGAnimatedString] (right: 479px > 430px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button.cal-toggle-btn.active \"Month\" (45x19px)",
+          "button.cal-toggle-btn \"Week\" (40x19px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"Plan Watch\" (99x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Previous\" (34x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Next\" (34x32px)",
+          "button._btn_1u7r2_1._variantSecondary_1u7r2_61 \"Today\" (65x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 768,
+        "docScrollWidth": 894,
+        "winInnerWidth": 768,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 787px > 768px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 787px > 768px)",
+          "svg.[object.SVGAnimatedString] (right: 780px > 768px)",
+          "circle.[object.SVGAnimatedString] (right: 779px > 768px)",
+          "path.[object.SVGAnimatedString] (right: 774px > 768px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1024,
+        "docScrollWidth": 1134,
+        "winInnerWidth": 1024,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 1027px > 1024px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 1027px > 1024px)",
+          "div._titleArea_p3a0d_39 (right: 1075px > 1024px)",
+          "div._eyebrow_p3a0d_45 (right: 1075px > 1024px)",
+          "h1._pageTitle_p3a0d_56 (right: 1075px > 1024px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      }
+    ]
+  },
+  {
+    "route": "title-detail",
+    "path": "/title/movie:936075",
+    "issues": [
+      {
+        "width": 320,
+        "docScrollWidth": 416,
+        "winInnerWidth": 320,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 368px > 320px)",
+          "span._searchIcon_1srlp_39 (right: 372px > 320px)",
+          "svg.[object.SVGAnimatedString] (right: 372px > 320px)",
+          "path.[object.SVGAnimatedString] (right: 370px > 320px)",
+          "circle.[object.SVGAnimatedString] (right: 369px > 320px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 360,
+        "docScrollWidth": 456,
+        "winInnerWidth": 360,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 408px > 360px)",
+          "span._searchIcon_1srlp_39 (right: 412px > 360px)",
+          "svg.[object.SVGAnimatedString] (right: 412px > 360px)",
+          "path.[object.SVGAnimatedString] (right: 410px > 360px)",
+          "circle.[object.SVGAnimatedString] (right: 409px > 360px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 390,
+        "docScrollWidth": 486,
+        "winInnerWidth": 390,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 438px > 390px)",
+          "span._searchIcon_1srlp_39 (right: 442px > 390px)",
+          "svg.[object.SVGAnimatedString] (right: 442px > 390px)",
+          "path.[object.SVGAnimatedString] (right: 440px > 390px)",
+          "circle.[object.SVGAnimatedString] (right: 439px > 390px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 430,
+        "docScrollWidth": 526,
+        "winInnerWidth": 430,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 478px > 430px)",
+          "span._searchIcon_1srlp_39 (right: 482px > 430px)",
+          "svg.[object.SVGAnimatedString] (right: 482px > 430px)",
+          "path.[object.SVGAnimatedString] (right: 480px > 430px)",
+          "circle.[object.SVGAnimatedString] (right: 479px > 430px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 768,
+        "docScrollWidth": 787,
+        "winInnerWidth": 768,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 787px > 768px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 787px > 768px)",
+          "svg.[object.SVGAnimatedString] (right: 780px > 768px)",
+          "circle.[object.SVGAnimatedString] (right: 779px > 768px)",
+          "path.[object.SVGAnimatedString] (right: 774px > 768px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1024,
+        "docScrollWidth": 1948,
+        "winInnerWidth": 1024,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 1027px > 1024px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 1027px > 1024px)",
+          "div.title-hero-breadcrumbs (right: 1122px > 1024px)",
+          "span.title-hero-breadcrumb-tag (right: 1052px > 1024px)",
+          "span.title-hero-breadcrumb-sep (right: 1065px > 1024px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1440,
+        "docScrollWidth": 1956,
+        "winInnerWidth": 1440,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div.title-overview-main-col (right: 1592px > 1440px)",
+          "div._card_y6gd2_1._variantDefault_y6gd2_13 (right: 1592px > 1440px)",
+          "div.title-card-header (right: 1567px > 1440px)",
+          "p.title-overview-text (right: 1567px > 1440px)",
+          "div._card_y6gd2_1._variantDefault_y6gd2_13 (right: 1592px > 1440px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      }
+    ]
+  },
+  {
+    "route": "settings",
+    "path": "/settings",
+    "issues": [
+      {
+        "width": 320,
+        "docScrollWidth": 728,
+        "winInnerWidth": 320,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 368px > 320px)",
+          "span._searchIcon_1srlp_39 (right: 372px > 320px)",
+          "svg.[object.SVGAnimatedString] (right: 372px > 320px)",
+          "path.[object.SVGAnimatedString] (right: 370px > 320px)",
+          "circle.[object.SVGAnimatedString] (right: 369px > 320px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"☀️ Light\" (79x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"🌓 System\" (94x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"🌙 Dark\" (77x32px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 360,
+        "docScrollWidth": 768,
+        "winInnerWidth": 360,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 408px > 360px)",
+          "span._searchIcon_1srlp_39 (right: 412px > 360px)",
+          "svg.[object.SVGAnimatedString] (right: 412px > 360px)",
+          "path.[object.SVGAnimatedString] (right: 410px > 360px)",
+          "circle.[object.SVGAnimatedString] (right: 409px > 360px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"☀️ Light\" (79x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"🌓 System\" (94x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"🌙 Dark\" (77x32px)",
+          "button \"Select accent color \" (34x34px)",
+          "button \"Select accent color \" (28x28px)",
+          "button \"Select accent color \" (28x28px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 390,
+        "docScrollWidth": 798,
+        "winInnerWidth": 390,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 438px > 390px)",
+          "span._searchIcon_1srlp_39 (right: 442px > 390px)",
+          "svg.[object.SVGAnimatedString] (right: 442px > 390px)",
+          "path.[object.SVGAnimatedString] (right: 440px > 390px)",
+          "circle.[object.SVGAnimatedString] (right: 439px > 390px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"☀️ Light\" (79x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"🌓 System\" (94x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"🌙 Dark\" (77x32px)",
+          "button \"Select accent color \" (34x34px)",
+          "button \"Select accent color \" (28x28px)",
+          "button \"Select accent color \" (28x28px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 430,
+        "docScrollWidth": 838,
+        "winInnerWidth": 430,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "header._topBar_1srlp_1 (right: 478px > 430px)",
+          "span._searchIcon_1srlp_39 (right: 482px > 430px)",
+          "svg.[object.SVGAnimatedString] (right: 482px > 430px)",
+          "path.[object.SVGAnimatedString] (right: 480px > 430px)",
+          "circle.[object.SVGAnimatedString] (right: 479px > 430px)"
+        ],
+        "smallTargets": [
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Switch to dark mode\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"Keyboard shortcuts\" (32x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"☀️ Light\" (79x32px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 \"🌓 System\" (94x32px)",
+          "button._btn_1u7r2_1._variantPrimary_1u7r2_52 \"🌙 Dark\" (77x32px)",
+          "button \"Select accent color \" (34x34px)",
+          "button \"Select accent color \" (28x28px)",
+          "button \"Select accent color \" (28x28px)"
+        ],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 768,
+        "docScrollWidth": 1074,
+        "winInnerWidth": 768,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 787px > 768px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 787px > 768px)",
+          "svg.[object.SVGAnimatedString] (right: 780px > 768px)",
+          "circle.[object.SVGAnimatedString] (right: 779px > 768px)",
+          "path.[object.SVGAnimatedString] (right: 774px > 768px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      },
+      {
+        "width": 1024,
+        "docScrollWidth": 1314,
+        "winInnerWidth": 1024,
+        "hasHorizontalOverflow": true,
+        "overflowingElements": [
+          "div._actions_1srlp_64 (right: 1027px > 1024px)",
+          "button._btn_1u7r2_1._variantGhost_1u7r2_72 (right: 1027px > 1024px)",
+          "div._titleArea_p3a0d_39 (right: 1062px > 1024px)",
+          "div._eyebrow_p3a0d_45 (right: 1062px > 1024px)",
+          "h1._pageTitle_p3a0d_56 (right: 1062px > 1024px)"
+        ],
+        "smallTargets": [],
+        "bottomNavOverlap": false
+      }
+    ]
+  }
+]
