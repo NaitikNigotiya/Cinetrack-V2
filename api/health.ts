@@ -132,6 +132,14 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       adminInit = `error:${msg.slice(0, 30)}`
     }
 
+    let tmdbStatus = 'unknown'
+    try {
+      const mod = await import('./tmdb/[...path].js').catch(async () => import('./tmdb/[...path].ts'))
+      tmdbStatus = 'imported successfully: ' + typeof mod.default
+    } catch (e: unknown) {
+      tmdbStatus = 'import error: ' + (e instanceof Error ? e.message : String(e))
+    }
+
     const ok = tmdbTokenPresent && firebaseAdminOk
 
     res.statusCode = 200
@@ -141,6 +149,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
         tmdbTokenPresent,
         firebaseAdminOk,
         adminInit,
+        tmdbStatus,
       })
     )
   } catch (fatalErr: unknown) {
