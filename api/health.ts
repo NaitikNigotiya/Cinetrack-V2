@@ -132,6 +132,18 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       adminInit = `error:${msg.slice(0, 30)}`
     }
 
+    let authImportOk = false
+    let authImportError = 'none'
+    try {
+      const authMod = await import('firebase-admin/auth')
+      if (typeof authMod.getAuth === 'function') {
+        authMod.getAuth()
+        authImportOk = true
+      }
+    } catch (e: unknown) {
+      authImportError = e instanceof Error ? e.message : String(e)
+    }
+
     const ok = tmdbTokenPresent && firebaseAdminOk
 
     res.statusCode = 200
@@ -141,6 +153,8 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
         tmdbTokenPresent,
         firebaseAdminOk,
         adminInit,
+        authImportOk,
+        authImportError,
       })
     )
   } catch (fatalErr: unknown) {
