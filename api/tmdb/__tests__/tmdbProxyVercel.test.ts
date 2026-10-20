@@ -48,7 +48,7 @@ function createVercelReqRes(options: {
     url: options.url ?? '/api/tmdb/discover/movie',
     query: options.query,
     headers: {
-      host: 'cinetrack-v2-bice.vercel.app',
+      host: 'awsome-orpin.vercel.app',
       ...(options.authHeader === null
         ? {}
         : { authorization: options.authHeader ?? 'Bearer valid-owner-token' }),
